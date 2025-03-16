@@ -1,0 +1,18 @@
+# Ignore Visual Studio files
+.vs/
+*.suo
+*.db
+*.vscode/
+*.user
+*.json
+# Ignore build and dependency files
+bin/
+obj/
+*.nuget.cache
+*.assets.json
+*.dg.spec.json
+*.editorconfig
+# Ignore more Visual Studio files
+*.userosscache
+*.sln.docstates
+.vscode/
