@@ -1,10 +1,13 @@
 ﻿using Domain.Enums;
+using Domain.Memberships;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Memberships;
+
 
 namespace Domain.Users
 {
@@ -19,5 +22,7 @@ namespace Domain.Users
         public Role Role { get; set; }
         public DateTime Created_at { get; set; }
         public bool Active { get; set; }
+
+        public virtual Membership Membership { get; set; } // 1-to-1 relationship
     }
 }
