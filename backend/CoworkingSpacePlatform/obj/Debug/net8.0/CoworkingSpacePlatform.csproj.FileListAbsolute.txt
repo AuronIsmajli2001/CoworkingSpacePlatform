@@ -1,0 +1,14 @@
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\bin\Debug\net8.0\CoworkingSpacePlatform.exe
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\bin\Debug\net8.0\CoworkingSpacePlatform.deps.json
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\bin\Debug\net8.0\CoworkingSpacePlatform.runtimeconfig.json
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\bin\Debug\net8.0\CoworkingSpacePlatform.dll
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\bin\Debug\net8.0\CoworkingSpacePlatform.pdb
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.AssemblyInfoInputs.cache
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.AssemblyInfo.cs
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.csproj.CoreCompileInputs.cache
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.dll
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\refint\CoworkingSpacePlatform.dll
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.pdb
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\CoworkingSpacePlatform.genruntimeconfig.cache
+C:\Users\AURON\Desktop\CoworkingSpacePlatform\CoworkingSpacePlatform\backend\CoworkingSpacePlatform\obj\Debug\net8.0\ref\CoworkingSpacePlatform.dll
