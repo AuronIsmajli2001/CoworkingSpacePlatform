@@ -23,6 +23,6 @@ namespace Domain.Users
         public DateTime Created_at { get; set; }
         public bool Active { get; set; }
 
-        public virtual Membership Membership { get; set; } // 1-to-1 relationship
+        public virtual Membership Membership { get; set; } 
     }
 }
