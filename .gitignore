@@ -16,3 +16,12 @@ obj/
 *.userosscache
 *.sln.docstates
 .vscode/
+
+# Ignore build and cache files
+backend/**/obj/
+backend/**/bin/
+backend/**/Debug/
+backend/**/Release/
+backend/**/.vs/
+backend/**/project.lock.json
+backend/**/project.assets.json
