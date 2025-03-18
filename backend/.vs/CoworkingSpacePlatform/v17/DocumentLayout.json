@@ -3,12 +3,72 @@
   "WorkspaceRootPath": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\equipments\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\equipments\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\memberships\\membership.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\memberships\\membership.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\persistence\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|solutionrelative:persistence\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\users\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\users\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\persistence\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|solutionrelative:persistence\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\persistence\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|solutionrelative:persistence\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\application\\interfaces\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\interfaces\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\application\\interfaces\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\interfaces\\iunitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\equipments\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\equipments\\equipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\reservationequipments\\reservationequipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\reservationequipments\\reservationequipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\reservations\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\reservations\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\payments\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\payments\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\spaceequipments\\spaceequipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\spaceequipments\\spaceequipment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\enums\\reservationstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\enums\\reservationstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\enums\\status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\enums\\status.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\enums\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\enums\\paymentmethod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspaceplatform\\coworkingspaceplatform\\backend\\domain\\enums\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,7 +82,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -33,43 +93,225 @@
               "Name": "ST:882258311:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Api\\appsettings.json",
+              "RelativeDocumentMoniker": "Api\\appsettings.json",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Api\\appsettings.json",
+              "RelativeToolTip": "Api\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-18T01:27:50.328Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Repository.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Persistence\\Repository.cs",
+              "RelativeDocumentMoniker": "Persistence\\Repository.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Persistence\\Repository.cs",
+              "RelativeToolTip": "Persistence\\Repository.cs",
+              "ViewState": "AQIAACQAAAAAAAAAAAA7wBcAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T00:07:14.686Z"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "DatabaseService.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Persistence\\DatabaseService.cs",
+              "RelativeDocumentMoniker": "Persistence\\DatabaseService.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Persistence\\DatabaseService.cs",
+              "RelativeToolTip": "Persistence\\DatabaseService.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAAAB0AAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:55:21.022Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IRepository.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Application\\Interfaces\\IRepository.cs",
+              "RelativeDocumentMoniker": "Application\\Interfaces\\IRepository.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Application\\Interfaces\\IRepository.cs",
+              "RelativeToolTip": "Application\\Interfaces\\IRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:54:15.267Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IUnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Application\\Interfaces\\IUnitOfWork.cs",
+              "RelativeDocumentMoniker": "Application\\Interfaces\\IUnitOfWork.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Application\\Interfaces\\IUnitOfWork.cs",
+              "RelativeToolTip": "Application\\Interfaces\\IUnitOfWork.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:54:03.856Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Persistence\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "Persistence\\UnitOfWork.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Persistence\\UnitOfWork.cs",
+              "RelativeToolTip": "Persistence\\UnitOfWork.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAA9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:43:14.585Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ReservationEquipment.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\ReservationEquipments\\ReservationEquipment.cs",
+              "RelativeDocumentMoniker": "Domain\\ReservationEquipments\\ReservationEquipment.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\ReservationEquipments\\ReservationEquipment.cs",
+              "RelativeToolTip": "Domain\\ReservationEquipments\\ReservationEquipment.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:39:17.062Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "SpaceEquipment.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\SpaceEquipments\\SpaceEquipment.cs",
+              "RelativeDocumentMoniker": "Domain\\SpaceEquipments\\SpaceEquipment.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\SpaceEquipments\\SpaceEquipment.cs",
+              "RelativeToolTip": "Domain\\SpaceEquipments\\SpaceEquipment.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABQAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:34:49.572Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Space.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Spaces\\Space.cs",
+              "RelativeDocumentMoniker": "Domain\\Spaces\\Space.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Spaces\\Space.cs",
+              "RelativeToolTip": "Domain\\Spaces\\Space.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABUAAABhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:22:44.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ReservationStatus.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\ReservationStatus.cs",
+              "RelativeDocumentMoniker": "Domain\\Enums\\ReservationStatus.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\ReservationStatus.cs",
+              "RelativeToolTip": "Domain\\Enums\\ReservationStatus.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:21:14.611Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Reservation.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Reservations\\Reservation.cs",
+              "RelativeDocumentMoniker": "Domain\\Reservations\\Reservation.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Reservations\\Reservation.cs",
+              "RelativeToolTip": "Domain\\Reservations\\Reservation.cs",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAABoAAABTAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:15:39.758Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PaymentMethod.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\PaymentMethod.cs",
+              "RelativeDocumentMoniker": "Domain\\Enums\\PaymentMethod.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\PaymentMethod.cs",
+              "RelativeToolTip": "Domain\\Enums\\PaymentMethod.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:13:10.558Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "Role.cs",
               "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\Role.cs",
               "RelativeDocumentMoniker": "Domain\\Enums\\Role.cs",
               "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\Role.cs",
               "RelativeToolTip": "Domain\\Enums\\Role.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAUAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-16T20:38:01.968Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-17T23:11:52.294Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Users\\User.cs",
-              "RelativeDocumentMoniker": "Domain\\Users\\User.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Users\\User.cs",
-              "RelativeToolTip": "Domain\\Users\\User.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABQAAAAoAAAA",
+              "DocumentIndex": 15,
+              "Title": "Status.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\Status.cs",
+              "RelativeDocumentMoniker": "Domain\\Enums\\Status.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\Status.cs",
+              "RelativeToolTip": "Domain\\Enums\\Status.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwAsAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-16T20:15:39.277Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-17T23:11:49.995Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 12,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Payments\\Payment.cs",
+              "RelativeDocumentMoniker": "Domain\\Payments\\Payment.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Payments\\Payment.cs",
+              "RelativeToolTip": "Domain\\Payments\\Payment.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAAAA8AAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:10:34.719Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "Equipment.cs",
               "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Equipments\\Equipment.cs",
               "RelativeDocumentMoniker": "Domain\\Equipments\\Equipment.cs",
               "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Equipments\\Equipment.cs",
               "RelativeToolTip": "Domain\\Equipments\\Equipment.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAAAAAA",
+              "ViewState": "AQIAAAQAAAAAAAAAAAAAABUAAABTAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-16T20:14:45.284Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-17T23:06:14.972Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Membership.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Memberships\\Membership.cs",
+              "RelativeDocumentMoniker": "Domain\\Memberships\\Membership.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Memberships\\Membership.cs",
+              "RelativeToolTip": "Domain\\Memberships\\Membership.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABcAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:06:46.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Users\\User.cs",
+              "RelativeDocumentMoniker": "Domain\\Users\\User.cs",
+              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpacePlatform\\CoworkingSpacePlatform\\backend\\Domain\\Users\\User.cs",
+              "RelativeToolTip": "Domain\\Users\\User.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-17T23:06:17.315Z"
             }
           ]
         }
