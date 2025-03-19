@@ -6,8 +6,8 @@
 *.user
 *.json
 # Ignore build and dependency files
-bin/
-obj/
+backend/bin/
+backend/obj/
 *.nuget.cache
 *.assets.json
 *.dg.spec.json
