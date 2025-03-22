@@ -3,15 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{8E68AE22-E3BC-4646-B80A-381544FF9C93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{8E68AE22-E3BC-4646-B80A-381544FF9C93}"
+	ProjectSection(ProjectDependencies) = postProject
+		{765D5322-CDC6-4054-99E8-776F058E237E} = {765D5322-CDC6-4054-99E8-776F058E237E}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{765D5322-CDC6-4054-99E8-776F058E237E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{765D5322-CDC6-4054-99E8-776F058E237E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{36FF8103-0A22-4A52-843A-BBCFA39D0555}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{36FF8103-0A22-4A52-843A-BBCFA39D0555}"
+	ProjectSection(ProjectDependencies) = postProject
+		{765D5322-CDC6-4054-99E8-776F058E237E} = {765D5322-CDC6-4054-99E8-776F058E237E}
+		{8E68AE22-E3BC-4646-B80A-381544FF9C93} = {8E68AE22-E3BC-4646-B80A-381544FF9C93}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastucture\Infrastructure.csproj", "{C4D5FAB8-F6D5-4666-BD1D-71D6F9E051BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastucture\Infrastructure.csproj", "{C4D5FAB8-F6D5-4666-BD1D-71D6F9E051BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{611577A4-2F26-4381-AC91-7420FD2B8424}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{611577A4-2F26-4381-AC91-7420FD2B8424}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
