@@ -16,3 +16,12 @@ obj/
 *.userosscache
 *.sln.docstates
 .vscode/
+
+**/obj/
+**/bin/
+*.cache
+*.user
+*.suo
+*.vs/
+*.vsconfig
+
