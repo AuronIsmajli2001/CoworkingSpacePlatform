@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.3
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: coworkingSpace
+      MYSQL_USER: user
+      MYSQL_PASSWORD: coworking
+    ports:
+      - "3310:3306"  # Host port 3310 mapped to container port 3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-container
+    environment:
+      PMA_HOST: mysql-db  # Connects to MySQL service using the service name
+      PMA_PORT: 3306      # Connect to MySQL using container port (not host port)
+    ports:
+      - "8080:80"  # Exposes phpMyAdmin on port 8080
+
+volumes:
+  mysql_data:
