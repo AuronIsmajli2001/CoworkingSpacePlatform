@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Domain.Users;
 using Domain.Equipments;
 using Domain.ReservationEquipments;
@@ -14,15 +13,10 @@ namespace Persistence.Database
 {
     public class DatabaseService : DbContext
     {
-        private readonly IConfiguration _configuration;
 
-        public DatabaseService(IConfiguration configuration)
+        public DatabaseService(DbContextOptions<DatabaseService> options) : base(options)
         {
-            _configuration = configuration;
 
-            // Database.Migrate();
-
-            //Database.EnsureCreated();
         }
 
         public void Save()
@@ -40,13 +34,41 @@ namespace Persistence.Database
         public DbSet<Reservation> Reservations { get; set; }
 
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var connectionString = _configuration.GetConnectionString("postgres");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        { 
 
-            optionsBuilder.UseNpgsql(connectionString, b => b.MigrationsAssembly("Api"));
-            // , b => b.MigrationsAssembly("EcommerceService")
-        }*/
-        
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ReservationEquipment>()
+                .HasKey(sc => new { sc.ReservationId, sc.EquipmentId});
+
+            modelBuilder.Entity<ReservationEquipment>()
+                .HasOne(sc => sc.Reservation)
+                .WithMany(s => s.ReservationEquipment)
+                .HasForeignKey(sc => sc.ReservationId);
+
+            modelBuilder.Entity<ReservationEquipment>()
+                .HasOne(sc => sc.Equipment)
+                .WithMany(c => c.ReservationEquipment)
+                .HasForeignKey(sc => sc.EquipmentId);
+
+            modelBuilder.Entity<SpaceEquipment>()
+                .HasKey(sc => new { sc.SpaceId, sc.EquipmentId });
+
+            modelBuilder.Entity<SpaceEquipment>()
+                .HasOne(sc => sc.Space)
+                .WithMany(s => s.SpaceEquipment)
+                .HasForeignKey(sc => sc.SpaceId);
+
+            modelBuilder.Entity<SpaceEquipment>()
+                .HasOne(sc => sc.Equipment)
+                .WithMany(c => c.SpaceEquipment)
+                .HasForeignKey(sc => sc.EquipmentId);
+
+        }
+
     }
 }
