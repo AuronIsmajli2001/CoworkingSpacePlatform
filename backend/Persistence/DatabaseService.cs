@@ -9,6 +9,7 @@ using Domain.SpaceEquipments;
 using Domain.Reservations;
 
 
+
 namespace Persistence.Database
 {
     public class DatabaseService : DbContext
