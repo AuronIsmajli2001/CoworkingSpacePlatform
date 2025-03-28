@@ -14,5 +14,7 @@ namespace Domain.ReservationEquipments
         [ForeignKey("EquipmentId")]
         public string EquipmentId { get; set; }
         public int quantity { get; set; }
+        public Reservation Reservation { get; set; }
+        public Equipment Equipment { get; set; }
     }
 }
