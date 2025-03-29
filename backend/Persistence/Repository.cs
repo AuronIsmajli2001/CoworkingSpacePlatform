@@ -39,6 +39,11 @@ namespace Persistence.Repository
             _dbContext.Set<Tentity>().RemoveRange(entities);
         }
 
+        public async Task<List<Tentity>> GetAllAsync()
+        {
+            return await _dbContext.Set<Tentity>().ToListAsync();
+        }
+
         public IQueryable<Tentity> GetAll()
         {
             return _dbContext.Set<Tentity>();
