@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain.Equipments;
+using Domain.Reservations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
