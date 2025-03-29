@@ -15,9 +15,8 @@ namespace Domain.SpaceEquipments
         public string SpaceId { get; set; }
         [ForeignKey("EquipmentId")]
         public string EquipmentId { get; set; }
-        public int quantity { get; set; }
+        public int Quantity { get; set; }
         public Space Space { get; set; }
         public Equipment Equipment { get; set; }
-        //Duhet me e shkru key ne databaze
     }
 }
