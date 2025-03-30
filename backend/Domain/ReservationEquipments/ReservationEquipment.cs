@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.Reservation;
-using Domain.Equipment;
+using Domain.Reservations;
+using Domain.Equipments;
 
 namespace Domain.ReservationEquipments
 {

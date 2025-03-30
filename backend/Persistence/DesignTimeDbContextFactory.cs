@@ -11,7 +11,7 @@ namespace Persistence
         public DatabaseService CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseService>();
-            
+
             var configurationPath = Path.Combine(Directory.GetCurrentDirectory(), "../Api");
 
             // Set up configuration for migrations
@@ -22,7 +22,7 @@ namespace Persistence
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            optionsBuilder.UseMySQL(connectionString);
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 
             return new DatabaseService(optionsBuilder.Options);
 

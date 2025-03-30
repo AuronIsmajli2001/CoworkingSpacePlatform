@@ -20,7 +20,10 @@ public class Program
         });
 
         builder.Services.AddDbContext<DatabaseService>(options =>
-            options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseMySql(
+                builder.Configuration.GetConnectionString("DefaultConnection"),
+                new MySqlServerVersion(new Version(8, 0, 21)) // Specify your MySQL server version
+            ));
 
         var app = builder.Build();
 
