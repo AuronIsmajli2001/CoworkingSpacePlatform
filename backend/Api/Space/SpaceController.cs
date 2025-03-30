@@ -83,5 +83,20 @@ namespace Api.Space
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpDelete("{id}",Name = "DeleteSpace")]
+        public async Task<IActionResult> DeleteSpace(string id)
+        {
+            try
+            {
+                await _spaceService.DeleteSpaceAsync(id);
+                return Ok("Space deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in DeleteSpace method: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
     }
 }
