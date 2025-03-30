@@ -9,6 +9,9 @@ using Domain.Spaces;
 using Application.Interfaces.IUnitOfWork;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Internal;
+using Application.Services.ImgurUploaderService;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Services.Spaces
 {
@@ -23,11 +26,12 @@ namespace Application.Services.Spaces
             _logger = logger;
         }
 
-        public async Task CreateSpaceAsync(SpaceDTOCreate spaceDTO)
+        public async Task<string> CreateSpaceAsync(SpaceDTOCreate spaceDTO,IFormFile imageFile)
         {
             try
             {
                 _logger.LogInformation("Creating a new space with Name: {Name}", spaceDTO.Name);
+
                 var space = new Space
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -37,11 +41,33 @@ namespace Application.Services.Spaces
                     Capacity = spaceDTO.Capacity,
                     Price = spaceDTO.Price,
                     Location = spaceDTO.Location,
+                    Image_URL = null
                 };
+
+            if (imageFile != null)
+                {
+                    if (imageFile.Length > 0)
+                    {
+                        var tempFilePath = Path.GetTempFileName();
+                        using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+                        var imageUrl = await ImageUploaderService.UploadToImgur(tempFilePath, "YOUR_API_KEY");
+                    
+                        
+
+                        space.Image_URL = imageUrl;
+                        System.IO.File.Delete(tempFilePath);
+                    }
+                }
+
+                
 
                 _unitOfWork.Repository<Space>().Create(space);
                 await _unitOfWork.CompleteAsync();
                 _logger.LogInformation("Space created successfully with ID: {Id}", space.Id);
+                return "Space created successfully!";
             }
             catch (DbUpdateException dbEx)
             {
