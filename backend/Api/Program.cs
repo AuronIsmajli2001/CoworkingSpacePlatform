@@ -1,5 +1,9 @@
+using Application.Interfaces.IUnitOfWork;
+using Application.Services.ISpaceServices;
+using Application.Services.Spaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
+using Persistence.UnitOfWork;
 
 public class Program
 {
@@ -10,6 +14,8 @@ public class Program
         // Add services to the container
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddScoped<ISpaceService, SpaceService>();
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
