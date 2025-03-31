@@ -84,6 +84,24 @@ namespace Api.Space
             }
         }
 
+        [HttpPut("{id}",Name = "UpdateSpace")]
+        public async Task<IActionResult> UpdateSpace(string id, [FromForm] SpaceDTOUpdate spaceDto,IFormFile image)
+        {
+            try
+            {
+                var space = await _spaceService.UpdateSpaceAsync(id, spaceDto,image);
+                return Ok(space);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in UpdateSpace method : {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+            
+        }
+
+
+
         [HttpDelete("{id}",Name = "DeleteSpace")]
         public async Task<IActionResult> DeleteSpace(string id)
         {

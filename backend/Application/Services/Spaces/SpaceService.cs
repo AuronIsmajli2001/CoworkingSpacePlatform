@@ -154,7 +154,7 @@ namespace Application.Services.Spaces
 
         }
 
-        public async Task<Space> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate)
+        public async Task<Space> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate,IFormFile image)
         {
 
             try 
@@ -175,6 +175,25 @@ namespace Application.Services.Spaces
                 space.Location = spaceDTOUpdate.Location;
                 space.Description = spaceDTOUpdate.Description;
                 space.Type = spaceDTOUpdate.Type;
+                space.Image_URL = space.Image_URL;
+
+                if (image != null)
+                {
+                    if (image.Length > 0)
+                    {
+                        var tempFilePath = Path.GetTempFileName();
+                        using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+                        var imageUrl = await ImageUploaderService.UploadToImgur(tempFilePath, "YOUR_API_KEY");
+
+
+
+                        space.Image_URL = imageUrl;
+                        System.IO.File.Delete(tempFilePath);
+                    }
+                }
 
                 _unitOfWork.Repository<Space>().Update(space);
                 await _unitOfWork.CompleteAsync();
