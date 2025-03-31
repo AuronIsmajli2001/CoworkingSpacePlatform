@@ -1,5 +1,6 @@
 using Application.Interfaces.IUnitOfWork;
 using Application.Services.ISpaceServices;
+using Application.Services.Memberships;
 using Application.Services.Spaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
@@ -15,6 +16,7 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddScoped<ISpaceService, SpaceService>();
+        builder.Services.AddScoped<IMembershipService, MembershipService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddSwaggerGen(c =>
         {
