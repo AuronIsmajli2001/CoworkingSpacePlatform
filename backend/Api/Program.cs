@@ -1,5 +1,6 @@
 using Application.Interfaces.IUnitOfWork;
 using Application.Services.ISpaceServices;
+using Application.Services.Payments;
 using Application.Services.Memberships;
 using Application.Services.Spaces;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddScoped<ISpaceService, SpaceService>();
         builder.Services.AddScoped<IMembershipService, MembershipService>();
+        builder.Services.AddScoped<IPaymentService, PaymentService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddSwaggerGen(c =>
         {
