@@ -40,12 +40,17 @@ export default function Index() {
             </div>
           </div>
         </div>
-
-        <img
+        <div
+          className="w-full md:w-4/12 lg:w-6/12 xl:w-6/12 px-4 bg-cover bg-center rounded-lg min-h-[300px]"
+          style={{
+            backgroundImage: `url(${require("assets/img/hero.png")})`,
+          }}
+        ></div>
+        {/* <img
           className="absolute top-0 b-auto right-0 pt-16 sm:w-6/12 -mt-48 sm:mt-0 w-10/12 max-h-860px"
-          src={require("assets/img/pattern_react.png").default}
+          src={require("assets/img/hero.png")}
           alt="..."
-        />
+        /> */}
       </section>
 
       <section className="mt-48 md:mt-40 pb-40 relative bg-blueGray-100">
