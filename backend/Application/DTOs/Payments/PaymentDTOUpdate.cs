@@ -10,7 +10,6 @@ namespace Application.DTOs.Payments
 {
     public class PaymentDTOUpdate
     {
-        [Required]
         public string Id { get; set; }
         public Status? Status { get; set; }
         public PaymentMethod? PaymentMethod { get; set; }

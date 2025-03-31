@@ -163,5 +163,10 @@ namespace Application.Services.Payments
         {
             throw new NotImplementedException();
         }
+
+        Task<string> IPaymentService.CreatePaymentAsync(PaymentDTOCreate paymentDTO)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

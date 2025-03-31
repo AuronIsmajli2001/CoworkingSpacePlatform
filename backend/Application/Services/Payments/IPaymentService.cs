@@ -10,7 +10,7 @@ namespace Application.Services.Payments
 {
     public interface IPaymentService
     {
-        Task CreatePaymentAsync(PaymentDTOCreate paymentDTO);
+        Task <string>CreatePaymentAsync(PaymentDTOCreate paymentDTO);
         Task<PaymentDTORead> GetPaymentById(string id);
         Task<IEnumerable<PaymentDTORead>> GetAllPayments();
         Task<Payment> UpdatePaymentAsync(PaymentDTOUpdate paymentDTOUpdate);
