@@ -6,6 +6,7 @@ using Application.Services.Spaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
 using Persistence.UnitOfWork;
+using Application.Services.SpaceEquipments;
 
 public class Program
 {
@@ -19,6 +20,7 @@ public class Program
         builder.Services.AddScoped<ISpaceService, SpaceService>();
         builder.Services.AddScoped<IMembershipService, MembershipService>();
         builder.Services.AddScoped<IPaymentService, PaymentService>();
+        builder.Services.AddScoped<ISpaceEquipmentService, SpaceEquipmentService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddSwaggerGen(c =>
         {
