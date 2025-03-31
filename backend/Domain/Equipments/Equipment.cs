@@ -19,6 +19,7 @@ namespace Domain.Equipments
         public int quantity { get; set; }
         public double price_per_piece { get; set; }
         public ICollection<SpaceEquipment> SpaceEquipment { get; set; } = new List<SpaceEquipment>();
-        public ICollection<ReservationEquipment> ReservationEquipment { get; set; }
+        public ICollection<ReservationEquipment> ReservationEquipment { get; set; } = new List<ReservationEquipment>();
+
     }
 }
