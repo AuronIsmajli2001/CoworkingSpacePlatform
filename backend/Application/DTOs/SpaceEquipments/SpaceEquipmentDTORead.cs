@@ -8,5 +8,10 @@ namespace Application.DTOs.SpaceEquipment
 {
     public class SpaceEquipmentDTORead
     {
+        public string SpaceId { get; set; }
+        public string SpaceName { get; set; }  
+        public string EquipmentId { get; set; }
+        public string EquipmentName { get; set; }  
+        public int Quantity { get; set; }
     }
 }
