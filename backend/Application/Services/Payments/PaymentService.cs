@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Payments;
+﻿/*using Application.DTOs.Payments;
 using Application.Interfaces.IUnitOfWork;
 using Domain.Payments;
 using Microsoft.Extensions.Logging;
@@ -165,3 +165,4 @@ namespace Application.Services.Payments
         }
     }
 }
+*/
