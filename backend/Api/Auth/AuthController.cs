@@ -40,12 +40,6 @@ public class AuthController : ControllerBase
             {
                 AccessToken = tokens.AccessToken,
                 RefreshToken = tokens.RefreshToken,
-                ExpiresIn = tokens.ExpiresIn,
-                RefreshTokenExpiry = tokens.RefreshTokenExpiry,
-                UserId = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Role = user.Role.ToString()
             });
         }
         catch (Exception ex)
@@ -56,7 +50,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    public async Task<ActionResult<AuthResponseDTO>> SignUp([FromForm] SignUpRequestDTO request)
+    public async Task<IActionResult> SignUp([FromForm] SignUpRequestDTO request)
     {
         try
         {
@@ -74,17 +68,7 @@ public class AuthController : ControllerBase
 
             _logger.LogInformation("New user registered: {Username}", createdUser.UserName);
 
-            return Ok(new AuthResponseDTO
-            {
-                AccessToken = tokens.AccessToken,
-                RefreshToken = tokens.RefreshToken,
-                ExpiresIn = tokens.ExpiresIn,
-                RefreshTokenExpiry = tokens.RefreshTokenExpiry,
-                UserId = createdUser.Id,
-                Username = createdUser.UserName,
-                Email = createdUser.Email,
-                Role = createdUser.Role.ToString()
-            });
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -129,8 +113,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [Authorize]
-    [HttpGet("me")]
+    [HttpGet("GetCurrentUser")]
     public ActionResult<UserProfileDTO> GetCurrentUser()
     {
         try
