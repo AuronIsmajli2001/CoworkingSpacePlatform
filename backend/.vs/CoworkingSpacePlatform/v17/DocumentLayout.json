@@ -3,20 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\services\\payments\\ipaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\payments\\ipaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\services\\payments\\paymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\payments\\paymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\dtos\\memberships\\membershipdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\memberships\\membershipdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\services\\payments\\ipaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\payments\\ipaymentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\dtos\\payments\\paymentdtoupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\payments\\paymentdtoupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\dtos\\payments\\paymentdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\payments\\paymentdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\dtos\\spaces\\spacedtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\spaces\\spacedtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\dtos\\memberships\\membershipdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\memberships\\membershipdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\abdul\\onedrive\\documents\\github\\coworkingspaceplatform\\backend\\application\\services\\spaceequipments\\spaceequipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -70,37 +78,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
-              "RelativeDocumentMoniker": "Api\\Program.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
-              "RelativeToolTip": "Api\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-31T21:06:44.744Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MembershipDTOCreate.cs",
-              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
-              "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
-              "RelativeToolTip": "Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Title": "PaymentDTOUpdate.cs",
+              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Payments\\PaymentDTOUpdate.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Payments\\PaymentDTOUpdate.cs",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Payments\\PaymentDTOUpdate.cs",
+              "RelativeToolTip": "Application\\DTOs\\Payments\\PaymentDTOUpdate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T20:17:32.061Z",
+              "WhenOpened": "2025-03-31T21:49:13.396Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
+              "Title": "PaymentDTOCreate.cs",
+              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Payments\\PaymentDTOCreate.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Payments\\PaymentDTOCreate.cs",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Payments\\PaymentDTOCreate.cs",
+              "RelativeToolTip": "Application\\DTOs\\Payments\\PaymentDTOCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T21:46:48.422Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "ISpaceEquipmentService.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\ISpaceEquipmentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\SpaceEquipments\\ISpaceEquipmentService.cs",
@@ -108,25 +116,24 @@
               "RelativeToolTip": "Application\\Services\\SpaceEquipments\\ISpaceEquipmentService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T19:58:50.781Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-30T19:58:50.781Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "IPaymentService.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\IPaymentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Payments\\IPaymentService.cs",
               "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\IPaymentService.cs",
               "RelativeToolTip": "Application\\Services\\Payments\\IPaymentService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAABMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-30T19:57:42.494Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Domain\\Users\\User.cs",
               "RelativeDocumentMoniker": "Domain\\Users\\User.cs",
@@ -138,13 +145,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "PaymentService.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\PaymentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Payments\\PaymentService.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\PaymentService.cs",
-              "RelativeToolTip": "Application\\Services\\Payments\\PaymentService.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAAwB8AAAARAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\PaymentService.cs*",
+              "RelativeToolTip": "Application\\Services\\Payments\\PaymentService.cs*",
+              "ViewState": "AgIAAJMAAAAAAAAAAAAowKoAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-30T19:57:56.938Z",
               "EditorCaption": ""
@@ -152,32 +159,18 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "MembershipService.cs",
-              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\Memberships\\MembershipService.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
-              "RelativeToolTip": "Application\\Services\\Memberships\\MembershipService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "MembershipDTOCreate.cs",
+              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
+              "RelativeToolTip": "Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T19:57:26.556Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-30T20:17:32.061Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "SpaceEquipmentService.cs",
-              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
-              "RelativeToolTip": "Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T19:59:06.021Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "SpaceDTOCreate.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Spaces\\SpaceDTOCreate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Spaces\\SpaceDTOCreate.cs",
@@ -185,12 +178,47 @@
               "RelativeToolTip": "Application\\DTOs\\Spaces\\SpaceDTOCreate.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T20:52:21.499Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-30T20:52:21.499Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
+              "RelativeDocumentMoniker": "Api\\Program.cs",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
+              "RelativeToolTip": "Api\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-31T21:06:44.744Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MembershipService.cs",
+              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Memberships\\MembershipService.cs",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
+              "RelativeToolTip": "Application\\Services\\Memberships\\MembershipService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T19:57:26.556Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SpaceEquipmentService.cs",
+              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
+              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
+              "RelativeToolTip": "Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-30T19:59:06.021Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "IMembershipService.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\IMembershipService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Memberships\\IMembershipService.cs",
@@ -202,7 +230,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "MembershipDTORead.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTORead.cs",
@@ -214,7 +242,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "MembershipDTOUpdate.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOUpdate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTOUpdate.cs",
@@ -226,7 +254,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "SpaceEquipmentDTORead.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\SpaceEquipments\\SpaceEquipmentDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\SpaceEquipments\\SpaceEquipmentDTORead.cs",
@@ -238,7 +266,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "Role.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\Role.cs",
               "RelativeDocumentMoniker": "Domain\\Enums\\Role.cs",
@@ -250,7 +278,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "Equipment.cs",
               "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Domain\\Equipments\\Equipment.cs",
               "RelativeDocumentMoniker": "Domain\\Equipments\\Equipment.cs",
