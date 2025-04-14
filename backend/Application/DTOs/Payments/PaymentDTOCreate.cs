@@ -18,5 +18,6 @@ namespace Application.DTOs.Payments
 
         [Required]
         public PaymentMethod PaymentMethod { get; set; }
+        public Status Status { get; internal set; }
     }
 }
