@@ -1,8 +1,8 @@
 import Sidebar from "../components/Sidebar";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
+import React from "react";
 
-// Types based on your Domain model
 type User = {
   id: string;
   name: string;
@@ -40,8 +40,7 @@ type Reservation = {
   reservationEquipment: ReservationEquipment[];
 };
 
-// Sample data - replace with real data from your API
-const reservations: Reservation[] = [
+const sampleReservations: Reservation[] = [
   {
     id: "1",
     userId: "user1",
@@ -91,6 +90,8 @@ const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
+  const [reservations, setReservations] = useState<Reservation[]>(sampleReservations);
 
   const toggleSelect = (id: string) => {
     setSelectedReservations((prev) =>
@@ -106,6 +107,30 @@ const Reservations = () => {
     }
   };
 
+  const handleDelete = (id: string) => {
+    setReservations(prev => prev.filter(res => res.id !== id));
+    setSelectedReservations(prev => prev.filter(resId => resId !== id));
+  };
+
+  const handleBulkDelete = () => {
+    setReservations(prev => prev.filter(res => !selectedReservations.includes(res.id)));
+    setSelectedReservations([]);
+    setShowConfirmModal(false);
+  };
+
+  const handleEdit = (reservation: Reservation) => {
+    setEditingReservation(reservation);
+  };
+
+  const handleSaveEdit = (updatedReservation: Reservation) => {
+    setReservations(prev =>
+      prev.map(res =>
+        res.id === updatedReservation.id ? updatedReservation : res
+      )
+    );
+    setEditingReservation(null);
+  };
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
       year: 'numeric',
@@ -119,10 +144,6 @@ const Reservations = () => {
       hour: '2-digit',
       minute: '2-digit'
     });
-  };
-
-  const formatDateTimeRange = (start: Date, end: Date) => {
-    return `${formatDate(start)} ${formatTime(start)} - ${formatTime(end)}`;
   };
 
   const getEquipmentSummary = (equipment: ReservationEquipment[]) => {
@@ -170,7 +191,7 @@ const Reservations = () => {
                     <input
                       type="checkbox"
                       onChange={toggleSelectAll}
-                      checked={selectedReservations.length === reservations.length}
+                      checked={selectedReservations.length === reservations.length && reservations.length > 0}
                       className="accent-blue-600"
                     />
                   </th>
@@ -234,10 +255,19 @@ const Reservations = () => {
                         </span>
                       </td>
                       <td className="p-3 flex gap-2">
-                        <button className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1">
+                        <button 
+                          onClick={() => handleEdit(res)}
+                          className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1"
+                        >
                           <Pencil size={14} /> Edit
                         </button>
-                        <button className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1">
+                        <button 
+                          onClick={() => {
+                            setSelectedReservations([res.id]);
+                            setShowConfirmModal(true);
+                          }}
+                          className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1"
+                        >
                           <Trash2 size={14} /> Delete
                         </button>
                       </td>
@@ -247,7 +277,7 @@ const Reservations = () => {
             </table>
           </div>
 
-          {/* Modal */}
+          {/* Delete Confirmation Modal */}
           {showConfirmModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-gray-800 p-6 rounded shadow-lg w-96">
@@ -268,13 +298,116 @@ const Reservations = () => {
                   </button>
                   <button
                     onClick={() => {
-                      setSelectedReservations([]);
+                      if (selectedReservations.length === 1) {
+                        handleDelete(selectedReservations[0]);
+                      } else {
+                        handleBulkDelete();
+                      }
                       setShowConfirmModal(false);
-                      // TODO: Add actual deletion logic
                     }}
                     className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 rounded"
                   >
                     Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Modal */}
+          {editingReservation && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2">
+                <h3 className="text-lg font-semibold mb-4">Edit Reservation</h3>
+                
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">User</label>
+                    <input
+                      type="text"
+                      value={editingReservation.user.name}
+                      onChange={(e) => setEditingReservation({
+                        ...editingReservation,
+                        user: {
+                          ...editingReservation.user,
+                          name: e.target.value
+                        }
+                      })}
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">Space</label>
+                    <input
+                      type="text"
+                      value={editingReservation.space.name}
+                      onChange={(e) => setEditingReservation({
+                        ...editingReservation,
+                        space: {
+                          ...editingReservation.space,
+                          name: e.target.value
+                        }
+                      })}
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">Start Date</label>
+                    <input
+                      type="datetime-local"
+                      value={editingReservation.startDateTime.toISOString().slice(0, 16)}
+                      onChange={(e) => setEditingReservation({
+                        ...editingReservation,
+                        startDateTime: new Date(e.target.value)
+                      })}
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">End Date</label>
+                    <input
+                      type="datetime-local"
+                      value={editingReservation.endDateTime.toISOString().slice(0, 16)}
+                      onChange={(e) => setEditingReservation({
+                        ...editingReservation,
+                        endDateTime: new Date(e.target.value)
+                      })}
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">Status</label>
+                    <select
+                      value={editingReservation.status}
+                      onChange={(e) => setEditingReservation({
+                        ...editingReservation,
+                        status: e.target.value as ReservationStatus
+                      })}
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    >
+                      {Object.values(ReservationStatus).map((status) => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setEditingReservation(null)}
+                    className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleSaveEdit(editingReservation)}
+                    className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </div>
