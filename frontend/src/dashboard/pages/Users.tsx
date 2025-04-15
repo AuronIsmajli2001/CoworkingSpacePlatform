@@ -2,7 +2,7 @@ import Sidebar from "../components/Sidebar";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 
-const users = [
+const initialUsers = [
   {
     id: 1,
     name: "Neil Sims",
@@ -25,6 +25,19 @@ const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [users, setUsers] = useState(initialUsers);
+  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+
+  type User = {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+    status: string;
+    avatar: string;
+  };
 
   const toggleSelect = (id: number) => {
     setSelectedUsers((prev) =>
@@ -38,6 +51,19 @@ const Users = () => {
     } else {
       setSelectedUsers(users.map((user) => user.id));
     }
+  };
+
+  const handleDeleteConfirmed = () => {
+    if (userToDelete !== null) {
+      setUsers((prev) => prev.filter((user) => user.id !== userToDelete));
+      setUserToDelete(null);
+    } else {
+      setUsers((prev) =>
+        prev.filter((user) => !selectedUsers.includes(user.id))
+      );
+      setSelectedUsers([]);
+    }
+    setShowConfirmModal(false);
   };
 
   return (
@@ -135,10 +161,22 @@ const Users = () => {
                         </span>
                       </td>
                       <td className="p-3 flex gap-2">
-                        <button className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1">
+                        <button
+                          onClick={() => {
+                            setEditUser(user);
+                            setShowEditModal(true);
+                          }}
+                          className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1"
+                        >
                           <Pencil size={14} /> Edit
                         </button>
-                        <button className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1">
+                        <button
+                          onClick={() => {
+                            setUserToDelete(user.id);
+                            setShowConfirmModal(true);
+                          }}
+                          className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1"
+                        >
                           <Trash2 size={14} /> Delete
                         </button>
                       </td>
@@ -148,34 +186,126 @@ const Users = () => {
             </table>
           </div>
 
-          {/* Modal */}
+          {/* Delete Confirmation Modal */}
           {showConfirmModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-gray-800 p-6 rounded shadow-lg w-96">
-                <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+              <div className="bg-[#1f2937] p-6 rounded-lg shadow-xl w-[400px]">
+                <h2 className="text-xl font-semibold text-white mb-2">
+                  Confirm Deletion
+                </h2>
                 <p className="text-sm text-gray-300 mb-6">
                   Are you sure you want to delete{" "}
-                  <span className="font-bold text-white">
-                    {selectedUsers.length}
-                  </span>{" "}
-                  selected user{selectedUsers.length > 1 ? "s" : ""}?
+                  <strong>
+                    {userToDelete !== null ? 1 : selectedUsers.length}
+                  </strong>{" "}
+                  user
+                  {userToDelete === null && selectedUsers.length > 1 ? "s" : ""}
+                  ?
                 </p>
                 <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => setShowConfirmModal(false)}
-                    className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded"
+                    onClick={() => {
+                      setShowConfirmModal(false);
+                      setUserToDelete(null);
+                    }}
+                    className="px-4 py-2 bg-gray-600 text-white text-sm rounded hover:bg-gray-700"
                   >
                     Cancel
                   </button>
                   <button
-                    onClick={() => {
-                      setSelectedUsers([]);
-                      setShowConfirmModal(false);
-                      // TODO: optional – remove users from array if you're using state
-                    }}
-                    className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 rounded"
+                    onClick={handleDeleteConfirmed}
+                    className="px-4 py-2 bg-red-600 text-white text-sm rounded hover:bg-red-700"
                   >
                     Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Modal */}
+          {showEditModal && editUser && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-[500px] max-w-full">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Edit user</h3>
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="text-gray-400 hover:text-white"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="text-sm block mb-1">First Name</label>
+                    <input
+                      type="text"
+                      value={editUser.name.split(" ")[0]}
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Last Name</label>
+                    <input
+                      type="text"
+                      value={editUser.name.split(" ")[1] || ""}
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Email</label>
+                    <input
+                      type="text"
+                      value={editUser.email}
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Role</label>
+                    <input
+                      type="text"
+                      value={editUser.role}
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                      readOnly
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Membership</label>
+                    <select className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white">
+                      <option value="none">None</option>
+                      <option value="week">Weekly</option>
+                      <option value="month">Monthly</option>
+                      <option value="year">Yearly</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-sm block mb-1">Status</label>
+                    <select className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white">
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <label className="text-sm block mb-1">Biography</label>
+                    <textarea
+                      rows={3}
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                      placeholder="Write something..."
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setShowEditModal(false)}
+                    className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm rounded"
+                  >
+                    Save all
                   </button>
                 </div>
               </div>
