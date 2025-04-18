@@ -1,4 +1,5 @@
 import Sidebar from "../components/Sidebar";
+import CalendarView from '../pages/CalendarView';
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
@@ -45,9 +46,9 @@ const sampleReservations: Reservation[] = [
     id: "1",
     userId: "user1",
     spaceId: "space1",
-    startDateTime: new Date("2023-12-15T10:00:00"),
-    endDateTime: new Date("2023-12-15T12:00:00"),
-    createdAt: new Date("2023-11-20"),
+    startDateTime: new Date("2025-04-15T10:00:00"),
+    endDateTime: new Date("2025-04-15T12:00:00"),
+    createdAt: new Date("2025-04-20"),
     status: ReservationStatus.Confirmed,
     user: {
       id: "user1",
@@ -67,9 +68,9 @@ const sampleReservations: Reservation[] = [
     id: "2",
     userId: "user2",
     spaceId: "space2",
-    startDateTime: new Date("2023-12-16T14:00:00"),
-    endDateTime: new Date("2023-12-16T16:00:00"),
-    createdAt: new Date("2023-11-21"),
+    startDateTime: new Date("2025-04-16T14:00:00"),
+    endDateTime: new Date("2025-04-16T16:00:00"),
+    createdAt: new Date("2025-04-21"),
     status: ReservationStatus.Pending,
     user: {
       id: "user2",
@@ -92,6 +93,7 @@ const Reservations = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>(sampleReservations);
+  const [viewMode, setViewMode] = useState<'table' | 'calendar'>('table');
 
   const toggleSelect = (id: string) => {
     setSelectedReservations((prev) =>
@@ -158,6 +160,20 @@ const Reservations = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">All Reservations</h2>
             <div className="flex gap-2">
+            <div className="flex gap-2">
+              <button 
+                onClick={() => setViewMode('table')}
+                className={`px-3 py-1 rounded text-sm ${viewMode === 'table' ? 'bg-blue-600' : 'bg-gray-700'}`}
+              >
+                Table View
+              </button>
+              <button 
+                onClick={() => setViewMode('calendar')}
+                className={`px-3 py-1 rounded text-sm ${viewMode === 'calendar' ? 'bg-blue-600' : 'bg-gray-700'}`}
+              >
+                Calendar View
+              </button>
+            </div>
               {selectedReservations.length > 0 && (
                 <button
                   onClick={() => setShowConfirmModal(true)}
@@ -183,6 +199,7 @@ const Reservations = () => {
             className="bg-gray-800 text-white border border-gray-700 rounded px-4 py-2 text-sm w-64 mb-4"
           />
 
+          {viewMode === 'table' ? (
           <div className="overflow-x-auto">
             <table className="w-full table-auto text-sm">
               <thead className="bg-gray-800 text-left uppercase text-gray-400">
@@ -276,6 +293,13 @@ const Reservations = () => {
               </tbody>
             </table>
           </div>
+          ) : (
+            <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Calendar View</h3>
+              <div className="text-gray-400 text-center py-8">
+              <CalendarView reservations={reservations} />              </div>
+            </div>
+          )}
 
           {/* Delete Confirmation Modal */}
           {showConfirmModal && (
