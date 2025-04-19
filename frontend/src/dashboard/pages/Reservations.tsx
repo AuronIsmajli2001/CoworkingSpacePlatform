@@ -295,7 +295,6 @@ const Reservations = () => {
           </div>
           ) : (
             <div className="mt-4 p-4 bg-gray-800 rounded-lg">
-              <h3 className="text-lg font-semibold mb-4">Calendar View</h3>
               <div className="text-gray-400 text-center py-8">
               <CalendarView reservations={reservations} />              </div>
             </div>
