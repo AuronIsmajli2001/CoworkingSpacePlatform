@@ -1,4 +1,5 @@
 import Sidebar from "../components/Sidebar";
+import CalendarView from "../pages/CalendarView";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 
@@ -44,9 +45,9 @@ const sampleReservations: Reservation[] = [
     id: "1",
     userId: "user1",
     spaceId: "space1",
-    startDateTime: new Date("2023-12-15T10:00:00"),
-    endDateTime: new Date("2023-12-15T12:00:00"),
-    createdAt: new Date("2023-11-20"),
+    startDateTime: new Date("2025-04-15T10:00:00"),
+    endDateTime: new Date("2025-04-15T12:00:00"),
+    createdAt: new Date("2025-04-20"),
     status: ReservationStatus.Confirmed,
     user: {
       id: "user1",
@@ -66,9 +67,9 @@ const sampleReservations: Reservation[] = [
     id: "2",
     userId: "user2",
     spaceId: "space2",
-    startDateTime: new Date("2023-12-16T14:00:00"),
-    endDateTime: new Date("2023-12-16T16:00:00"),
-    createdAt: new Date("2023-11-21"),
+    startDateTime: new Date("2025-04-16T14:00:00"),
+    endDateTime: new Date("2025-04-16T16:00:00"),
+    createdAt: new Date("2025-04-21"),
     status: ReservationStatus.Pending,
     user: {
       id: "user2",
@@ -93,6 +94,7 @@ const Reservations = () => {
     useState<Reservation | null>(null);
   const [reservations, setReservations] =
     useState<Reservation[]>(sampleReservations);
+  const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
 
   const toggleSelect = (id: string) => {
     setSelectedReservations((prev) =>
@@ -161,6 +163,24 @@ const Reservations = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">All Reservations</h2>
             <div className="flex gap-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setViewMode("table")}
+                  className={`px-3 py-1 rounded text-sm ${
+                    viewMode === "table" ? "bg-blue-600" : "bg-gray-700"
+                  }`}
+                >
+                  Table View
+                </button>
+                <button
+                  onClick={() => setViewMode("calendar")}
+                  className={`px-3 py-1 rounded text-sm ${
+                    viewMode === "calendar" ? "bg-blue-600" : "bg-gray-700"
+                  }`}
+                >
+                  Calendar View
+                </button>
+              </div>
               {selectedReservations.length > 0 && (
                 <button
                   onClick={() => setShowConfirmModal(true)}
@@ -186,110 +206,119 @@ const Reservations = () => {
             className="bg-gray-800 text-white border border-gray-700 rounded px-4 py-2 text-sm w-64 mb-4"
           />
 
-          <div className="overflow-x-auto">
-            <table className="w-full table-auto text-sm">
-              <thead className="bg-gray-800 text-left uppercase text-gray-400">
-                <tr>
-                  <th className="p-3">
-                    <input
-                      type="checkbox"
-                      onChange={toggleSelectAll}
-                      checked={
-                        selectedReservations.length === reservations.length &&
-                        reservations.length > 0
-                      }
-                      className="accent-blue-600"
-                    />
-                  </th>
-                  <th className="p-3">ID</th>
-                  <th className="p-3">User</th>
-                  <th className="p-3">Space</th>
-                  <th className="p-3">Date & Time</th>
-                  <th className="p-3">Equipment</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservations
-                  .filter(
-                    (res) =>
-                      res.user.name
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase()) ||
-                      res.space.name
-                        .toLowerCase()
-                        .includes(searchTerm.toLowerCase())
-                  )
-                  .map((res) => (
-                    <tr
-                      className="border-b border-gray-700 hover:bg-gray-800"
-                      key={res.id}
-                    >
-                      <td className="p-3">
-                        <input
-                          type="checkbox"
-                          checked={selectedReservations.includes(res.id)}
-                          onChange={() => toggleSelect(res.id)}
-                          className="accent-blue-600"
-                        />
-                      </td>
-                      <td className="p-3">{res.id}</td>
-                      <td className="p-3">
-                        <div className="font-semibold">{res.user.name}</div>
-                        <div className="text-gray-300 text-xs">
-                          {res.user.email}
-                        </div>
-                      </td>
-                      <td className="p-3 font-semibold">{res.space.name}</td>
-                      <td className="p-3">
-                        <div>{formatDate(res.startDateTime)}</div>
-                        <div className="text-gray-300 text-xs">
-                          {formatTime(res.startDateTime)} -{" "}
-                          {formatTime(res.endDateTime)}
-                        </div>
-                      </td>
-                      <td className="p-3 text-gray-300 text-sm">
-                        {getEquipmentSummary(res.reservationEquipment)}
-                      </td>
-                      <td className="p-3">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded ${
-                            res.status === ReservationStatus.Confirmed
-                              ? "bg-green-600/20 text-green-400"
-                              : res.status === ReservationStatus.Pending
-                              ? "bg-yellow-600/20 text-yellow-400"
-                              : res.status === ReservationStatus.Cancelled
-                              ? "bg-red-600/20 text-red-400"
-                              : "bg-blue-600/20 text-blue-400"
-                          }`}
-                        >
-                          <span className="h-2 w-2 rounded-full bg-current"></span>
-                          {res.status}
-                        </span>
-                      </td>
-                      <td className="p-3 flex gap-2">
-                        <button
-                          onClick={() => handleEdit(res)}
-                          className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1"
-                        >
-                          <Pencil size={14} /> Edit
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedReservations([res.id]);
-                            setShowConfirmModal(true);
-                          }}
-                          className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1"
-                        >
-                          <Trash2 size={14} /> Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          {viewMode === "table" ? (
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto text-sm">
+                <thead className="bg-gray-800 text-left uppercase text-gray-400">
+                  <tr>
+                    <th className="p-3">
+                      <input
+                        type="checkbox"
+                        onChange={toggleSelectAll}
+                        checked={
+                          selectedReservations.length === reservations.length &&
+                          reservations.length > 0
+                        }
+                        className="accent-blue-600"
+                      />
+                    </th>
+                    <th className="p-3">ID</th>
+                    <th className="p-3">User</th>
+                    <th className="p-3">Space</th>
+                    <th className="p-3">Date & Time</th>
+                    <th className="p-3">Equipment</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reservations
+                    .filter(
+                      (res) =>
+                        res.user.name
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase()) ||
+                        res.space.name
+                          .toLowerCase()
+                          .includes(searchTerm.toLowerCase())
+                    )
+                    .map((res) => (
+                      <tr
+                        className="border-b border-gray-700 hover:bg-gray-800"
+                        key={res.id}
+                      >
+                        <td className="p-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedReservations.includes(res.id)}
+                            onChange={() => toggleSelect(res.id)}
+                            className="accent-blue-600"
+                          />
+                        </td>
+                        <td className="p-3">{res.id}</td>
+                        <td className="p-3">
+                          <div className="font-semibold">{res.user.name}</div>
+                          <div className="text-gray-300 text-xs">
+                            {res.user.email}
+                          </div>
+                        </td>
+                        <td className="p-3 font-semibold">{res.space.name}</td>
+                        <td className="p-3">
+                          <div>{formatDate(res.startDateTime)}</div>
+                          <div className="text-gray-300 text-xs">
+                            {formatTime(res.startDateTime)} -{" "}
+                            {formatTime(res.endDateTime)}
+                          </div>
+                        </td>
+                        <td className="p-3 text-gray-300 text-sm">
+                          {getEquipmentSummary(res.reservationEquipment)}
+                        </td>
+                        <td className="p-3">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded ${
+                              res.status === ReservationStatus.Confirmed
+                                ? "bg-green-600/20 text-green-400"
+                                : res.status === ReservationStatus.Pending
+                                ? "bg-yellow-600/20 text-yellow-400"
+                                : res.status === ReservationStatus.Cancelled
+                                ? "bg-red-600/20 text-red-400"
+                                : "bg-blue-600/20 text-blue-400"
+                            }`}
+                          >
+                            <span className="h-2 w-2 rounded-full bg-current"></span>
+                            {res.status}
+                          </span>
+                        </td>
+                        <td className="p-3 flex gap-2">
+                          <button
+                            onClick={() => handleEdit(res)}
+                            className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1"
+                          >
+                            <Pencil size={14} /> Edit
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedReservations([res.id]);
+                              setShowConfirmModal(true);
+                            }}
+                            className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1"
+                          >
+                            <Trash2 size={14} /> Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">Calendar View</h3>
+              <div className="text-gray-400 text-center py-8">
+                <CalendarView reservations={reservations} />{" "}
+              </div>
+            </div>
+          )}
 
           {/* Delete Confirmation Modal */}
           {showConfirmModal && (
