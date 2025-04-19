@@ -1,7 +1,6 @@
 import Sidebar from "../components/Sidebar";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import React from "react";
 
 type User = {
   id: string;
@@ -24,7 +23,7 @@ enum ReservationStatus {
   Pending = "Pending",
   Confirmed = "Confirmed",
   Cancelled = "Cancelled",
-  Completed = "Completed"
+  Completed = "Completed",
 }
 
 type Reservation = {
@@ -52,16 +51,16 @@ const sampleReservations: Reservation[] = [
     user: {
       id: "user1",
       name: "Neil Sims",
-      email: "neil.sims@fswabs.com"
+      email: "neil.sims@fswabs.com",
     },
     space: {
       id: "space1",
-      name: "Conference Room A"
+      name: "Conference Room A",
     },
     reservationEquipment: [
       { id: "eq1", name: "Projector", quantity: 1 },
-      { id: "eq2", name: "Whiteboard", quantity: 1 }
-    ]
+      { id: "eq2", name: "Whiteboard", quantity: 1 },
+    ],
   },
   {
     id: "2",
@@ -74,24 +73,26 @@ const sampleReservations: Reservation[] = [
     user: {
       id: "user2",
       name: "Roberta Cazar",
-      email: "roberta.casas@fswabs.com"
+      email: "roberta.casas@fswabs.com",
     },
     space: {
       id: "space2",
-      name: "Meeting Room B"
+      name: "Meeting Room B",
     },
-    reservationEquipment: [
-      { id: "eq3", name: "TV Screen", quantity: 1 }
-    ]
-  }
+    reservationEquipment: [{ id: "eq3", name: "TV Screen", quantity: 1 }],
+  },
 ];
 
 const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
+  const [selectedReservations, setSelectedReservations] = useState<string[]>(
+    []
+  );
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
-  const [reservations, setReservations] = useState<Reservation[]>(sampleReservations);
+  const [editingReservation, setEditingReservation] =
+    useState<Reservation | null>(null);
+  const [reservations, setReservations] =
+    useState<Reservation[]>(sampleReservations);
 
   const toggleSelect = (id: string) => {
     setSelectedReservations((prev) =>
@@ -108,12 +109,14 @@ const Reservations = () => {
   };
 
   const handleDelete = (id: string) => {
-    setReservations(prev => prev.filter(res => res.id !== id));
-    setSelectedReservations(prev => prev.filter(resId => resId !== id));
+    setReservations((prev) => prev.filter((res) => res.id !== id));
+    setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
   };
 
   const handleBulkDelete = () => {
-    setReservations(prev => prev.filter(res => !selectedReservations.includes(res.id)));
+    setReservations((prev) =>
+      prev.filter((res) => !selectedReservations.includes(res.id))
+    );
     setSelectedReservations([]);
     setShowConfirmModal(false);
   };
@@ -123,8 +126,8 @@ const Reservations = () => {
   };
 
   const handleSaveEdit = (updatedReservation: Reservation) => {
-    setReservations(prev =>
-      prev.map(res =>
+    setReservations((prev) =>
+      prev.map((res) =>
         res.id === updatedReservation.id ? updatedReservation : res
       )
     );
@@ -133,21 +136,21 @@ const Reservations = () => {
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
-      hour: '2-digit',
-      minute: '2-digit'
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const getEquipmentSummary = (equipment: ReservationEquipment[]) => {
-    return equipment.map(e => `${e.name} (${e.quantity})`).join(", ");
+    return equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
   };
 
   return (
@@ -191,7 +194,10 @@ const Reservations = () => {
                     <input
                       type="checkbox"
                       onChange={toggleSelectAll}
-                      checked={selectedReservations.length === reservations.length && reservations.length > 0}
+                      checked={
+                        selectedReservations.length === reservations.length &&
+                        reservations.length > 0
+                      }
                       className="accent-blue-600"
                     />
                   </th>
@@ -206,9 +212,14 @@ const Reservations = () => {
               </thead>
               <tbody>
                 {reservations
-                  .filter((res) =>
-                    res.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    res.space.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  .filter(
+                    (res) =>
+                      res.user.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      res.space.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
                   )
                   .map((res) => (
                     <tr
@@ -226,13 +237,16 @@ const Reservations = () => {
                       <td className="p-3">{res.id}</td>
                       <td className="p-3">
                         <div className="font-semibold">{res.user.name}</div>
-                        <div className="text-gray-300 text-xs">{res.user.email}</div>
+                        <div className="text-gray-300 text-xs">
+                          {res.user.email}
+                        </div>
                       </td>
                       <td className="p-3 font-semibold">{res.space.name}</td>
                       <td className="p-3">
                         <div>{formatDate(res.startDateTime)}</div>
                         <div className="text-gray-300 text-xs">
-                          {formatTime(res.startDateTime)} - {formatTime(res.endDateTime)}
+                          {formatTime(res.startDateTime)} -{" "}
+                          {formatTime(res.endDateTime)}
                         </div>
                       </td>
                       <td className="p-3 text-gray-300 text-sm">
@@ -255,13 +269,13 @@ const Reservations = () => {
                         </span>
                       </td>
                       <td className="p-3 flex gap-2">
-                        <button 
+                        <button
                           onClick={() => handleEdit(res)}
                           className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1"
                         >
                           <Pencil size={14} /> Edit
                         </button>
-                        <button 
+                        <button
                           onClick={() => {
                             setSelectedReservations([res.id]);
                             setShowConfirmModal(true);
@@ -287,7 +301,8 @@ const Reservations = () => {
                   <span className="font-bold text-white">
                     {selectedReservations.length}
                   </span>{" "}
-                  selected reservation{selectedReservations.length > 1 ? "s" : ""}?
+                  selected reservation
+                  {selectedReservations.length > 1 ? "s" : ""}?
                 </p>
                 <div className="flex justify-end gap-2">
                   <button
@@ -319,78 +334,104 @@ const Reservations = () => {
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2">
                 <h3 className="text-lg font-semibold mb-4">Edit Reservation</h3>
-                
+
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">User</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      User
+                    </label>
                     <input
                       type="text"
                       value={editingReservation.user.name}
-                      onChange={(e) => setEditingReservation({
-                        ...editingReservation,
-                        user: {
-                          ...editingReservation.user,
-                          name: e.target.value
-                        }
-                      })}
+                      onChange={(e) =>
+                        setEditingReservation({
+                          ...editingReservation,
+                          user: {
+                            ...editingReservation.user,
+                            name: e.target.value,
+                          },
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Space</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Space
+                    </label>
                     <input
                       type="text"
                       value={editingReservation.space.name}
-                      onChange={(e) => setEditingReservation({
-                        ...editingReservation,
-                        space: {
-                          ...editingReservation.space,
-                          name: e.target.value
-                        }
-                      })}
+                      onChange={(e) =>
+                        setEditingReservation({
+                          ...editingReservation,
+                          space: {
+                            ...editingReservation.space,
+                            name: e.target.value,
+                          },
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Start Date</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Start Date
+                    </label>
                     <input
                       type="datetime-local"
-                      value={editingReservation.startDateTime.toISOString().slice(0, 16)}
-                      onChange={(e) => setEditingReservation({
-                        ...editingReservation,
-                        startDateTime: new Date(e.target.value)
-                      })}
+                      value={editingReservation.startDateTime
+                        .toISOString()
+                        .slice(0, 16)}
+                      onChange={(e) =>
+                        setEditingReservation({
+                          ...editingReservation,
+                          startDateTime: new Date(e.target.value),
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">End Date</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      End Date
+                    </label>
                     <input
                       type="datetime-local"
-                      value={editingReservation.endDateTime.toISOString().slice(0, 16)}
-                      onChange={(e) => setEditingReservation({
-                        ...editingReservation,
-                        endDateTime: new Date(e.target.value)
-                      })}
+                      value={editingReservation.endDateTime
+                        .toISOString()
+                        .slice(0, 16)}
+                      onChange={(e) =>
+                        setEditingReservation({
+                          ...editingReservation,
+                          endDateTime: new Date(e.target.value),
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Status</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Status
+                    </label>
                     <select
                       value={editingReservation.status}
-                      onChange={(e) => setEditingReservation({
-                        ...editingReservation,
-                        status: e.target.value as ReservationStatus
-                      })}
+                      onChange={(e) =>
+                        setEditingReservation({
+                          ...editingReservation,
+                          status: e.target.value as ReservationStatus,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
                       {Object.values(ReservationStatus).map((status) => (
-                        <option key={status} value={status}>{status}</option>
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
                       ))}
                     </select>
                   </div>
