@@ -114,6 +114,11 @@ const Users = () => {
   const activeUsers = users.filter((u) => u.status === "Active").length;
   const inactiveUsers = users.filter((u) => u.status === "Inactive").length;
 
+  const [showStatusFilter, setShowStatusFilter] = useState(false);
+  const [showRoleFilter, setShowRoleFilter] = useState(false);
+  const [filterRole, setFilterRole] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
+
   return (
     <div className="flex h-screen">
       <Sidebar />
@@ -188,8 +193,80 @@ const Users = () => {
                   <th className="p-3">ID</th>
                   <th className="p-3">Name</th>
                   <th className="p-3">Email</th>
-                  <th className="p-3">Role</th>
-                  <th className="p-3">Status</th>
+                  <th className="p-3 relative">
+                    <div className="flex items-center gap-1">
+                      Role
+                      <button
+                        onClick={() => setShowRoleFilter((prev) => !prev)}
+                        className="text-gray-400 hover:text-white"
+                        title="Filter by role"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M3 5a1 1 0 012 0v1h10V5a1 1 0 112 0v1a1 1 0 01-1 1H4a1 1 0 01-1-1V5zM5 9h10a1 1 0 010 2H5a1 1 0 010-2zm3 4h4a1 1 0 010 2H8a1 1 0 010-2z" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {showRoleFilter && (
+                      <div className="absolute top-full left-0 mt-2 bg-gray-800 border border-gray-700 rounded shadow-md z-10 p-2">
+                        <select
+                          value={filterRole}
+                          onChange={(e) => {
+                            setFilterRole(e.target.value);
+                            setShowRoleFilter(false);
+                          }}
+                          className="bg-gray-700 text-white p-1 text-xs rounded"
+                        >
+                          <option value="All">All</option>
+                          <option value="User">User</option>
+                          <option value="Admin">Admin</option>
+                        </select>
+                      </div>
+                    )}
+                  </th>
+
+                  <th className="p-3 relative">
+                    <div className="flex items-center gap-1">
+                      Status
+                      <button
+                        onClick={() => setShowStatusFilter((prev) => !prev)}
+                        className="text-gray-400 hover:text-white"
+                        title="Filter by status"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M3 5a1 1 0 012 0v1h10V5a1 1 0 112 0v1a1 1 0 01-1 1H4a1 1 0 01-1-1V5zM5 9h10a1 1 0 010 2H5a1 1 0 010-2zm3 4h4a1 1 0 010 2H8a1 1 0 010-2z" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    {showStatusFilter && (
+                      <div className="absolute top-full left-0 mt-2 bg-gray-800 border border-gray-700 rounded shadow-md z-10 p-2">
+                        <select
+                          value={filterStatus}
+                          onChange={(e) => {
+                            setFilterStatus(e.target.value);
+                            setShowStatusFilter(false);
+                          }}
+                          className="bg-gray-700 text-white p-1 text-xs rounded"
+                        >
+                          <option value="All">All</option>
+                          <option value="Active">Active</option>
+                          <option value="Inactive">Inactive</option>
+                        </select>
+                      </div>
+                    )}
+                  </th>
+
                   <th className="p-3">Actions</th>
                 </tr>
               </thead>
@@ -198,6 +275,14 @@ const Users = () => {
                   .filter((user) =>
                     user.name.toLowerCase().includes(searchTerm.toLowerCase())
                   )
+                  .filter(
+                    (user) => filterRole === "All" || user.role === filterRole
+                  )
+                  .filter(
+                    (user) =>
+                      filterStatus === "All" || user.status === filterStatus
+                  )
+
                   .map((user) => (
                     <tr
                       className="border-b border-gray-700 hover:bg-gray-800"
