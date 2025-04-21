@@ -2,6 +2,7 @@ import Sidebar from "../components/Sidebar";
 import CalendarView from "../pages/CalendarView";
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
+import React from "react";
 
 type User = {
   id: string;
