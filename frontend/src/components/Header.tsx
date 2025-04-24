@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
@@ -13,21 +14,22 @@ const Header = () => {
   return (
     <header className="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
       <div className="flex items-center gap-2">
-        <div className="text-2xl font-bold text-pink-700">😃</div>
-        <span className="font-bold uppercase text-sm tracking-widest">
-          CoSpace
+        <div className="text-3xl font-extrabold text-blue-600">☉</div>
+        <span className="text-2xl font-semibold tracking-wide text-gray-800">
+          Co<span className="text-blue-600">Space</span>
         </span>
       </div>
 
-      <nav className="flex gap-6">
+
+      <nav className="flex gap-10">
         {navItems.map((item) => (
           <Link
             key={item.name}
             to={item.path}
             className={`font-medium ${
               location.pathname === item.path
-                ? "text-pink-600"
-                : "text-black hover:text-pink-600"
+                ? "text-blue-600"
+                : "text-black hover:text-blue-600"
             }`}
           >
             {item.name}
@@ -37,7 +39,7 @@ const Header = () => {
 
       <Link
         to="/pricingPlans"
-        className="bg-pink-700 text-white font-semibold py-2 px-5 rounded-xl text-sm"
+        className="bg-blue-700 text-white font-semibold py-2 px-7 rounded-xl text-md"
       >
         Pricing Plans
       </Link>

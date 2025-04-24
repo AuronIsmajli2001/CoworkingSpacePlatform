@@ -59,7 +59,7 @@ const CalendarView = ({ reservations }: { reservations: Reservation[] }) => {
 
   return (
     <div
-      style={{ height: "500px", padding: "10px", backgroundColor: "#1f2937" }}
+      style={{ height: "467px", padding: "10px", backgroundColor: "#1f2937" }}
     >
       <Calendar
         localizer={localizer}

@@ -1,14 +1,146 @@
+import React from "react";
 import Header from "../components/Header";
+import { 
+  Wifi, 
+  MapPin,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  Youtube,
+  CreditCard,
+  Wallet,
+  Coffee,
+  Mail,
+  Phone, 
+  Baby, 
+  DollarSign, 
+  Utensils,
+  MessageCircle, 
+} from 'lucide-react';
+
 const Home = () => {
   return (
     <>
       <Header />
-      <div className="p-6">
-        <h1 className="text-3xl font-bold">Welcome to Home Page</h1>
-        <p className="mt-4 text-gray-500">This is your homepage content.</p>
+      
+     {/* Hero Section */}
+<section className="relative py-32 min-h-[650px] flex items-center">
+  {/* Background Image with Dark Overlay */}
+  <div className="absolute inset-0 z-0">
+    <img
+      src="/Images/2.png" 
+      alt="CoSpace Workspace"
+      className="w-full h-full object-cover"
+    />
+    <div className="absolute inset-0 bg-black/40"></div>
+  </div>
+
+  {/* Content */}
+  <div className="container mx-auto px-6 relative z-10 text-center">
+    <h1 className="text-4xl md:text-5xl font-bold mb-7 text-white drop-shadow-lg">
+      CHANGING THE WAY WORK HAPPENS IN PRISHTINA
+    </h1>
+    <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md">
+      Join the CoSpace movement and experience the game-changing way work happens in Prishtina.
+    </p>
+    <div className="flex flex-col sm:flex-row justify-center gap-4">
+      <button className="bg-white text-gray-900 px-8 py-3 rounded-xl 
+                          font-medium hover:bg-gray-100 hover:text-blue-600 
+                          transition-all duration-300 shadow-lg hover:shadow-xl">
+        CONTACT US
+      </button>
+      <button className="
+                      border-2 border-white text-white px-8 py-3 rounded-xl font-medium
+                      transition-all duration-300 shadow-lg
+                      hover:border-blue-500 
+                      hover:bg-white/10 hover:shadow-blue-500/30
+                      active:scale-95
+                    ">
+                      BOOK A TOUR
+</button>
+    </div>
+  </div>
+</section>
+
+    {/* About Section */}
+        <section className="py-16 bg-white ">
+      <div className="container mx-auto px-8 max-w-7xl border border-gray-200 rounded-xl 
+               shadow-[0_0_10px_5px_rgba(59,200,246,0.2)]">
+        <div className="flex flex-col lg:flex-row gap-12 items-center p-8">
+          {/* Left Column - Content */}
+          <div className="lg:w-1/2 text-center">
+            <span className="text-sm font-bold text-blue-600 tracking-wider">ABOUT</span>
+            <h2 className="text-4xl font-bold mt-2 mb-4 text-gray-800">CoSpace</h2>
+            <h3 className="text-[20px] font-bold mb-6 text-blue-600">Work for Yourself, not by Yourself!</h3>
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              A space to build connections and be productive. Meet with your clients in a space that is more professional and welcoming than a coffee shop. A space that cares about your whole self, not just your work self.
+            </p>
+            <button className="bg-blue-600 text-white font-medium border-gray-700 px-7 py-2 rounded-xl 
+                  transition-all duration-300 
+                  hover:bg-white hover:text-black 
+                  hover:shadow-md hover:shadow-blue-500/30">
+              Learn More
+            </button>
+          </div>
+
+          {/* Right Column - Amenities Cards */}
+          <div className="lg:w-1/2">
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { 
+                  icon: <Wifi className="w-6 h-6 text-blue-600" />, 
+                  text: 'High-Speed Internet', 
+                  border: 'border-blue-200'
+                },
+                { 
+                  icon: <MapPin className="w-6 h-6 text-blue-600" />, 
+                  text: 'Convenient Location', 
+                  bg: 'bg-blue-50', 
+                  border: 'border-blue-200'
+                },
+                { 
+                  icon: <Coffee className="w-6 h-6 text-blue-600" />, 
+                  text: 'CoSpace Coffee Bar', 
+                  bg: 'bg-blue-50', 
+                  border: 'border-blue-200'
+                },
+                { 
+                  icon: <Baby className="w-6 h-6 text-blue-600" />, 
+                  text: 'CoSpace Kids Area', 
+                  border: 'border-blue-200'
+                },
+                { 
+                  icon: <DollarSign className="w-6 h-6 text-blue-600" />, 
+                  text: 'Affordable Price', 
+                  border: 'border-blue-200'
+                },
+                { 
+                  icon: <Utensils className="w-6 h-6 text-blue-600" />, 
+                  text: 'Equipped Kitchen', 
+                  bg: 'bg-blue-50', 
+                  border: 'border-blue-200'
+                }
+              ].map((item, index) => (
+                <div 
+                  key={index}
+                  className={`p-5 rounded-xl border ${item.border} ${item.bg}
+                            transition-all duration-200 hover:shadow-md
+                            hover:border-blue-300 hover:translate-y-[-2px]`}
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="p-3 bg-white rounded-lg border border-blue-100">
+                      {item.icon}
+                    </div>
+                    <span className="font-medium text-gray-800">{item.text}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-<<<<<<< Updated upstream
-=======
+
     </section>
 
  
@@ -130,12 +262,10 @@ const Home = () => {
       <h2 className="text-3xl font-extrabold tracking-wider">
         Co<span className="text-blue-500">Space</span>
       </h2>
-
       <p className="max-w-xs text-sm text-neutral-300">
         Work for yourself, not by yourself. Flexible, connected, inspiring.
       </p>
     </div>
-
     {/* 2️⃣ Socials + payment */}
     <div className="space-y-10">
       {/* socials */}
@@ -144,7 +274,6 @@ const Home = () => {
         <p className="text-neutral-400 text-sm mb-6">
           A monthly digest of the latest news and resources.
         </p>
-
         <div className="flex gap-3">
           {[Facebook, Instagram, Twitter, Linkedin, Youtube].map((Icon, i) => (
             <a
@@ -208,8 +337,6 @@ const Home = () => {
           </a>
         </div>
       </footer>
-
->>>>>>> Stashed changes
     </>
   );
 };
