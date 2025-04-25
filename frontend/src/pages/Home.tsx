@@ -25,7 +25,7 @@ const Home = () => {
       <Header />
       
      {/* Hero Section */}
-<section className="relative py-32 min-h-[650px] flex items-center">
+<section className="relative py-32 min-h-[800px] flex items-center">
   {/* Background Image with Dark Overlay */}
   <div className="absolute inset-0 z-0">
     <img
@@ -143,68 +143,74 @@ const Home = () => {
 
     </section>
 
+    
+
  
           {/* Facilities Section */}
-      <section className="py-16 bg-white isolate ">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">Space Facilities & Amenities</h2>
-          <h3 className="text-5xl font-bold text-black-600 mb-6">Flexible Workplace</h3>
-          
-          <p className="text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed text-lg">
-            We offer premium facilities including meeting rooms, conference spaces, kitchen areas, kids' corner, rest areas, coffee bar, and outdoor veranda.
-          </p>
-          
-          <button className="bg-blue-600 text-white font-medium px-7 py-3 rounded-xl
-                          border-2 border-transparent
-                          transition-all duration-300
-                          hover:bg-white hover:text-blue-600 hover:border-blue-600 hover:shadow-lg">
-                Explore more
-              </button>
+            <section className="py-16 bg-white isolate ">
+              <div className="container mx-auto px-6 text-center">
+                <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">Space Facilities & Amenities</h2>
+                <h3 className="text-5xl font-bold text-black-600 mb-6">Flexible Workplace</h3>
+                
+                <p className="text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed text-lg">
+                  We offer premium facilities including meeting rooms, conference spaces, kitchen areas, kids' corner, rest areas, coffee bar, and outdoor veranda.
+                </p>
+                
+                <button className="bg-blue-600 text-white font-medium px-7 py-3 rounded-xl
+                                border-2 border-transparent
+                                transition-all duration-300
+                                hover:bg-white hover:text-blue-600 hover:border-blue-600 hover:shadow-lg">
+                      Explore more
+                    </button>
 
-    
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 max-w-7xl mx-auto">
-      {[
-        { 
-          name: 'Conference Room 1', 
-          location: 'CoSpace 1', 
-          image: '/Images/Conference_1.jpg',
-        },
-        { 
-          name: 'Conference Room 2', 
-          location: 'CoSpace 2', 
-          image: '/Images/Conference_2.jpg',
-        },
-        { 
-          name: 'Executive Suite', 
-          location: 'CoSpace 1', 
-          image: '/Images/meeting-rooms-2.jpg',
-        }
-        
-      ].map((room, index) => (
-        <div key={index} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 group">
-          <div className="relative pb-[80%] overflow-hidden">
-          <img
-            src={room.image}
-            alt={`${room.name} ${room.location}`}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-        
           
-          {/* Content */}
-          <div className="p-5 text-left">
-            <h4 className="font-bold text-lg text-gray-800">{room.name}</h4>
-            <p className="text-blue-600 font-medium">{room.location}</p>
-            <button className="mt-3 text-blue-600 text-sm font-semibold hover:text-blue-800 transition">
-              View details →
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
+                      {[
+                        {
+                          name: "Conference Room 1",
+                          location: "CoSpace 1",
+                          image: "/Images/Conference_1.jpg",
+                        },
+                        {
+                          name: "Conference Room 2",
+                          location: "CoSpace 2",
+                          image: "/Images/Conference_2.jpg",
+                        },
+                        {
+                          name: "Executive Suite",
+                          location: "CoSpace 1",
+                          image: "/Images/meeting-rooms-2.jpg",
+                        },
+                      ].map((room, index) => (
+                        <div
+                          key={index}
+                          className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
+                        >
 
+                          {/* Image */}
+                          <div className="relative pb-[70%] overflow-hidden">
+                            <img
+                              src={room.image}
+                              alt={`${room.name} ${room.location}`}
+                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                          </div>
+
+                          {/* Content */}
+                          <div className="p-6 text-left">
+                            <h4 className="text-2xl font-semibold text-gray-800 mb-1">{room.name}</h4>
+                            <p className="text-gray-600 text-sm mb-3">{room.location}</p>
+                            <div className="flex justify-between items-center">
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    </div>
+                </section>
+
+        
         {/* Address & Directions Section */}
       <section className="relative py-24">
         {/* Background Image */}
@@ -254,11 +260,70 @@ const Home = () => {
   </div>
 </section>
 
+
+  {/* Testimonials */}
+  <section className="bg-white py-20">
+            <div className="container mx-auto px-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800 mb-12">What Our Members Say</h2>
+              
+              <div className="grid gap-10 md:grid-cols-3 max-w-6xl mx-auto">
+      {[
+        {
+          name: "Arbesa Gashi",
+          img: "/Images/u1.jpg", // update with actual path
+          quote: "CoSpace has been a game changer for my freelance journey. The vibe, the people, the space – 10/10.",
+          rating: 5,
+        },
+        {
+          name: "Drilon Sevdiu",
+          img: "/Images/u2.avif",
+          quote: "I found my focus and community here. I never thought coworking could feel this empowering.",
+          rating: 5,
+        },
+        {
+          name: "Marigona Krasniqi",
+          img: "/Images/u4.webp",
+          quote: "Everything just works. The coffee, the Wi-Fi, the support. CoSpace delivers real value every day.",
+          rating: 4,
+        },
+      ].map((person, i) => (
+        <div
+          key={i}
+          className="rounded-3xl shadow-lg overflow-hidden bg-white flex flex-col items-center text-left"
+        >
+          <img
+            src={person.img}
+            alt={person.name}
+            className="w-full h-72 object-cover"
+          />
+          <div className="p-6 w-full flex flex-col justify-between h-full">
+            <p className="text-gray-700 text-base mb-6 leading-relaxed">“{person.quote}”</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-900">{person.name}</h4>
+                <div className="flex gap-1 mt-1">
+                  {Array.from({ length: person.rating }).map((_, i) => (
+                    <span key={i}>⭐</span>
+                  ))}
+                </div>
+              </div>
+              <button className="bg-gray-100 text-sm font-semibold px-4 py-2 rounded-full">
+                Member
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
 {/* Footer */}
 <footer className="bg-neutral-900 text-white">
   {/* top area */}
   <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
     <div className="space-y-6">
+
       <h2 className="text-3xl font-extrabold tracking-wider">
         Co<span className="text-blue-500">Space</span>
       </h2>
@@ -271,7 +336,7 @@ const Home = () => {
       {/* socials */}
       <div>
         <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
-        <p className="text-neutral-400 text-sm mb-6">
+        <p className="text-white text-[16px] mb-6">
           A monthly digest of the latest news and resources.
         </p>
         <div className="flex gap-3">
@@ -282,7 +347,7 @@ const Home = () => {
               className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700
                          flex items-center justify-center transition"
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-5 h-5 text-white" />
             </a>
           ))}
         </div>
@@ -298,7 +363,7 @@ const Home = () => {
               className="w-10 h-10 rounded-xl bg-blue-600 flex items-center
                          justify-center"
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-5 h-5 text-white" />
             </span>
           ))}
         </div>
@@ -316,7 +381,7 @@ const Home = () => {
       ].map(({ icon: Icon, text }) => (
         <div key={text} className="flex items-center gap-4">
           <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-            <Icon className="w-5 h-5" />
+            <Icon className="w-5 h-5 text-white" />
           </span>
           <span>{text}</span>
         </div>
