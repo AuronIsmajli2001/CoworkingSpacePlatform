@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.IUnitOfWork;
+using Application.Interfaces.IUnitOfWork;
 using Domain.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,7 +16,7 @@ public class AuthService : IAuthService
 {
     private readonly IConfiguration _configuration;
     private readonly IUnitOfWork _unitOfWork;
-    private const int BCRYPT_WORK_FACTOR = 12; // Good security balance (10-12 is recommended)
+    private const int BCRYPT_WORK_FACTOR = 12; 
     private const int REFRESH_TOKEN_LIFETIME_DAYS = 30;
 
     public AuthService(IConfiguration configuration, IUnitOfWork unitOfWork)
@@ -65,43 +65,47 @@ public class AuthService : IAuthService
     }
 
     public async Task<AuthTokens> RefreshToken(string accessToken, string refreshToken)
-{
-    // 1. Validate the expired access token
-    var principal = GetPrincipalFromExpiredToken(accessToken);
-    var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
-    
-    if (userIdClaim == null)
-        throw new SecurityTokenException("Invalid token claims");
+    {
+        // 1. Validate the expired access token
+        var principal = GetPrincipalFromExpiredToken(accessToken);
+        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
 
-    var userId = userIdClaim.Value;
+        if (userIdClaim == null)
+            throw new SecurityTokenException("Invalid token claims");
 
-    // 2. Validate the refresh token
-    var storedToken = await _unitOfWork.Repository<RefreshToken>()
-        .GetByCondition(rt => 
-            rt.Token == refreshToken &&
-            rt.UserId == userId &&
-            rt.Expires > DateTime.UtcNow &&
-            rt.Revoked == null)
-        .FirstOrDefaultAsync();
+        var userId = userIdClaim.Value;
 
-    if (storedToken == null)
-        throw new SecurityTokenException("Invalid refresh token");
+        // 2. Validate the refresh token
+        var storedToken = await _unitOfWork.Repository<RefreshToken>()
+            .GetByCondition(rt =>
+                rt.Token == refreshToken &&
+                rt.UserId == userId &&
+                rt.Expires > DateTime.UtcNow &&
+                rt.Revoked == null)
+            .FirstOrDefaultAsync();
 
-    // 3. Revoke the old token
-    storedToken.Revoked = DateTime.UtcNow;
-    _unitOfWork.Repository<RefreshToken>().Update(storedToken);
-    await _unitOfWork.CompleteAsync();
-    
-    // 4. Get user and generate new tokens
-    var user = await _unitOfWork.Repository<User>()
-        .GetByCondition(u => u.Id == userId)
-        .FirstOrDefaultAsync();
+        if (storedToken == null)
+            throw new SecurityTokenException("Invalid refresh token");
 
-    if (user == null)
-        throw new SecurityTokenException("User not found");
+        // 3. Revoke the old token
+        storedToken.Revoked = DateTime.UtcNow;
+        _unitOfWork.Repository<RefreshToken>().Update(storedToken);
 
-    return await GenerateTokens(user);
-}
+        // 4. Get user and generate new tokens
+        var user = await _unitOfWork.Repository<User>()
+            .GetByCondition(u => u.Id == userId)
+            .FirstOrDefaultAsync();
+
+        if (user == null)
+            throw new SecurityTokenException("User not found");
+
+        // 5. Generate new tokens (this creates a new refresh token)
+        var newTokens = await GenerateTokens(user);
+
+        await _unitOfWork.CompleteAsync();
+
+        return newTokens;
+    }
 
     public async Task RevokeRefreshToken(string refreshToken)
     {
@@ -160,6 +164,20 @@ public class AuthService : IAuthService
             Created = DateTime.UtcNow
         };
 
+        // Revoke all previous active refresh tokens for this user
+        var previousTokens = await _unitOfWork.Repository<RefreshToken>()
+            .GetByCondition(rt =>
+                rt.UserId == userId &&
+                rt.Expires > DateTime.UtcNow &&
+                rt.Revoked == null)
+            .ToListAsync();
+
+        foreach (var token in previousTokens)
+        {
+            token.Revoked = DateTime.UtcNow;
+            _unitOfWork.Repository<RefreshToken>().Update(token);
+        }
+
         _unitOfWork.Repository<RefreshToken>().Create(refreshToken);
         await _unitOfWork.CompleteAsync();
 
@@ -170,15 +188,25 @@ public class AuthService : IAuthService
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
-            ValidateAudience = false,
-            ValidateIssuer = false,
+            ValidateAudience = true,
+            ValidAudience = _configuration["Jwt:Audience"],
+            ValidateIssuer = true,
+            ValidIssuer = _configuration["Jwt:Issuer"],
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
-            ValidateLifetime = false
+            ValidateLifetime = false // We validate expiration manually
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+
+        // Additional validation for algorithm
+        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+        {
+            throw new SecurityTokenException("Invalid token");
+        }
+
         return principal;
     }
 
