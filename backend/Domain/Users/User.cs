@@ -27,5 +27,7 @@ namespace Domain.Users
         public DateTime Created_at { get; set; }
         public bool Active { get; set; }
         public Membership Membership { get; set; }
+        public ICollection<RefreshToken> RefreshTokens { get; set; }
+
     }
 }
