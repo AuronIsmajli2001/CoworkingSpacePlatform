@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./dashboard/pages/Dashboard";
 import Users from "./dashboard/pages/Users";
-// import Spaces from "./dashboard/pages/Spaces";
+import Spaces from "./dashboard/pages/Spaces";
 import Reservations from "./dashboard/pages/Reservations";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -22,7 +22,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
         <Route path="/reservations" element={<Reservations />} />
-        {/* <Route path="/spaces" element={<Spaces />} /> */}
+        <Route path="/spaces" element={<Spaces />} /> 
       </Routes>
     </Router>
   );
