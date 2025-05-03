@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { Lock, Mail, User, Eye, EyeOff } from 'lucide-react';
 import React from 'react';
+import Header from '../components/Header';
 
 const Auth = () => {
+   
+    
+
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -64,11 +68,17 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white p-4">
-      <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {isLogin ? 'Login' : 'Create Account'}
-        </h2>
+    
+    <div className="flex flex-col min-h-screen bg-gray-900 text-white">
+      {/* Header at the top */}
+      <Header />
+      
+      {/* Centered auth form */}
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            {isLogin ? 'Login' : 'Create Account'}
+          </h2>
 
         <form onSubmit={handleSubmit}>
           {!isLogin && (
@@ -157,6 +167,7 @@ const Auth = () => {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };
