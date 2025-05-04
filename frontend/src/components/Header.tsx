@@ -9,7 +9,7 @@ const Header = () => {
     { name: "About", path: "/about" },
     { name: "Space", path: "/space" },
     { name: "Contact", path: "/contact" },
-    { name: "Login", path: "/auth"},
+    { name: "Pricing Plans", path: "/pricingPlans"},
   ];
 
   return (
@@ -39,10 +39,10 @@ const Header = () => {
       </nav>
 
       <Link
-        to="/pricingPlans"
+        to="/auth"
         className="bg-blue-700 text-white font-semibold py-2 px-7 rounded-xl text-md"
       >
-        Pricing Plans
+        Log In
       </Link>
     </header>
   );

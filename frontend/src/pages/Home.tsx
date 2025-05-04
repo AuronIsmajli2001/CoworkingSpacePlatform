@@ -29,7 +29,7 @@ const Home = () => {
   {/* Background Image with Dark Overlay */}
   <div className="absolute inset-0 z-0">
     <img
-      src="/Images/os.jpg" 
+      src="/Images/office_pic.jpg" 
       alt="CoSpace Workspace"
       className="w-full h-full object-cover"
     />
@@ -40,7 +40,7 @@ const Home = () => {
   <div className="container mx-auto px-6 relative z-10 text-center mt-16">
   <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
     <span className="block mb-4">CHANGING THE WAY WORK</span>
-    <span className="block">HAPPENS IN <span className="text-blue-600">PRISHTINA</span></span>
+    <span className="block">HAPPENS IN <span className="text-blue-500">PRISHTINA</span></span>
   </h1>
     <p className="text-xl mb-8 max-w-2xl mx-auto text-white drop-shadow-md">
       Join the CoSpace movement and experience the game-changing way work happens in Prishtina.
@@ -320,7 +320,7 @@ const Home = () => {
 </section>
 
 {/* Footer */}
-<footer className="bg-neutral-900 text-white">
+<footer className="bg-gray-900 text-white">
   <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
     <div className="space-y-6">
       <h2 className="text-3xl font-extrabold tracking-wider">
