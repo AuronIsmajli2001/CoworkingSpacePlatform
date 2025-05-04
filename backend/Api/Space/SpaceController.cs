@@ -58,7 +58,7 @@ namespace Api.Space
                     Price = spaces.Price,
                 }).ToList();
 
-                return Ok(spaceDto);
+                return Ok(spaces);
 
             }
             catch (Exception ex)
