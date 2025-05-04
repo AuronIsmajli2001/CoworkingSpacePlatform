@@ -97,6 +97,7 @@ namespace Application.Services.Spaces
                     Description = s.Description,
                     Price = s.Price,
                     Type = s.Type,
+                    Image_URL = s.Image_URL,
                 }).ToList();
 
                 _logger.LogInformation("Successfully fetched {Count} spaces from the database.", spaceDTOs.Count);
