@@ -25,11 +25,11 @@ const Home = () => {
       <Header />
       
      {/* Hero Section */}
-<section className="relative py-32 min-h-[800px] flex items-center">
+<section className="relative py-40 min-h-[800px] flex items-center">
   {/* Background Image with Dark Overlay */}
   <div className="absolute inset-0 z-0">
     <img
-      src="/Images/2.png" 
+      src="/Images/os.jpg" 
       alt="CoSpace Workspace"
       className="w-full h-full object-cover"
     />
@@ -37,11 +37,12 @@ const Home = () => {
   </div>
 
   {/* Content */}
-  <div className="container mx-auto px-6 relative z-10 text-center">
-    <h1 className="text-4xl md:text-5xl font-bold mb-7 text-white drop-shadow-lg">
-      CHANGING THE WAY WORK HAPPENS IN PRISHTINA
-    </h1>
-    <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90 drop-shadow-md">
+  <div className="container mx-auto px-6 relative z-10 text-center mt-16">
+  <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
+    <span className="block mb-4">CHANGING THE WAY WORK</span>
+    <span className="block">HAPPENS IN <span className="text-blue-600">PRISHTINA</span></span>
+  </h1>
+    <p className="text-xl mb-8 max-w-2xl mx-auto text-white drop-shadow-md">
       Join the CoSpace movement and experience the game-changing way work happens in Prishtina.
     </p>
     <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -270,7 +271,7 @@ const Home = () => {
       {[
         {
           name: "Arbesa Gashi",
-          img: "/Images/u1.jpg", // update with actual path
+          img: "/Images/u1.jpg", 
           quote: "CoSpace has been a game changer for my freelance journey. The vibe, the people, the space – 10/10.",
           rating: 5,
         },
@@ -320,10 +321,8 @@ const Home = () => {
 
 {/* Footer */}
 <footer className="bg-neutral-900 text-white">
-  {/* top area */}
   <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
     <div className="space-y-6">
-
       <h2 className="text-3xl font-extrabold tracking-wider">
         Co<span className="text-blue-500">Space</span>
       </h2>
