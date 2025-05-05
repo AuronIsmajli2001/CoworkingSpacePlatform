@@ -391,8 +391,7 @@ const Home = () => {
   {/* bottom bar */}
         <div
           className="border-t border-neutral-700 text-sm flex flex-col md:flex-row
-                    items-center justify-between gap-4 px-6 py-6 container mx-auto"
-        >
+                    items-center justify-between gap-4 px-6 py-6 container mx-auto">
           <span>
             © {new Date().getFullYear()} CoSpace. All rights reserved.
           </span>
