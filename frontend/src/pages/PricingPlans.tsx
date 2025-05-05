@@ -3,8 +3,15 @@ import Header from "../components/Header";
 import { Check, Zap, Star, Coffee, User, Clock, Calendar, Printer, Wifi, 
   Lock, Facebook, Instagram, Twitter, Linkedin, Youtube, Wallet, CreditCard,
    Phone, Mail, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const PricingPlans = () => {
+
+  const navigate = useNavigate();
+  
+  const handleContactClick = () => {
+    navigate('/contact'); 
+  };
   return (
     <>
       <Header />
@@ -58,8 +65,9 @@ const PricingPlans = () => {
                 <h4 className="font-medium text-gray-900 mb-2">Additional Services:</h4>
                 <p className="text-gray-600 text-sm">Printing & scanner access, parking, private locker, etc.</p>
               </div>
-              <button className="w-full py-3 px-6 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition">
-                Contact Us
+              <button onClick={handleContactClick}
+                        className="w-full py-3 px-6 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition">
+                        Contact Us
               </button>
             </div>
             {/* Desk Plans */}
@@ -127,8 +135,9 @@ const PricingPlans = () => {
                 <h4 className="font-medium text-gray-900 mb-2">Additional services:</h4>
                 <p className="text-gray-600 text-sm">Parking, in-house catering, professional photos, office supplies</p>
               </div>
-              <button className="w-full py-3 px-6 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition">
-                Contact Us
+              <button onClick={handleContactClick}
+                      className="w-full py-3 px-6 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition">
+                      Contact Us
               </button>
             </div>
             {/* Private Office */}
@@ -159,11 +168,27 @@ const PricingPlans = () => {
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-3 px-6 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition">
+              <button onClick={handleContactClick}
+                className="w-full py-3 px-6 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition">
                 Contact Us
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+
+ {/* CTA Section */}
+ <section className="py-16 bg-blue-600 text-white text-center">
+        <div className="container mx-auto px-6 max-w-2xl">
+          <h2 className="text-3xl font-bold mb-6">Still have questions?</h2>
+          <p className="text-xl mb-8 opacity-90">
+            Our team is happy to help you choose the perfect plan.
+          </p>
+          <button onClick={handleContactClick}
+          className="bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
+          Contact Us
+        </button>
         </div>
       </section>
 
