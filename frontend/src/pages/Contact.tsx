@@ -1,5 +1,5 @@
 import React from "react";
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, Send } from 'lucide-react';
 import Header from "../components/Header";
 const Contact = () => {
   return (
@@ -57,6 +57,72 @@ const Contact = () => {
                 <p className="text-gray-500 text-sm">{item.subtitle}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+
+
+              {/* Contact Form */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-6 max-w-2xl">
+          <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12">
+            <h2 className="text-3xl font-bold mb-6 text-center">Send us a message</h2>
+            <form className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="How can we help?"
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  rows={4}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Your message..."
+                ></textarea>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2"
+              >
+                <Send className="w-5 h-5" />
+                Send Message
+              </button>
+            </form>
           </div>
         </div>
       </section>
