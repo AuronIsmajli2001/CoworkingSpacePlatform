@@ -231,7 +231,6 @@ const Home = () => {
                 </section>
 
         
-        {/* Address & Directions Section */}
       {/* Facilities Section */}
       <section className="py-16 bg-white isolate ">
         <div className="container mx-auto px-6 text-center">
