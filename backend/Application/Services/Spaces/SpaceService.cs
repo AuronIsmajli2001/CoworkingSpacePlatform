@@ -91,6 +91,7 @@ namespace Application.Services.Spaces
 
                 var spaceDTOs = spaces.Select(s => new SpaceDTORead
                 {
+                    Id = s.Id,
                     Capacity = s.Capacity,
                     Name = s.Name,
                     Location = s.Location,
@@ -134,6 +135,8 @@ namespace Application.Services.Spaces
 
                 return new SpaceDTORead
                 {
+                    Id = space.Id,
+                    Image_URL = space.Image_URL,
                     Name = space.Name,
                     Location = space.Location,
                     Description = space.Description,

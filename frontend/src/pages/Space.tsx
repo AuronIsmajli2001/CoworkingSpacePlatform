@@ -1,19 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import Room1 from "../images/Conferenceroom1.jpg";
-import Room3 from "../images/Conferenceroom3.jpg";
-import Room4 from "../images/Conferenceroom4.jpg";
-import Room6 from "../images/Conferenceroom6.jpg";
-import DedicatedDesk1 from "../images/DedicatedDesk1.jpg";
-import DedicatedDesk2 from "../images/DedicatedDesk2.png";
-import private_office_1 from "../images/private_office_1.png";
-import private_office_2 from "../images/private_office_2.png";
-import private_office_3 from "../images/private_office_3.png";
-import private_office_4 from "../images/private_office_4.png";
-import eventArea from "../images/eventArea.jpeg";
-import eventArea2 from "../images/eventArea2.jpeg";
-import Kitchen from "../images/Kitchen.jpeg";
+import { useNavigate } from "react-router-dom";
+
 import Header from "../components/Header";
 
 type Space = {
@@ -117,6 +106,7 @@ const categories = [
 export default function Spaces() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -127,7 +117,9 @@ export default function Spaces() {
 
         setSpaces(
           res.data.map((space: any) => ({
-            ...space,
+            id: space.id,
+            name: space.name,
+            type: space.type,
             imageUrl: space.image_URL, // map it to match your frontend type
           }))
         );
@@ -186,6 +178,7 @@ export default function Spaces() {
                 className="bg-white rounded-2xl overflow-hidden shadow transition hover:shadow-lg hover:-translate-y-1 duration-400"
               >
                 <img
+                  onClick={() => navigate(`/space/${space.id}`)}
                   src={space.imageUrl}
                   alt={space.name}
                   className="w-full h-56 min-h-[300px] object-cover rounded-t-2xl"
@@ -194,7 +187,10 @@ export default function Spaces() {
                   <h3 className="text-lg font-semibold text-gray-800">
                     {space.name}
                   </h3>
-                  <button className="text-blue-600 font-medium text-sm hover:underline">
+                  <button
+                    onClick={() => navigate(`/space/${space.id}`)}
+                    className="text-blue-600 font-medium text-sm hover:underline"
+                  >
                     View
                   </button>
                 </div>
