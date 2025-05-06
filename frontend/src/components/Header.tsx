@@ -10,6 +10,8 @@ const Header = () => {
     { name: "Space", path: "/space" },
     { name: "Contact", path: "/contact" },
     { name: "Pricing Plans", path: "/pricingPlans"},
+    { name: "Login", path: "/auth" },
+    { name: "My reservations", path: "/myreservations" },
   ];
 
   return (
@@ -20,7 +22,6 @@ const Header = () => {
           Co<span className="text-blue-600">Space</span>
         </span>
       </div>
-
 
       <nav className="flex gap-10">
         {navItems.map((item) => (

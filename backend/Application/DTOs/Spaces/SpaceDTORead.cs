@@ -15,6 +15,7 @@ namespace Application.DTOs.Spaces
         public int Capacity { get; set; }
         public double Price { get; set; }
         public string Location { get; set; }
+        public string Image_URL { get; set; }
         public List<SpaceEquipmentDTORead> SpaceEquipments { get; set; } = new List<SpaceEquipmentDTORead>();
     }
 }
