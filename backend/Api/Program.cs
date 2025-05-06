@@ -120,7 +120,7 @@ public class Program
             c.RoutePrefix = "swagger"; // Access Swagger UI at /swagger
         });
 
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         app.UseStaticFiles();
 
 

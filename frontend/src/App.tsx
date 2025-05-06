@@ -9,6 +9,8 @@ import Space from "./pages/Space";
 import SpaceDetails from "./pages/SpaceDetails";
 import Contact from "./pages/Contact";
 import PricingPlans from "./pages/PricingPlans";
+import React from "react";
+import Auth from "./pages/Auth";
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         <Route path="/pricingplans" element={<PricingPlans />} />
         <Route path="/space" element={<Space />} />
         <Route path="/space/:id" element={<SpaceDetails />} />
+        <Route path="/auth" element={<Auth />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
