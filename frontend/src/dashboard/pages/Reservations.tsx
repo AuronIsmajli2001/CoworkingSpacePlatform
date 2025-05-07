@@ -1,7 +1,7 @@
 import Sidebar from "../components/Sidebar";
 import CalendarView from "../pages/CalendarView";
 import { useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
 
 type User = {
@@ -87,15 +87,20 @@ const sampleReservations: Reservation[] = [
 
 const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedReservations, setSelectedReservations] = useState<string[]>(
-    []
-  );
+  const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [editingReservation, setEditingReservation] =
-    useState<Reservation | null>(null);
-  const [reservations, setReservations] =
-    useState<Reservation[]>(sampleReservations);
+  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
+  const [reservations, setReservations] = useState<Reservation[]>(sampleReservations);
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newReservation, setNewReservation] = useState({
+    user: { name: "", email: "" },
+    space: { name: "" },
+    startDateTime: new Date(),
+    endDateTime: new Date(Date.now() + 3600000), // 1 hour later
+    status: ReservationStatus.Pending,
+    equipment: [{ name: "", quantity: 1 }]
+  });
 
   const toggleSelect = (id: string) => {
     setSelectedReservations((prev) =>
@@ -135,6 +140,98 @@ const Reservations = () => {
       )
     );
     setEditingReservation(null);
+  };
+
+  const handleAddReservation = () => {
+    const reservation: Reservation = {
+      ...newReservation,
+      id: `res-${Date.now()}`,
+      userId: `user-${Date.now()}`,
+      spaceId: `space-${Date.now()}`,
+      createdAt: new Date(),
+      user: {
+        id: `user-${Date.now()}`,
+        name: newReservation.user.name,
+        email: newReservation.user.email
+      },
+      space: {
+        id: `space-${Date.now()}`,
+        name: newReservation.space.name
+      },
+      reservationEquipment: newReservation.equipment.map((eq, idx) => ({
+        id: `eq-${Date.now()}-${idx}`,
+        name: eq.name,
+        quantity: eq.quantity
+      }))
+    };
+    
+    setReservations([...reservations, reservation]);
+    setShowAddModal(false);
+    resetNewReservationForm();
+  };
+
+  const resetNewReservationForm = () => {
+    setNewReservation({
+      user: { name: "", email: "" },
+      space: { name: "" },
+      startDateTime: new Date(),
+      endDateTime: new Date(Date.now() + 3600000),
+      status: ReservationStatus.Pending,
+      equipment: [{ name: "", quantity: 1 }]
+    });
+  };
+
+  const addEquipmentField = () => {
+    setNewReservation(prev => ({
+      ...prev,
+      equipment: [...prev.equipment, { name: "", quantity: 1 }]
+    }));
+  };
+
+  const removeEquipmentField = (index: number) => {
+    setNewReservation(prev => ({
+      ...prev,
+      equipment: prev.equipment.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleEquipmentChange = (index: number, field: 'name' | 'quantity', value: string | number) => {
+    const newEquipment = [...newReservation.equipment];
+    newEquipment[index] = {
+      ...newEquipment[index],
+      [field]: field === 'quantity' ? Number(value) : value
+    };
+    setNewReservation(prev => ({ ...prev, equipment: newEquipment }));
+  };
+
+  const exportToCSV = () => {
+    const headers = [
+      'ID', 'User Name', 'User Email', 'Space', 
+      'Start Date', 'End Date', 'Status', 'Equipment'
+    ];
+    
+    const csvContent = [
+      headers.join(','),
+      ...reservations.map(res => [
+        res.id,
+        `"${res.user.name}"`,
+        `"${res.user.email}"`,
+        `"${res.space.name}"`,
+        `"${formatDate(res.startDateTime)} ${formatTime(res.startDateTime)}"`,
+        `"${formatTime(res.endDateTime)}"`,
+        res.status,
+        `"${getEquipmentSummary(res.reservationEquipment)}"`
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'reservations.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const formatDate = (date: Date) => {
@@ -190,11 +287,17 @@ const Reservations = () => {
                   Delete selected ({selectedReservations.length})
                 </button>
               )}
-              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm">
-                + Add Reservation
+              <button 
+                onClick={() => setShowAddModal(true)}
+                className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm flex items-center gap-1"
+              >
+                <Plus size={16} /> Add Reservation
               </button>
-              <button className="border border-gray-500 px-4 py-2 rounded text-sm">
-                Export
+              <button 
+                onClick={exportToCSV}
+                className="border border-gray-500 px-4 py-2 rounded text-sm flex items-center gap-1"
+              >
+                <Download size={16} /> Export
               </button>
             </div>
           </div>
@@ -478,6 +581,190 @@ const Reservations = () => {
                     className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded"
                   >
                     Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Add Reservation Modal */}
+          {showAddModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-auto">
+                <h3 className="text-lg font-semibold mb-4">Add New Reservation</h3>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      User Name
+                    </label>
+                    <input
+                      type="text"
+                      value={newReservation.user.name}
+                      onChange={(e) =>
+                        setNewReservation({
+                          ...newReservation,
+                          user: {
+                            ...newReservation.user,
+                            name: e.target.value,
+                          },
+                        })
+                      }
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      User Email
+                    </label>
+                    <input
+                      type="email"
+                      value={newReservation.user.email}
+                      onChange={(e) =>
+                        setNewReservation({
+                          ...newReservation,
+                          user: {
+                            ...newReservation.user,
+                            email: e.target.value,
+                          },
+                        })
+                      }
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Space Name
+                    </label>
+                    <input
+                      type="text"
+                      value={newReservation.space.name}
+                      onChange={(e) =>
+                        setNewReservation({
+                          ...newReservation,
+                          space: {
+                            ...newReservation.space,
+                            name: e.target.value,
+                          },
+                        })
+                      }
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Status
+                    </label>
+                    <select
+                      value={newReservation.status}
+                      onChange={(e) =>
+                        setNewReservation({
+                          ...newReservation,
+                          status: e.target.value as ReservationStatus,
+                        })
+                      }
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    >
+                      {Object.values(ReservationStatus).map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Start Date & Time
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={newReservation.startDateTime.toISOString().slice(0, 16)}
+                      onChange={(e) =>
+                        setNewReservation({
+                          ...newReservation,
+                          startDateTime: new Date(e.target.value),
+                        })
+                      }
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      End Date & Time
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={newReservation.endDateTime.toISOString().slice(0, 16)}
+                      onChange={(e) =>
+                        setNewReservation({
+                          ...newReservation,
+                          endDateTime: new Date(e.target.value),
+                        })
+                      }
+                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <label className="block text-sm text-gray-300">Equipment</label>
+                    <button
+                      onClick={addEquipmentField}
+                      className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1"
+                    >
+                      <Plus size={14} /> Add Equipment
+                    </button>
+                  </div>
+                  {newReservation.equipment.map((eq, index) => (
+                    <div key={index} className="grid grid-cols-2 gap-2 mb-2">
+                      <input
+                        type="text"
+                        placeholder="Equipment name"
+                        value={eq.name}
+                        onChange={(e) => handleEquipmentChange(index, 'name', e.target.value)}
+                        className="bg-gray-700 text-white rounded px-3 py-2"
+                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          placeholder="Quantity"
+                          min="1"
+                          value={eq.quantity}
+                          onChange={(e) => handleEquipmentChange(index, 'quantity', e.target.value)}
+                          className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                        />
+                        <button
+                          onClick={() => removeEquipmentField(index)}
+                          className="bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => {
+                      setShowAddModal(false);
+                      resetNewReservationForm();
+                    }}
+                    className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddReservation}
+                    className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded"
+                  >
+                    Add Reservation
                   </button>
                 </div>
               </div>
