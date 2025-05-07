@@ -1,19 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import React from "react";
 
-import Room1 from "../images/Conferenceroom1.jpg";
-import Room3 from "../images/Conferenceroom3.jpg";
-import Room4 from "../images/Conferenceroom4.jpg";
-import Room6 from "../images/Conferenceroom6.jpg";
-import DedicatedDesk1 from "../images/DedicatedDesk1.jpg";
-import DedicatedDesk2 from "../images/DedicatedDesk2.png";
-import private_office_1 from "../images/private_office_1.png";
-import private_office_2 from "../images/private_office_2.png";
-import private_office_3 from "../images/private_office_3.png";
-import private_office_4 from "../images/private_office_4.png";
-import eventArea from "../images/eventArea.jpeg";
-import eventArea2 from "../images/eventArea2.jpeg";
-import Kitchen from "../images/Kitchen.jpeg";
+
 import Header from "../components/Header";
 
 type Space = {
