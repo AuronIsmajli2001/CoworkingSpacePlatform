@@ -9,12 +9,13 @@ const Header = () => {
     { name: "About", path: "/about" },
     { name: "Space", path: "/space" },
     { name: "Contact", path: "/contact" },
+    { name: "Pricing Plans", path: "/pricingPlans"},
     { name: "Login", path: "/auth" },
     { name: "My reservations", path: "/myreservations" },
   ];
 
   return (
-    <header className="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
+    <header className=" fixed top-0 w-full z-50 bg-white shadow-sm px-6 py-4 flex justify-between items-center">
       <div className="flex items-center gap-2">
         <div className="text-3xl font-extrabold text-blue-600">☉</div>
         <span className="text-2xl font-semibold tracking-wide text-gray-800">
@@ -39,10 +40,10 @@ const Header = () => {
       </nav>
 
       <Link
-        to="/pricingPlans"
+        to="/auth"
         className="bg-blue-700 text-white font-semibold py-2 px-7 rounded-xl text-md"
       >
-        Pricing Plans
+        Log In
       </Link>
     </header>
   );
