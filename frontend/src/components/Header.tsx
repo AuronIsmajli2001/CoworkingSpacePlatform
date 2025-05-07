@@ -10,7 +10,6 @@ const Header = () => {
     { name: "Space", path: "/space" },
     { name: "Contact", path: "/contact" },
     { name: "Pricing Plans", path: "/pricingPlans"},
-    { name: "Login", path: "/auth" },
     { name: "My reservations", path: "/myreservations" },
   ];
 
