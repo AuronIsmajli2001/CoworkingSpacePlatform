@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import Header from "../components/Header";
 
 type Space = {
@@ -110,6 +112,7 @@ const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 export default function Spaces() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const url = `${baseUrl}/Space`;
@@ -122,8 +125,10 @@ export default function Spaces() {
 
         setSpaces(
           res.data.map((space: any) => ({
-            ...space,
-            imageUrl: space.image_URL,
+            id: space.id,
+            name: space.name,
+            type: space.type,
+            imageUrl: space.image_URL, // map it to match your frontend type
           }))
         );
       })
@@ -144,7 +149,7 @@ export default function Spaces() {
       <Header />
       <div className="min-h-screen bg-white">
         {/* Hero */}
-        <section className="text-center py-16 bg-white">
+        <section className="pt-[7rem] pb-16 bg-white text-center">
           <h1 className="text-4xl font-bold text-gray-900">
             Explore Our Workspaces
           </h1>
@@ -180,6 +185,7 @@ export default function Spaces() {
                 className="bg-white rounded-2xl overflow-hidden shadow transition hover:shadow-lg hover:-translate-y-1 duration-400"
               >
                 <img
+                  onClick={() => navigate(`/space/${space.id}`)}
                   src={space.imageUrl}
                   alt={space.name}
                   className="w-full h-56 min-h-[300px] object-cover rounded-t-2xl"
@@ -188,7 +194,10 @@ export default function Spaces() {
                   <h3 className="text-lg font-semibold text-gray-800">
                     {space.name}
                   </h3>
-                  <button className="text-blue-600 font-medium text-sm hover:underline">
+                  <button
+                    onClick={() => navigate(`/space/${space.id}`)}
+                    className="text-blue-600 font-medium text-sm hover:underline"
+                  >
                     View
                   </button>
                 </div>
