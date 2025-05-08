@@ -16,7 +16,7 @@ obj/
 *.userosscache
 *.sln.docstates
 .vscode/
-
+.env
 **/obj/
 **/bin/
 *.cache
