@@ -25,3 +25,4 @@ obj/
 *.vs/
 *.vsconfig
 
+/node_modules
