@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import React from "react";
 
-
 import Header from "../components/Header";
 
 type Space = {
@@ -103,13 +102,18 @@ const categories = [
   "Private Office",
 ];
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
 export default function Spaces() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:5234/Space")
+      .get(`"${baseUrl}/Space"`)
       .then((res) => {
         console.log("Spaces from backend:", res.data);
         console.log("Raw backend data:", res.data);
