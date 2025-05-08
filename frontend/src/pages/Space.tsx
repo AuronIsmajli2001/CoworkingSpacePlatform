@@ -142,7 +142,7 @@ export default function Spaces() {
       <Header />
       <div className="min-h-screen bg-white">
         {/* Hero */}
-        <section className="text-center py-16 bg-white">
+        <section className="pt-[7rem] pb-16 bg-white text-center">
           <h1 className="text-4xl font-bold text-gray-900">
             Explore Our Workspaces
           </h1>
