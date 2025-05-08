@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\spaces\\spacedtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\spaces\\spacedtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,24 +19,12 @@
       "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|Solution Items{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\docker-compose.yml||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|Solution Items{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|solutionrelative:docker-compose.yml||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\spaces\\spacedtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\spaces\\spacedtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\space\\spacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\space\\spacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\spaces\\ispaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -93,6 +89,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\domain\\enums\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\enums\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|Solution Items{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\docker-compose.yml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|Solution Items{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}|solutionrelative:docker-compose.yml||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -102,7 +102,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -114,7 +114,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 22,
               "Title": "docker-compose.yml",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\docker-compose.yml",
               "RelativeDocumentMoniker": "docker-compose.yml",
@@ -122,34 +122,32 @@
               "RelativeToolTip": "docker-compose.yml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
-              "WhenOpened": "2025-05-04T22:44:33.236Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T22:44:33.236Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "SpaceService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\SpaceService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Spaces\\SpaceService.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\SpaceService.cs",
               "RelativeToolTip": "Application\\Services\\Spaces\\SpaceService.cs",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAvwF0AAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAIgAAAAAAAAAAADwv4gAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-04T22:01:53.983Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "SpaceDTORead.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Spaces\\SpaceDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Spaces\\SpaceDTORead.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Spaces\\SpaceDTORead.cs",
               "RelativeToolTip": "Application\\DTOs\\Spaces\\SpaceDTORead.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T21:54:32.676Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T21:54:32.676Z"
             },
             {
               "$type": "Document",
@@ -161,12 +159,11 @@
               "RelativeToolTip": "Domain\\Spaces\\Space.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAA+wBMAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-03T05:43:52.377Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-03T05:43:52.377Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "ISpaceService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\ISpaceService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Spaces\\ISpaceService.cs",
@@ -174,8 +171,7 @@
               "RelativeToolTip": "Application\\Services\\Spaces\\ISpaceService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T11:40:41.269Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T11:40:41.269Z"
             },
             {
               "$type": "Document",
@@ -187,25 +183,23 @@
               "RelativeToolTip": "Api\\Space\\SpaceController.cs",
               "ViewState": "AgIAADwAAAAAAAAAAAAAAD0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T21:51:43.883Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T21:51:43.883Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
               "RelativeDocumentMoniker": "Api\\Program.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
               "RelativeToolTip": "Api\\Program.cs",
-              "ViewState": "AgIAAGIAAAAAAAAAAADwv3wAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGEAAAAAAAAAAAAAAHsAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-04T12:44:52.888Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T12:44:52.888Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\appsettings.json",
               "RelativeDocumentMoniker": "Api\\appsettings.json",
@@ -213,12 +207,11 @@
               "RelativeToolTip": "Api\\appsettings.json",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAcAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-04T08:57:24.72Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T08:57:24.72Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "SpaceDTOCreate.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Spaces\\SpaceDTOCreate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Spaces\\SpaceDTOCreate.cs",
@@ -226,12 +219,11 @@
               "RelativeToolTip": "Application\\DTOs\\Spaces\\SpaceDTOCreate.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-30T20:52:21.499Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-30T20:52:21.499Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 14,
               "Title": "MembershipDTORead.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTORead.cs",
@@ -243,7 +235,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Api\\Properties\\launchSettings.json",
@@ -251,12 +243,11 @@
               "RelativeToolTip": "Api\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-05-04T08:56:16.83Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-04T08:56:16.83Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 13,
               "Title": "MembershipDTOUpdate.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOUpdate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTOUpdate.cs",
@@ -268,7 +259,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 15,
               "Title": "MembershipDTOCreate.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Memberships\\MembershipDTOCreate.cs",
@@ -280,7 +271,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
               "Title": "ISpaceEquipmentService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\ISpaceEquipmentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\SpaceEquipments\\ISpaceEquipmentService.cs",
@@ -292,7 +283,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "IMembershipService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\IMembershipService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Memberships\\IMembershipService.cs",
@@ -304,7 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 9,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Users\\User.cs",
               "RelativeDocumentMoniker": "Domain\\Users\\User.cs",
@@ -316,7 +307,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 12,
               "Title": "IPaymentService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\IPaymentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Payments\\IPaymentService.cs",
@@ -328,7 +319,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 16,
               "Title": "SpaceEquipmentDTORead.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\SpaceEquipments\\SpaceEquipmentDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\SpaceEquipments\\SpaceEquipmentDTORead.cs",
@@ -340,7 +331,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 17,
               "Title": "SpaceEquipmentService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\SpaceEquipments\\SpaceEquipmentService.cs",
@@ -352,7 +343,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 18,
               "Title": "PaymentService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Payments\\PaymentService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Payments\\PaymentService.cs",
@@ -364,7 +355,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 19,
               "Title": "MembershipService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Memberships\\MembershipService.cs",
@@ -376,7 +367,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 21,
               "Title": "Role.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Enums\\Role.cs",
               "RelativeDocumentMoniker": "Domain\\Enums\\Role.cs",
@@ -388,7 +379,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 20,
               "Title": "Equipment.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Equipments\\Equipment.cs",
               "RelativeDocumentMoniker": "Domain\\Equipments\\Equipment.cs",

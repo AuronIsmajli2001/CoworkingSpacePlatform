@@ -112,22 +112,23 @@ export default function Spaces() {
   const [spaces, setSpaces] = useState<Space[]>([]);
 
   useEffect(() => {
+    const url = `${baseUrl}/Space`;
+    console.log("📡 Requesting spaces from:", url);
+
     axios
-      .get(`"${baseUrl}/Space"`)
+      .get(url)
       .then((res) => {
-        console.log("Spaces from backend:", res.data);
-        console.log("Raw backend data:", res.data);
+        console.log("✅ Spaces from backend:", res.data);
 
         setSpaces(
           res.data.map((space: any) => ({
             ...space,
-            imageUrl: space.image_URL, // map it to match your frontend type
+            imageUrl: space.image_URL,
           }))
         );
-        console.log("✅ Mapped Spaces:", res.data);
       })
       .catch((err) => {
-        console.error("Error fetching spaces:", err);
+        console.error("❌ Error fetching spaces:", err);
       });
   }, []);
 
