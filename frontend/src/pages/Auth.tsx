@@ -6,6 +6,11 @@ import Header from "../components/Header";
 import React from "react";
 import { jwtDecode } from "jwt-decode";
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
 interface AuthResponse {
   accessToken: string;
   refreshToken: string;
@@ -99,12 +104,11 @@ export default function Auth() {
       if (isLogin) {
         // Login logic
         await axios
-          .post(`http://localhost:5234/api/Auth/login`, {
+          .post(`${baseUrl}/api/Auth/login`, {
             username: formData.username,
             password: formData.password,
           })
           .then((e) => {
-            console.log(e.data);
             localStorage.setItem("accessToken", e.data.accessToken);
             localStorage.setItem("refreshToken", e.data.refreshToken);
             accessToken = e.data.accessToken;
@@ -115,10 +119,10 @@ export default function Auth() {
 
             if (role === "User") {
               // Redirect to home page for User role
-              window.location.href = "http://localhost:5173/";
+              window.location.href = `${frontUrl}`;
             } else if (role === "Staff" || role === "SuperAdmin") {
               // Redirect to dashboard for Staff or SuperAdmin roles
-              window.location.href = "http://localhost:5173/dashboard";
+              window.location.href = `${frontUrl}/dashboard`;
             } else {
               // Optional: Handle case for unknown roles or errors
               console.error("Unknown role:", role);
@@ -128,7 +132,7 @@ export default function Auth() {
         // Signup logic
         console.log(formData.username);
         await axios
-          .post(`http://localhost:5234/api/Auth/signup`, {
+          .post(`${baseUrl}/api/Auth/signup`, {
             username: formData.username,
             email: formData.email,
             password: formData.password,
@@ -138,7 +142,7 @@ export default function Auth() {
           .then((e) => console.log(e));
 
         alert("Registration successful! Please login.");
-        window.location.href = "http://localhost:5173/Auth";
+        window.location.href = `${frontUrl}/Auth`;
         setIsLogin(true);
         setFormData({
           firstName: "",
