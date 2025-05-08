@@ -25,7 +25,7 @@ export default function SpaceDetails() {
   return (
     <>
       <Header />
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-6xl mx-auto px-6 pt-[6.5rem] pb-[2.5rem]">
         {/* Image */}
         <div className="rounded-xl overflow-hidden shadow-lg mb-8">
           <img

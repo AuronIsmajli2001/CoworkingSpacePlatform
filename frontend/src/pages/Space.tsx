@@ -119,18 +119,22 @@ export default function Spaces() {
     console.log("📡 Requesting spaces from:", url);
 
     axios
-      .get(url)
+      .get("http://localhost:5234/Space")
       .then((res) => {
-        console.log("✅ Spaces from backend:", res.data);
+        console.log("Spaces from backend:", res.data);
 
-        setSpaces(
-          res.data.map((space: any) => ({
-            id: space.id,
-            name: space.name,
-            type: space.type,
-            imageUrl: space.image_URL, // map it to match your frontend type
-          }))
-        );
+        if (Array.isArray(res.data)) {
+          setSpaces(
+            res.data.map((space: any) => ({
+              id: space.id,
+              name: space.name,
+              type: space.type,
+              imageUrl: space.image_URL,
+            }))
+          );
+        } else {
+          console.error("❌ res.data is not an array:", res.data);
+        }
       })
       .catch((err) => {
         console.error("❌ Error fetching spaces:", err);
