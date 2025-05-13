@@ -94,6 +94,7 @@ namespace Application.Services.Equipments
 
                 var equipmentsDTOs = equipments.Select(s => new EquipmentDTORead
                 {
+                    Id = s.Id,
                     Name = s.Name,
                     Type = s.Type,
                     Price_per_piece = s.Price_per_piece,
@@ -135,6 +136,7 @@ namespace Application.Services.Equipments
 
                 return new EquipmentDTORead
                 {
+                    Id = equipment.Id,
                     Name = equipment.Name,
                     Type = equipment.Type,
                     Price_per_piece = equipment.Price_per_piece,

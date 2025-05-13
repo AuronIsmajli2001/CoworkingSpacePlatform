@@ -91,8 +91,6 @@ namespace Api.Space
             
         }
 
-
-
         [HttpDelete("{id}",Name = "DeleteSpace")]
         public async Task<IActionResult> DeleteSpace(string id)
         {
