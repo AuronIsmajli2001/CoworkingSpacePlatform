@@ -29,7 +29,7 @@ namespace Api.Space
         {
             try
             {
-                var space = await _spaceService.GetSpaceById(id);
+                var space = await _spaceService.GetSpaceByIdAsync(id);
                 if (space == null)
                 {
                     return NotFound("Space not found.");
@@ -48,16 +48,7 @@ namespace Api.Space
         {
             try
             {
-                var spaces = await _spaceService.GetAllSpaces();
-                var spaceDto = spaces.Select(spaces => new SpaceDTOCreate {
-                    Name = spaces.Name,
-                    Type = spaces.Type,
-                    Capacity = spaces.Capacity,
-                    Description = spaces.Description,
-                    Location = spaces.Location,
-                    Price = spaces.Price,
-                }).ToList();
-
+                var spaces = await _spaceService.GetAllSpacesAsync();
                 return Ok(spaces);
 
             }
