@@ -1,5 +1,5 @@
 # Ignore Visual Studio files
-/backend/.vs
+/backend/.vs/
 *.suo
 *.db
 *.vscode/
