@@ -6,6 +6,7 @@ import Reservations from "./dashboard/pages/Reservations";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Space from "./pages/Space";
+import SpaceDetails from "./pages/SpaceDetails";
 import Contact from "./pages/Contact";
 import PricingPlans from "./pages/PricingPlans";
 import React from "react";
@@ -20,12 +21,13 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/pricingplans" element={<PricingPlans />} />
         <Route path="/space" element={<Space />} />
+        <Route path="/space/:id" element={<SpaceDetails />} />
         <Route path="/auth" element={<Auth />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
         <Route path="/reservations" element={<Reservations />} />
-        <Route path="/spaces" element={<Spaces />} /> 
+        <Route path="/spaces" element={<Spaces />} />
       </Routes>
     </Router>
   );

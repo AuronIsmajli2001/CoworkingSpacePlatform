@@ -49,16 +49,7 @@ namespace Api.Space
             try
             {
                 var spaces = await _spaceService.GetAllSpacesAsync();
-                var spaceDto = spaces.Select(spaces => new SpaceDTOCreate {
-                    Name = spaces.Name,
-                    Type = spaces.Type,
-                    Capacity = spaces.Capacity,
-                    Description = spaces.Description,
-                    Location = spaces.Location,
-                    Price = spaces.Price,
-                }).ToList();
-
-                return Ok(spaceDto);
+                return Ok(spaces);
 
             }
             catch (Exception ex)
