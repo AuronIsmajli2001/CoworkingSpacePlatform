@@ -7,13 +7,19 @@ import { isAuthenticated } from "../utils/auth";
 
 export default function SpaceDetails() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     if (!isAuthenticated()) {
       navigate("/auth");
+    } else {
+      setIsLoading(false); // Only show content when authenticated
     }
   }, [navigate]);
 
+  if (isLoading) {
+    return null; // Or return a loading spinner
+  }
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
 
