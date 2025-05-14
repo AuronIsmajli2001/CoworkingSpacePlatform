@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import React from "react";
+import { isAuthenticated } from "../utils/auth";
 
 import { useNavigate } from "react-router-dom";
 
@@ -110,9 +111,16 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 export default function Spaces() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const url = `${baseUrl}/Space`;

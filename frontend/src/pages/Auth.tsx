@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Lock, Mail, User, Eye, EyeOff } from "lucide-react";
 import React from "react";
 import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
+import { isAuthenticated } from "../utils/auth";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -20,7 +22,6 @@ export default function Auth() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: "",

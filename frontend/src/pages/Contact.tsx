@@ -1,7 +1,33 @@
 import React from "react";
-import { Phone, Mail, MapPin, Send, Calendar, Clock, CreditCard, Wallet, Facebook, Instagram, Twitter, Linkedin, Youtube } from 'lucide-react';
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Send,
+  Calendar,
+  Clock,
+  CreditCard,
+  Wallet,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  Youtube,
+} from "lucide-react";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { isAuthenticated } from "../utils/auth";
+
 const Contact = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   return (
     <>
       <Header />
@@ -15,14 +41,14 @@ const Contact = () => {
             Let's <span className="text-blue-600">connect</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions? Reach out—we're here to help you find your perfect workspace.
+            Have questions? Reach out—we're here to help you find your perfect
+            workspace.
           </p>
         </div>
       </section>
 
-
-       {/* Contact Cards */}
-       <section className="py-20 bg-white">
+      {/* Contact Cards */}
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-6 max-w-5xl">
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -30,23 +56,23 @@ const Contact = () => {
                 icon: <Mail className="w-8 h-8 text-blue-600" />,
                 title: "Email Us",
                 details: "info@cospace.com",
-                subtitle: "Typically replies within 24 hours"
+                subtitle: "Typically replies within 24 hours",
               },
               {
                 icon: <Phone className="w-8 h-8 text-blue-600" />,
                 title: "Call Us",
                 details: "+383 48 739 738",
-                subtitle: "Mon-Fri, 9AM-5PM"
+                subtitle: "Mon-Fri, 9AM-5PM",
               },
               {
                 icon: <MapPin className="w-8 h-8 text-blue-600" />,
                 title: "Visit Us",
                 details: "10 B St, Prishtinë, 10000",
-                subtitle: "Book a tour before visiting"
-              }
+                subtitle: "Book a tour before visiting",
+              },
             ].map((item, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="border border-gray-200 rounded-2xl p-8 text-center hover:shadow-lg transition-all"
               >
                 <div className="w-16 h-16 mx-auto mb-4 bg-blue-50 rounded-full flex items-center justify-center">
@@ -61,17 +87,20 @@ const Contact = () => {
         </div>
       </section>
 
-
-
-              {/* Contact Form */}
+      {/* Contact Form */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-6 max-w-2xl">
           <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12">
-            <h2 className="text-3xl font-bold mb-6 text-center">Send us a message</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">
+              Send us a message
+            </h2>
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Full Name
                   </label>
                   <input
@@ -82,7 +111,10 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Email
                   </label>
                   <input
@@ -94,7 +126,10 @@ const Contact = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Subject
                 </label>
                 <input
@@ -105,7 +140,10 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Message
                 </label>
                 <textarea
@@ -134,7 +172,8 @@ const Contact = () => {
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold mb-6">Visit our space</h2>
               <p className="text-gray-600 mb-8">
-                Come see CoSpace in person! We'd love to show you around and discuss how our workspace can fit your needs.
+                Come see CoSpace in person! We'd love to show you around and
+                discuss how our workspace can fit your needs.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -165,7 +204,9 @@ const Contact = () => {
       {/* CTA Section */}
       <section className="py-16 bg-blue-600 text-white text-center">
         <div className="container mx-auto px-6 max-w-2xl">
-          <h2 className="text-3xl font-bold mb-6">Ready to see it in person?</h2>
+          <h2 className="text-3xl font-bold mb-6">
+            Ready to see it in person?
+          </h2>
           <p className="text-xl mb-8 opacity-90">
             Book a tour and experience CoSpace firsthand.
           </p>
@@ -175,75 +216,79 @@ const Contact = () => {
         </div>
       </section>
 
-             {/* Footer */}
-<footer className="bg-gray-900 text-white">
-  <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
-    <div className="space-y-6">
-      <h2 className="text-3xl font-extrabold tracking-wider">
-        Co<span className="text-blue-500">Space</span>
-      </h2>
-      <p className="max-w-xs text-sm text-neutral-300">
-        Work for yourself, not by yourself. Flexible, connected, inspiring.
-      </p>
-    </div>
-    {/* 2️⃣ Socials + payment */}
-    <div className="space-y-10">
-      {/* socials */}
-      <div>
-        <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
-        <p className="text-white text-[16px] mb-6">
-          A monthly digest of the latest news and resources.
-        </p>
-        <div className="flex gap-3">
-          {[Facebook, Instagram, Twitter, Linkedin, Youtube].map((Icon, i) => (
-            <a
-              key={i}
-              href="#"
-              className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white">
+        <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
+          <div className="space-y-6">
+            <h2 className="text-3xl font-extrabold tracking-wider">
+              Co<span className="text-blue-500">Space</span>
+            </h2>
+            <p className="max-w-xs text-sm text-neutral-300">
+              Work for yourself, not by yourself. Flexible, connected,
+              inspiring.
+            </p>
+          </div>
+          {/* 2️⃣ Socials + payment */}
+          <div className="space-y-10">
+            {/* socials */}
+            <div>
+              <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
+              <p className="text-white text-[16px] mb-6">
+                A monthly digest of the latest news and resources.
+              </p>
+              <div className="flex gap-3">
+                {[Facebook, Instagram, Twitter, Linkedin, Youtube].map(
+                  (Icon, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700
                          flex items-center justify-center transition"
-            >
-              <Icon className="w-5 h-5 text-white" />
-            </a>
-          ))}
-        </div>
-      </div>
-      {/* payment */}
-      <div>
-        <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
-        <div className="flex gap-3">
-          {[CreditCard, Wallet].map((Icon, i) => (
-            <span
-              key={i}
-              className="w-10 h-10 rounded-xl bg-blue-600 flex items-center
+                    >
+                      <Icon className="w-5 h-5 text-white" />
+                    </a>
+                  )
+                )}
+              </div>
+            </div>
+            {/* payment */}
+            <div>
+              <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
+              <div className="flex gap-3">
+                {[CreditCard, Wallet].map((Icon, i) => (
+                  <span
+                    key={i}
+                    className="w-10 h-10 rounded-xl bg-blue-600 flex items-center
                          justify-center"
-            >
-              <Icon className="w-5 h-5 text-white" />
-            </span>
-          ))}
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* 3️⃣ Contacts */}
+          <div className="space-y-8">
+            <h4 className="text-2xl font-semibold">Our Contacts</h4>
+            {[
+              { icon: MapPin, text: "10 B St, Prishtinë, 10000" },
+              { icon: Mail, text: "info@cospace.com" },
+              { icon: Phone, text: "+383 48 739 738" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-4">
+                <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-white" />
+                </span>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
-    {/* 3️⃣ Contacts */}
-    <div className="space-y-8">
-      <h4 className="text-2xl font-semibold">Our Contacts</h4>
-      {[
-        { icon: MapPin,  text: "10 B St, Prishtinë, 10000" },
-        { icon: Mail,    text: "info@cospace.com"          },
-        { icon: Phone,   text: "+383 48 739 738"           }
-      ].map(({ icon: Icon, text }) => (
-        <div key={text} className="flex items-center gap-4">
-          <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-white" />
-          </span>
-          <span>{text}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-  {/* bottom bar */}
+        {/* bottom bar */}
         <div
           className="border-t border-neutral-700 text-sm flex flex-col md:flex-row
-                    items-center justify-between gap-4 px-6 py-6 container mx-auto">
+                    items-center justify-between gap-4 px-6 py-6 container mx-auto"
+        >
           <span>
             © {new Date().getFullYear()} CoSpace. All rights reserved.
           </span>
@@ -252,10 +297,8 @@ const Contact = () => {
           </a>
         </div>
       </footer>
-
     </>
   );
-
 };
 
 export default Contact;
