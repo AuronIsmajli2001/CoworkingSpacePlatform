@@ -2,8 +2,18 @@ import Header from "../components/Header";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 
 export default function SpaceDetails() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
 

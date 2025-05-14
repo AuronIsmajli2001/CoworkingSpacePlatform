@@ -19,35 +19,50 @@ import {
   MessageCircle,
   Icon,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { isAuthenticated } from "../utils/auth";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   return (
     <>
       <Header />
-      
-     {/* Hero Section */}
-<section className="relative py-40 min-h-[800px] flex items-center">
-  {/* Background Image with Dark Overlay */}
-  <div className="absolute inset-0 z-0">
-    <img
-      src="/Images/office_pic.jpg" 
-      alt="CoSpace Workspace"
-      className="w-full h-full object-cover"
-    />
-    <div className="absolute inset-0 bg-black/40"></div>
-  </div>
 
-  {/* Content */}
-  <div className="container mx-auto px-6 relative z-10 text-center mt-16">
-  <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
-    <span className="block mb-4">CHANGING THE WAY WORK</span>
-    <span className="block">HAPPENS IN <span className="text-blue-500">PRISHTINA</span></span>
-  </h1>
-    <p className="text-xl mb-8 max-w-2xl mx-auto text-white drop-shadow-md">
-      Join the CoSpace movement and experience the game-changing way work happens in Prishtina.
-    </p>
-    <div className="flex flex-col sm:flex-row justify-center gap-4">
-      <button className="bg-white text-gray-900 px-8 py-3 rounded-xl 
+      {/* Hero Section */}
+      <section className="relative py-40 min-h-[800px] flex items-center">
+        {/* Background Image with Dark Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/Images/office_pic.jpg"
+            alt="CoSpace Workspace"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+
+        {/* Content */}
+        <div className="container mx-auto px-6 relative z-10 text-center mt-16">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
+            <span className="block mb-4">CHANGING THE WAY WORK</span>
+            <span className="block">
+              HAPPENS IN <span className="text-blue-500">PRISHTINA</span>
+            </span>
+          </h1>
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-white drop-shadow-md">
+            Join the CoSpace movement and experience the game-changing way work
+            happens in Prishtina.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button
+              className="bg-white text-gray-900 px-8 py-3 rounded-xl 
                           font-medium hover:bg-gray-100 hover:text-blue-600 
                           transition-all duration-300 shadow-lg hover:shadow-xl"
             >
@@ -162,76 +177,76 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Facilities Section */}
+      <section className="py-16 bg-white isolate ">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">
+            Space Facilities & Amenities
+          </h2>
+          <h3 className="text-5xl font-bold text-black-600 mb-6">
+            Flexible Workplace
+          </h3>
 
-    
+          <p className="text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed text-lg">
+            We offer premium facilities including meeting rooms, conference
+            spaces, kitchen areas, kids' corner, rest areas, coffee bar, and
+            outdoor veranda.
+          </p>
 
- 
-          {/* Facilities Section */}
-            <section className="py-16 bg-white isolate ">
-              <div className="container mx-auto px-6 text-center">
-                <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">Space Facilities & Amenities</h2>
-                <h3 className="text-5xl font-bold text-black-600 mb-6">Flexible Workplace</h3>
-                
-                <p className="text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed text-lg">
-                  We offer premium facilities including meeting rooms, conference spaces, kitchen areas, kids' corner, rest areas, coffee bar, and outdoor veranda.
-                </p>
-                
-                <button className="bg-blue-600 text-white font-medium px-7 py-3 rounded-xl
+          <button
+            className="bg-blue-600 text-white font-medium px-7 py-3 rounded-xl
                                 border-2 border-transparent
                                 transition-all duration-300
-                                hover:bg-white hover:text-blue-600 hover:border-blue-600 hover:shadow-lg">
-                      Explore more
-                    </button>
+                                hover:bg-white hover:text-blue-600 hover:border-blue-600 hover:shadow-lg"
+          >
+            Explore more
+          </button>
 
-          
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
-                      {[
-                        {
-                          name: "Conference Room 1",
-                          location: "CoSpace 1",
-                          image: "/Images/Conference_1.jpg",
-                        },
-                        {
-                          name: "Conference Room 2",
-                          location: "CoSpace 2",
-                          image: "/Images/Conference_2.jpg",
-                        },
-                        {
-                          name: "Executive Suite",
-                          location: "CoSpace 1",
-                          image: "/Images/meeting-rooms-2.jpg",
-                        },
-                      ].map((room, index) => (
-                        <div
-                          key={index}
-                          className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
-                        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
+            {[
+              {
+                name: "Conference Room 1",
+                location: "CoSpace 1",
+                image: "/Images/Conference_1.jpg",
+              },
+              {
+                name: "Conference Room 2",
+                location: "CoSpace 2",
+                image: "/Images/Conference_2.jpg",
+              },
+              {
+                name: "Executive Suite",
+                location: "CoSpace 1",
+                image: "/Images/meeting-rooms-2.jpg",
+              },
+            ].map((room, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
+              >
+                {/* Image */}
+                <div className="relative pb-[70%] overflow-hidden">
+                  <img
+                    src={room.image}
+                    alt={`${room.name} ${room.location}`}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                </div>
 
-                          {/* Image */}
-                          <div className="relative pb-[70%] overflow-hidden">
-                            <img
-                              src={room.image}
-                              alt={`${room.name} ${room.location}`}
-                              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                          </div>
-
-                          {/* Content */}
-                          <div className="p-6 text-left">
-                            <h4 className="text-2xl font-semibold text-gray-800 mb-1">{room.name}</h4>
-                            <p className="text-gray-600 text-sm mb-3">{room.location}</p>
-                            <div className="flex justify-between items-center">
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    </div>
-                </section>
-
-        
-    
+                {/* Content */}
+                <div className="p-6 text-left">
+                  <h4 className="text-2xl font-semibold text-gray-800 mb-1">
+                    {room.name}
+                  </h4>
+                  <p className="text-gray-600 text-sm mb-3">{room.location}</p>
+                  <div className="flex justify-between items-center"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Address & Directions Section */}
       <section className="relative py-24">
@@ -284,141 +299,153 @@ const Home = () => {
         </div>
       </section>
 
-  
+      {/* Testimonials */}
+      <section className="bg-white py-20">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-12">
+            What Our Members Say
+          </h2>
 
-
-
-  {/* Testimonials */}
-  <section className="bg-white py-20">
-            <div className="container mx-auto px-6 text-center">
-              <h2 className="text-3xl font-bold text-gray-800 mb-12">What Our Members Say</h2>
-              
-              <div className="grid gap-10 md:grid-cols-3 max-w-6xl mx-auto">
-      {[
-        {
-          name: "Arbesa Gashi",
-          img: "/Images/u1.jpg", 
-          quote: "CoSpace has been a game changer for my freelance journey. The vibe, the people, the space – 10/10.",
-          rating: 5,
-        },
-        {
-          name: "Drilon Sevdiu",
-          img: "/Images/u2.avif",
-          quote: "I found my focus and community here. I never thought coworking could feel this empowering.",
-          rating: 5,
-        },
-        {
-          name: "Marigona Krasniqi",
-          img: "/Images/u4.webp",
-          quote: "Everything just works. The coffee, the Wi-Fi, the support. CoSpace delivers real value every day.",
-          rating: 4,
-        },
-      ].map((person, i) => (
-        <div
-          key={i}
-          className="rounded-3xl shadow-lg overflow-hidden bg-white flex flex-col items-center text-left"
-        >
-          <img
-            src={person.img}
-            alt={person.name}
-            className="w-full h-72 object-cover"
-          />
-          <div className="p-6 w-full flex flex-col justify-between h-full">
-            <p className="text-gray-700 text-base mb-6 leading-relaxed">“{person.quote}”</p>
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-lg font-semibold text-gray-900">{person.name}</h4>
-                <div className="flex gap-1 mt-1">
-                  {Array.from({ length: person.rating }).map((_, i) => (
-                    <span key={i}>⭐</span>
-                  ))}
+          <div className="grid gap-10 md:grid-cols-3 max-w-6xl mx-auto">
+            {[
+              {
+                name: "Arbesa Gashi",
+                img: "/Images/u1.jpg",
+                quote:
+                  "CoSpace has been a game changer for my freelance journey. The vibe, the people, the space – 10/10.",
+                rating: 5,
+              },
+              {
+                name: "Drilon Sevdiu",
+                img: "/Images/u2.avif",
+                quote:
+                  "I found my focus and community here. I never thought coworking could feel this empowering.",
+                rating: 5,
+              },
+              {
+                name: "Marigona Krasniqi",
+                img: "/Images/u4.webp",
+                quote:
+                  "Everything just works. The coffee, the Wi-Fi, the support. CoSpace delivers real value every day.",
+                rating: 4,
+              },
+            ].map((person, i) => (
+              <div
+                key={i}
+                className="rounded-3xl shadow-lg overflow-hidden bg-white flex flex-col items-center text-left"
+              >
+                <img
+                  src={person.img}
+                  alt={person.name}
+                  className="w-full h-72 object-cover"
+                />
+                <div className="p-6 w-full flex flex-col justify-between h-full">
+                  <p className="text-gray-700 text-base mb-6 leading-relaxed">
+                    “{person.quote}”
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900">
+                        {person.name}
+                      </h4>
+                      <div className="flex gap-1 mt-1">
+                        {Array.from({ length: person.rating }).map((_, i) => (
+                          <span key={i}>⭐</span>
+                        ))}
+                      </div>
+                    </div>
+                    <button className="bg-gray-100 text-sm font-semibold px-4 py-2 rounded-full">
+                      Member
+                    </button>
+                  </div>
                 </div>
               </div>
-              <button className="bg-gray-100 text-sm font-semibold px-4 py-2 rounded-full">
-                Member
-              </button>
-            </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
-{/* Footer */}
-<footer className="bg-gray-900 text-white">
-  <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
-    {/* 1️⃣ Logo + Desc */}
-    <div className="space-y-6">
-      <h2 className="text-3xl font-extrabold tracking-wider">
-        Co<span className="text-blue-500">Space</span>
-      </h2>
-      <p className="max-w-xs text-sm text-neutral-300">
-        Work for yourself, not by yourself. Flexible, connected, inspiring.
-      </p>
-    </div>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white">
+        <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
+          {/* 1️⃣ Logo + Desc */}
+          <div className="space-y-6">
+            <h2 className="text-3xl font-extrabold tracking-wider">
+              Co<span className="text-blue-500">Space</span>
+            </h2>
+            <p className="max-w-xs text-sm text-neutral-300">
+              Work for yourself, not by yourself. Flexible, connected,
+              inspiring.
+            </p>
+          </div>
 
-    {/* 2️⃣ Socials + Payments */}
-    <div className="space-y-10">
-      <div>
-        <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
-        <p className="text-white text-[16px] mb-6">
-          A monthly digest of the latest news and resources.
-        </p>
-        <div className="flex gap-3">
-          {[Facebook, Instagram, Twitter, Linkedin, Youtube].map((Icon, i) => (
-            <a
-              key={i}
-              href="#"
-              className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition"
-            >
-              <Icon className="w-5 h-5 text-white" />
-            </a>
-          ))}
+          {/* 2️⃣ Socials + Payments */}
+          <div className="space-y-10">
+            <div>
+              <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
+              <p className="text-white text-[16px] mb-6">
+                A monthly digest of the latest news and resources.
+              </p>
+              <div className="flex gap-3">
+                {[Facebook, Instagram, Twitter, Linkedin, Youtube].map(
+                  (Icon, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition"
+                    >
+                      <Icon className="w-5 h-5 text-white" />
+                    </a>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
+              <div className="flex gap-3">
+                {[CreditCard, Wallet].map((Icon, i) => (
+                  <span
+                    key={i}
+                    className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center"
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 3️⃣ Contacts */}
+          <div className="space-y-8">
+            <h4 className="text-2xl font-semibold">Our Contacts</h4>
+            {[
+              { icon: MapPin, text: "10 B St, Prishtinë, 10000" },
+              { icon: Mail, text: "info@cospace.com" },
+              { icon: Phone, text: "+383 48 739 738" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-4">
+                <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-white" />
+                </span>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div>
-        <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
-        <div className="flex gap-3">
-          {[CreditCard, Wallet].map((Icon, i) => (
-            <span
-              key={i}
-              className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center"
-            >
-              <Icon className="w-5 h-5 text-white" />
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    {/* 3️⃣ Contacts */}
-    <div className="space-y-8">
-      <h4 className="text-2xl font-semibold">Our Contacts</h4>
-      {[
-        { icon: MapPin, text: "10 B St, Prishtinë, 10000" },
-        { icon: Mail, text: "info@cospace.com" },
-        { icon: Phone, text: "+383 48 739 738" },
-      ].map(({ icon: Icon, text }) => (
-        <div key={text} className="flex items-center gap-4">
-          <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-white" />
+        {/* Bottom Bar */}
+        <div className="border-t border-neutral-700 text-sm flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-6 container mx-auto">
+          <span>
+            © {new Date().getFullYear()} CoSpace. All rights reserved.
           </span>
-          <span>{text}</span>
+          <a href="#" className="hover:text-neutral-400">
+            Terms of use
+          </a>
         </div>
-      ))}
-    </div>
-  </div>
-
-  {/* Bottom Bar */}
-  <div className="border-t border-neutral-700 text-sm flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-6 container mx-auto">
-    <span>© {new Date().getFullYear()} CoSpace. All rights reserved.</span>
-    <a href="#" className="hover:text-neutral-400">Terms of use</a>
-  </div>
-</footer>
+      </footer>
     </>
-   );
-}; 
+  );
+};
 
 export default Home;
