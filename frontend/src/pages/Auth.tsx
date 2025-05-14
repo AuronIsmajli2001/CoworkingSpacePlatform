@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Lock, Mail, User, Eye, EyeOff } from "lucide-react";
-import Header from "../components/Header";
 import React from "react";
 import { jwtDecode } from "jwt-decode";
 
@@ -177,227 +176,230 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
-      <Header />
+    <div className="min-h-screen bg-gray-100 flex">
+      {/* Form Container - Left Side */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">
+            {isLogin ? "Login" : "Create Account"}
+          </h2>
 
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-          <div className="p-8">
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              {isLogin ? "Login" : "Create Account"}
-            </h2>
+          {apiError && (
+            <div className="mb-4 p-3 bg-red-500/20 text-red-700 rounded-lg text-sm">
+              {apiError}
+            </div>
+          )}
 
-            {apiError && (
-              <div className="mb-4 p-3 bg-red-500/20 text-red-300 rounded-lg text-sm">
-                {apiError}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        First Name
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <input
-                          name="firstName"
-                          type="text"
-                          value={formData.firstName}
-                          onChange={handleChange}
-                          className={`bg-gray-700 border ${
-                            errors.firstName
-                              ? "border-red-500"
-                              : "border-gray-600"
-                          } text-white rounded-lg block w-full pl-10 p-2.5 text-sm`}
-                          placeholder="John"
-                        />
-                      </div>
-                      {errors.firstName && (
-                        <p className="mt-1 text-xs text-red-400">
-                          {errors.firstName}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        Last Name
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <User className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <input
-                          name="lastName"
-                          type="text"
-                          value={formData.lastName}
-                          onChange={handleChange}
-                          className={`bg-gray-700 border ${
-                            errors.lastName
-                              ? "border-red-500"
-                              : "border-gray-600"
-                          } text-white rounded-lg block w-full pl-10 p-2.5 text-sm`}
-                          placeholder="Doe"
-                        />
-                      </div>
-                      {errors.lastName && (
-                        <p className="mt-1 text-xs text-red-400">
-                          {errors.lastName}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <>
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-1">
-                      Email
+                    <label className="block text-sm font-medium mb-1 text-gray-700">
+                      First Name
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-gray-400" />
+                        <User className="h-5 w-5 text-gray-400" />
                       </div>
                       <input
-                        name="email"
-                        type="email"
-                        value={formData.email}
+                        name="firstName"
+                        type="text"
+                        value={formData.firstName}
                         onChange={handleChange}
-                        className={`bg-gray-700 border ${
-                          errors.email ? "border-red-500" : "border-gray-600"
-                        } text-white rounded-lg block w-full pl-10 p-2.5 text-sm`}
-                        placeholder="your@email.com"
+                        className={`bg-white border ${
+                          errors.firstName
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        } text-gray-900 rounded-lg block w-full pl-10 p-2.5 text-sm`}
+                        placeholder="John"
                       />
                     </div>
-                    {errors.email && (
-                      <p className="mt-1 text-xs text-red-400">
-                        {errors.email}
+                    {errors.firstName && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {errors.firstName}
                       </p>
                     )}
                   </div>
-                </>
-              )}
 
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Username
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleChange}
-                    className={`bg-gray-700 border ${
-                      errors.username ? "border-red-500" : "border-gray-600"
-                    } text-white rounded-lg block w-full pl-10 p-2.5 text-sm`}
-                    placeholder="johndoe"
-                  />
-                </div>
-                {errors.username && (
-                  <p className="mt-1 text-xs text-red-400">{errors.username}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`bg-gray-700 border ${
-                      errors.password ? "border-red-500" : "border-gray-600"
-                    } text-white rounded-lg block w-full pl-10 p-2.5 text-sm`}
-                    placeholder="••••••••"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-gray-400" />
+                  <div>
+                    <label className="block text-sm font-medium mb-1 text-gray-700">
+                      Last Name
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <User className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        name="lastName"
+                        type="text"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        className={`bg-white border ${
+                          errors.lastName ? "border-red-500" : "border-gray-300"
+                        } text-gray-900 rounded-lg block w-full pl-10 p-2.5 text-sm`}
+                        placeholder="Doe"
+                      />
+                    </div>
+                    {errors.lastName && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {errors.lastName}
+                      </p>
                     )}
-                  </button>
+                  </div>
                 </div>
-                {errors.password && (
-                  <p className="mt-1 text-xs text-red-400">{errors.password}</p>
-                )}
-                {!isLogin && (
-                  <p className="mt-1 text-xs text-gray-400">
-                    Password must be at least 6 characters with 1 uppercase
-                    letter and 1 special character
-                  </p>
-                )}
+
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
+                    Email
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={`bg-white border ${
+                        errors.email ? "border-red-500" : "border-gray-300"
+                      } text-gray-900 rounded-lg block w-full pl-10 p-2.5 text-sm`}
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+                  )}
+                </div>
+              </>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">
+                Username
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  name="username"
+                  type="text"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className={`bg-white border ${
+                    errors.username ? "border-red-500" : "border-gray-300"
+                  } text-gray-900 rounded-lg block w-full pl-10 p-2.5 text-sm`}
+                  placeholder="johndoe"
+                />
               </div>
+              {errors.username && (
+                <p className="mt-1 text-xs text-red-500">{errors.username}</p>
+              )}
+            </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 transition-colors ${
-                  isLoading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Processing...
-                  </span>
-                ) : isLogin ? (
-                  "Login"
-                ) : (
-                  "Sign Up"
-                )}
-              </button>
-
-              <div className="text-sm text-center text-gray-400 pt-2">
-                {isLogin ? "Need an account?" : "Already registered?"}{" "}
+            <div>
+              <label className="block text-sm font-medium mb-1 text-gray-700">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`bg-white border ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  } text-gray-900 rounded-lg block w-full pl-10 p-2.5 text-sm`}
+                  placeholder="••••••••"
+                />
                 <button
                   type="button"
-                  onClick={toggleAuthMode}
-                  className="text-blue-400 hover:text-blue-300 font-medium underline focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
                 >
-                  {isLogin ? "Sign up" : "Login"}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
                 </button>
               </div>
-            </form>
-          </div>
+              {errors.password && (
+                <p className="mt-1 text-xs text-red-500">{errors.password}</p>
+              )}
+              {!isLogin && (
+                <p className="mt-1 text-xs text-gray-500">
+                  Password must be at least 6 characters with 1 uppercase letter
+                  and 1 special character
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg text-sm px-5 py-2.5 transition-colors ${
+                isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            >
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Processing...
+                </span>
+              ) : isLogin ? (
+                "Login"
+              ) : (
+                "Sign Up"
+              )}
+            </button>
+
+            <div className="text-sm text-center text-gray-500 pt-2">
+              {isLogin ? "Need an account?" : "Already registered?"}{" "}
+              <button
+                type="button"
+                onClick={toggleAuthMode}
+                className="text-blue-600 hover:text-blue-800 font-medium underline focus:outline-none"
+              >
+                {isLogin ? "Sign up" : "Login"}
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
+
+      {/* Image Container - Right Side */}
+      <div className="hidden md:flex md:w-1/2 bg-blue-600 items-center justify-center">
+        {/* You can add your image here */}
+        <img
+          src="../../public/images/coworkingAuth.webp"
+          alt="Welcome illustration"
+          className="w-full h-full object-fit"
+        />
       </div>
     </div>
   );
