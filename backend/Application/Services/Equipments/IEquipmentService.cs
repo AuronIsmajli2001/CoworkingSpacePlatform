@@ -8,11 +8,11 @@ using Domain.Equipments;
 
 namespace Application.Services.Equipments
 {
-    interface IEquipmentService
+    public interface IEquipmentService
     {
         Task<IEnumerable<EquipmentDTORead>> GetAllEquipmentAsync();
         Task<EquipmentDTORead> GetEquipmentByIdAsync(string id);
-        Task CreateEquipmentAsync(EquipmentDTOCreate dto);
+        Task<string> CreateEquipmentAsync(EquipmentDTOCreate dto);
         Task<Equipment> UpdateEquipmentAsync(string id, EquipmentDTOUpdate dto);
         Task<bool> DeleteEquipmentAsync(string id);
     }

@@ -29,7 +29,7 @@ namespace Api.Space
         {
             try
             {
-                var space = await _spaceService.GetSpaceById(id);
+                var space = await _spaceService.GetSpaceByIdAsync(id);
                 if (space == null)
                 {
                     return NotFound("Space not found.");
@@ -38,7 +38,7 @@ namespace Api.Space
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetSpaceById method: {ex.Message}");
+                _logger.LogError($"Error in GetSpaceByIdAsync method: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -48,22 +48,13 @@ namespace Api.Space
         {
             try
             {
-                var spaces = await _spaceService.GetAllSpaces();
-                var spaceDto = spaces.Select(spaces => new SpaceDTOCreate {
-                    Name = spaces.Name,
-                    Type = spaces.Type,
-                    Capacity = spaces.Capacity,
-                    Description = spaces.Description,
-                    Location = spaces.Location,
-                    Price = spaces.Price,
-                }).ToList();
-
+                var spaces = await _spaceService.GetAllSpacesAsync();
                 return Ok(spaces);
 
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in GetAllSpaces method: {ex.Message}");
+                _logger.LogError($"Error in GetAllSpacesAsync method: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -79,7 +70,7 @@ namespace Api.Space
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Error in CreateSpace method : {ex.Message}");
+                _logger.LogError($"Error in CreateSpaceAsync method : {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -94,13 +85,11 @@ namespace Api.Space
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in UpdateSpace method : {ex.Message}");
+                _logger.LogError($"Error in UpdateSpaceAsync method : {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
             
         }
-
-
 
         [HttpDelete("{id}",Name = "DeleteSpace")]
         public async Task<IActionResult> DeleteSpace(string id)
@@ -112,7 +101,7 @@ namespace Api.Space
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error in DeleteSpace method: {ex.Message}");
+                _logger.LogError($"Error in DeleteSpaceAsync method: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

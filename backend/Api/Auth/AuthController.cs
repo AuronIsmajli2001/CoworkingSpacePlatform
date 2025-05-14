@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponseDTO>> Login([FromForm] LoginRequestDTO request)
+    public async Task<ActionResult<AuthResponseDTO>> Login([FromBody] LoginRequestDTO request)
     {
         try
         {
@@ -50,8 +50,8 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    public async Task<IActionResult> SignUp([FromForm] SignUpRequestDTO request)
-    {
+    public async Task<IActionResult> SignUp([FromBody] SignUpRequestDTO request)
+    { 
         try
         {
             var newUser = new User
@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpGet("GetCurrentUser")]
+    /*[HttpGet("GetCurrentUser")]
     public ActionResult<UserProfileDTO> GetCurrentUser()
     {
         try
@@ -136,5 +136,5 @@ public class AuthController : ControllerBase
             _logger.LogError(ex, "Error getting current user");
             return StatusCode(500, new ErrorResponseDTO("Error retrieving user profile"));
         }
-    }
+    }*/
 }

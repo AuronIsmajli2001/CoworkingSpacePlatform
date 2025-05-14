@@ -81,7 +81,7 @@ namespace Application.Services.Spaces
             }
         }
 
-        public async Task<IEnumerable<SpaceDTORead>> GetAllSpaces()
+        public async Task<IEnumerable<SpaceDTORead>> GetAllSpacesAsync()
         {
             try
             {
@@ -117,7 +117,7 @@ namespace Application.Services.Spaces
             }
         }
 
-        public async Task<SpaceDTORead> GetSpaceById(string id)
+        public async Task<SpaceDTORead> GetSpaceByIdAsync(string id)
         {
             try
             {

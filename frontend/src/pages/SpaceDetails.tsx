@@ -2,8 +2,24 @@ import Header from "../components/Header";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../utils/auth";
 
 export default function SpaceDetails() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/auth");
+    } else {
+      setIsLoading(false); // Only show content when authenticated
+    }
+  }, [navigate]);
+
+  if (isLoading) {
+    return null; // Or return a loading spinner
+  }
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
 
@@ -25,7 +41,7 @@ export default function SpaceDetails() {
   return (
     <>
       <Header />
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-6xl mx-auto px-6 pt-[6.5rem] pb-[2.5rem]">
         {/* Image */}
         <div className="rounded-xl overflow-hidden shadow-lg mb-8">
           <img

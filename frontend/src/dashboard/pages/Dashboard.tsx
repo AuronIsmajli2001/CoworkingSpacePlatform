@@ -1,3 +1,4 @@
+import React from "react";
 import Sidebar from "../components/Sidebar";
 
 const Dashboard = () => {
@@ -117,6 +118,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 # Ignore Visual Studio files
-.vs/
+/backend/.vs/
 *.suo
 *.db
 *.vscode/
@@ -16,7 +16,7 @@ obj/
 *.userosscache
 *.sln.docstates
 .vscode/
-
+.env
 **/obj/
 **/bin/
 *.cache
@@ -25,3 +25,4 @@ obj/
 *.vs/
 *.vsconfig
 
+/node_modules

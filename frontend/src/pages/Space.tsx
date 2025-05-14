@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import React from "react";
+import { isAuthenticated } from "../utils/auth";
 
 import { useNavigate } from "react-router-dom";
 
@@ -103,30 +105,54 @@ const categories = [
   "Private Office",
 ];
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
 export default function Spaces() {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [spaces, setSpaces] = useState<Space[]>([]);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/auth");
+    } else {
+      setIsLoading(false); // Only show content when authenticated
+    }
+  }, [navigate]);
+
+  if (isLoading) {
+    return null; // Or return a loading spinner
+  }
+
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [spaces, setSpaces] = useState<Space[]>([]);
+
+  useEffect(() => {
+    const url = `${baseUrl}/Space`;
+    console.log("📡 Requesting spaces from:", url);
+
     axios
       .get("http://localhost:5234/Space")
       .then((res) => {
         console.log("Spaces from backend:", res.data);
-        console.log("Raw backend data:", res.data);
 
-        setSpaces(
-          res.data.map((space: any) => ({
-            id: space.id,
-            name: space.name,
-            type: space.type,
-            imageUrl: space.image_URL, // map it to match your frontend type
-          }))
-        );
-        console.log("✅ Mapped Spaces:", res.data);
+        if (Array.isArray(res.data)) {
+          setSpaces(
+            res.data.map((space: any) => ({
+              id: space.id,
+              name: space.name,
+              type: space.type,
+              imageUrl: space.image_URL,
+            }))
+          );
+        } else {
+          console.error("❌ res.data is not an array:", res.data);
+        }
       })
       .catch((err) => {
-        console.error("Error fetching spaces:", err);
+        console.error("❌ Error fetching spaces:", err);
       });
   }, []);
 

@@ -11,11 +11,12 @@ namespace Application.DTOs.Equipments;
 
 public class EquipmentDTORead
 {
+    public string Id { get; set; }
     public string Type { get; set; }
     public string Name { get; set; }
-    public int quantity { get; set; }
-    public double price_per_piece { get; set; }
-    public List<SpaceEquipmentDTORead> SpaceEquipments { get; set; } = new List<SpaceEquipmentDTORead>();
+    public int Quantity { get; set; }
+    public double Price_per_piece { get; set; }
+    public ICollection<SpaceEquipmentDTORead> SpaceEquipments { get; set; } = new List<SpaceEquipmentDTORead>();
 
-    public List<ReservationEquipment> ReservationEquipment { get; set; } = new List<ReservationEquipment>();
+    public ICollection<ReservationEquipment> ReservationEquipment { get; set; } = new List<ReservationEquipment>();
 }
