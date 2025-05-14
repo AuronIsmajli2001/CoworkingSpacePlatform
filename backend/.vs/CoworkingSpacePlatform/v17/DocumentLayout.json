@@ -1,41 +1,33 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\",
+  "WorkspaceRootPath": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\application\\services\\equipments\\equipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\equipments\\equipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\spaces\\spaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\spaces\\space.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\api\\space\\spacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\space\\spacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\space\\spacecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\application\\services\\equipments\\iequipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\equipments\\iequipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\equipments\\iequipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\application\\dtos\\equipments\\equipmentdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\equipments\\equipmentdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\equipments\\equipmentdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\api\\equipment\\equipmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\equipment\\equipmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\application\\services\\spaces\\ispaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\spaces\\ispaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\spaces\\ispaceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\auron\\desktop\\coworkingspace\\coworkingspaceplatform\\backend\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -46,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 150,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -59,125 +51,87 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Space.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Domain\\Spaces\\Space.cs",
-              "RelativeDocumentMoniker": "Domain\\Spaces\\Space.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Domain\\Spaces\\Space.cs",
-              "RelativeToolTip": "Domain\\Spaces\\Space.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Title": "SpaceController.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Space\\SpaceController.cs",
+              "RelativeDocumentMoniker": "Api\\Space\\SpaceController.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Space\\SpaceController.cs",
+              "RelativeToolTip": "Api\\Space\\SpaceController.cs",
+              "ViewState": "AQIAAEwAAAAAAAAAAAAqwFsAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:39:00.302Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:12:21.981Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "EquipmentDTORead.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
-              "RelativeDocumentMoniker": "Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
-              "RelativeToolTip": "Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAiAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:37:17.239Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SpaceController.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Api\\Space\\SpaceController.cs",
-              "RelativeDocumentMoniker": "Api\\Space\\SpaceController.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Api\\Space\\SpaceController.cs",
-              "RelativeToolTip": "Api\\Space\\SpaceController.cs",
-              "ViewState": "AQIAAEwAAAAAAAAAAAAqwFsAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:12:21.981Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
               "Title": "ISpaceService.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\ISpaceService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\ISpaceService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Spaces\\ISpaceService.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\ISpaceService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\ISpaceService.cs",
               "RelativeToolTip": "Application\\Services\\Spaces\\ISpaceService.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:11:22.573Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:11:22.573Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "EquipmentController.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Api\\Equipment\\EquipmentController.cs",
-              "RelativeDocumentMoniker": "Api\\Equipment\\EquipmentController.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Api\\Equipment\\EquipmentController.cs",
-              "RelativeToolTip": "Api\\Equipment\\EquipmentController.cs",
-              "ViewState": "AQIAACMAAAAAAAAAAADwvzIAAABNAAAA",
+              "DocumentIndex": 0,
+              "Title": "SpaceService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\SpaceService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Spaces\\SpaceService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\SpaceService.cs",
+              "RelativeToolTip": "Application\\Services\\Spaces\\SpaceService.cs",
+              "ViewState": "AgIAABcAAAAAAAAAAAAAwCQAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:07:29.466Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
-              "RelativeDocumentMoniker": "Api\\Program.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
-              "RelativeToolTip": "Api\\Program.cs",
-              "ViewState": "AQIAAAEAAAAAAAAAAAAAABoAAABDAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:05:54.121Z",
+              "WhenOpened": "2025-05-13T15:58:28.563Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IEquipmentService.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Equipments\\IEquipmentService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\Equipments\\IEquipmentService.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Equipments\\IEquipmentService.cs",
-              "RelativeToolTip": "Application\\Services\\Equipments\\IEquipmentService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAuwA0AAAAoAAAA",
+              "Title": "EquipmentDTORead.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
+              "RelativeToolTip": "Application\\DTOs\\Equipments\\EquipmentDTORead.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAiAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:05:45.87Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:37:17.239Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SpaceService.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\SpaceService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\Spaces\\SpaceService.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Spaces\\SpaceService.cs",
-              "RelativeToolTip": "Application\\Services\\Spaces\\SpaceService.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAAzwCQAAAAzAAAA",
+              "Title": "Space.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Spaces\\Space.cs",
+              "RelativeDocumentMoniker": "Domain\\Spaces\\Space.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Spaces\\Space.cs",
+              "RelativeToolTip": "Domain\\Spaces\\Space.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T15:58:28.563Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 150,
-          "SelectedChildIndex": 0,
-          "Children": [
+              "WhenOpened": "2025-05-13T16:39:00.302Z"
+            },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EquipmentService.cs",
-              "DocumentMoniker": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Equipments\\EquipmentService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\Equipments\\EquipmentService.cs",
-              "ToolTip": "C:\\Users\\AURON\\Desktop\\CoworkingSpace\\CoworkingSpacePlatform\\backend\\Application\\Services\\Equipments\\EquipmentService.cs",
-              "RelativeToolTip": "Application\\Services\\Equipments\\EquipmentService.cs",
-              "ViewState": "AQIAAFMAAAAAAAAAAAAgwGAAAAAeAAAA",
+              "DocumentIndex": 6,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
+              "RelativeDocumentMoniker": "Api\\Program.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
+              "RelativeToolTip": "Api\\Program.cs",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAAABoAAABDAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-13T16:37:33.703Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-13T16:05:54.121Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IEquipmentService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Equipments\\IEquipmentService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Equipments\\IEquipmentService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Equipments\\IEquipmentService.cs",
+              "RelativeToolTip": "Application\\Services\\Equipments\\IEquipmentService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwA0AAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-13T16:05:45.87Z"
             }
           ]
         }

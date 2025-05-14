@@ -3,23 +3,23 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticated } from "../utils/auth";
+// import { isAuthenticated } from "../utils/auth";
 
 export default function SpaceDetails() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  // const [isLoading, setIsLoading] = useState(true); // Add loading state
 
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/auth");
-    } else {
-      setIsLoading(false); // Only show content when authenticated
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (!isAuthenticated()) {
+  //     navigate("/auth");
+  //   } else {
+  //     setIsLoading(false);
+  //   }
+  // }, [navigate]);
 
-  if (isLoading) {
-    return null; // Or return a loading spinner
-  }
+  // if (isLoading) {
+  //   return null;
+  // }
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
 
