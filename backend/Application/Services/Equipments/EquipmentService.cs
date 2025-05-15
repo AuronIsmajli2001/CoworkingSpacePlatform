@@ -61,7 +61,7 @@ namespace Application.Services.Equipments
         {
             try
             {
-                var equipment = await _unitOfWork.Repository<Equipment>().GetById(id).FirstOrDefaultAsync();
+                var equipment = await _unitOfWork.Repository<Equipment>().GetByIdAsync(id);
 
                 if (equipment == null)
                 {
@@ -124,7 +124,7 @@ namespace Application.Services.Equipments
             {
                 _logger.LogInformation("Fetching equipment with ID: {Id}", id);
 
-                var equipment = await _unitOfWork.Repository<Equipment>().GetById(id).FirstOrDefaultAsync();
+                var equipment = await _unitOfWork.Repository<Equipment>().GetByIdAsync(id);
 
                 if (equipment == null)
                 {
@@ -163,7 +163,7 @@ namespace Application.Services.Equipments
             {
                 _logger.LogInformation("Updating equipment with ID: {Id}", id);
 
-                var equipment = await _unitOfWork.Repository<Equipment>().GetById(id).FirstOrDefaultAsync();
+                var equipment = await _unitOfWork.Repository<Equipment>().GetByIdAsync(id);
 
                 if (equipment == null)
                 {

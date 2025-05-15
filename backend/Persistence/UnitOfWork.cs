@@ -2,6 +2,7 @@
 using Application.Interfaces.Repository;
 using Persistence.Database;
 using Persistence.Repository;
+using Domain.Users;
 using System.Collections;
 
 namespace Persistence.UnitOfWork
@@ -15,6 +16,8 @@ namespace Persistence.UnitOfWork
         {
             _dbContext = dbContext;
         }
+
+        public IRepository<User> Users => Repository<User>();
 
         public async Task<bool> CompleteAsync()
         {

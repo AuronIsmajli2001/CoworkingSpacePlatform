@@ -54,11 +54,17 @@ namespace Persistence.Repository
             return _dbContext.Set<Tentity>().Where(expression);
         }
 
-        public IQueryable<Tentity> GetById<Tkey>(Tkey id)
+        //public IQueryable<Tentity> GetById<Tkey>(Tkey id)
+        //{
+        //    // Assuming the ID property is named "Id"
+        //    return _dbContext.Set<Tentity>().Where(e => EF.Property<Tkey>(e, "Id")!.Equals(id));
+        //}
+
+        public async Task<Tentity?> GetByIdAsync(string id)
         {
-            // Assuming the ID property is named "Id"
-            return _dbContext.Set<Tentity>().Where(e => EF.Property<Tkey>(e, "Id")!.Equals(id));
+            return await _dbContext.Set<Tentity>().FindAsync(id);
         }
+
 
         public async Task SaveChangesAsync()
         {
