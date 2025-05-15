@@ -39,7 +39,7 @@ namespace Application.Services.Reservations
 
         public async Task<ReservationDTORead> GetReservationByIdAsync(string id)
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetById(id).FirstOrDefaultAsync();
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
 
             if (reservation == null)
                 return null;
@@ -74,7 +74,7 @@ namespace Application.Services.Reservations
 
         public async Task<Reservation> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetById(id).FirstOrDefaultAsync();
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null) return null;
 
             reservation.StartDateTime = dto.StartDateTime;
@@ -89,7 +89,7 @@ namespace Application.Services.Reservations
 
         public async Task<bool> DeleteReservationAsync(string id)
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetById(id).FirstOrDefaultAsync();
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null) return false;
 
             _unitOfWork.Repository<Reservation>().Delete(reservation);

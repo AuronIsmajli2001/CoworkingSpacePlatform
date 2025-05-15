@@ -41,7 +41,7 @@ namespace Application.Services.Memberships
         public async Task<MembershipDTORead> GetMembershipById(string id)
         {
             _logger.LogInformation("Fetching membership with ID: {Id}", id);
-            var membership = await _unitOfWork.Repository<Membership>().GetById(id).FirstOrDefaultAsync();
+            var membership = await _unitOfWork.Repository<Membership>().GetByIdAsync(id);
 
             if (membership == null)
             {
@@ -84,7 +84,7 @@ namespace Application.Services.Memberships
         public async Task<Membership> UpdateMembershipAsync(MembershipDTOUpdate membershipDTO)
         {
             _logger.LogInformation("Updating membership with ID: {Id}", membershipDTO.Id);
-            var membership = await _unitOfWork.Repository<Membership>().GetById(membershipDTO.Id).FirstOrDefaultAsync();
+            var membership = await _unitOfWork.Repository<Membership>().GetByIdAsync(membershipDTO.Id);
 
             if (membership == null)
             {
@@ -106,7 +106,7 @@ namespace Application.Services.Memberships
         public async Task<bool> DeleteMembershipAsync(string id)
         {
             _logger.LogInformation("Deleting membership with ID: {Id}", id);
-            var membership = await _unitOfWork.Repository<Membership>().GetById(id).FirstOrDefaultAsync();
+            var membership = await _unitOfWork.Repository<Membership>().GetByIdAsync(id);
 
             if (membership == null)
             {

@@ -123,7 +123,7 @@ namespace Application.Services.Spaces
             {
                 _logger.LogInformation("Fetching space with ID: {Id}", id);
 
-                var space = await _unitOfWork.Repository<Space>().GetById(id).FirstOrDefaultAsync();
+                var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
 
                 if (space == null)
                 {
@@ -165,7 +165,7 @@ namespace Application.Services.Spaces
             {
                 _logger.LogInformation("Updating space with ID: {Id}", id);
 
-                var space = await _unitOfWork.Repository<Space>().GetById(id).FirstOrDefaultAsync();
+                var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
 
                 if (space == null)
                 {
@@ -224,7 +224,7 @@ namespace Application.Services.Spaces
         {
             try
             {
-                var space = await _unitOfWork.Repository<Space>().GetById(id).FirstOrDefaultAsync();
+                var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
 
                 if (space == null)
                 {
