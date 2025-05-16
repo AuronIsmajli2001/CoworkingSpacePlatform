@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import React from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
 type Space = {
   id: string;
@@ -14,50 +16,54 @@ type Space = {
   imageUrl: string;
 };
 
-const initialSpaces = [
-  {
-    id: "1",
-    name: "Conference Room A",
-    type: "Conference",
-    description: "Main conference room with video conferencing",
-    capacity: 20,
-    price: 150.0,
-    location: "Floor 3, West Wing",
-    imageUrl: "https://example.com/conf-room-a.jpg",
-  },
-  {
-    id: "2",
-    name: "Creative Studio",
-    type: "Workspace",
-    description: "Open space for collaborative work",
-    capacity: 10,
-    price: 75.0,
-    location: "Floor 2, East Wing",
-    imageUrl: "https://example.com/creative-studio.jpg",
-  },
-];
-
 const Spaces = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpaces, setSelectedSpaces] = useState<string[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
-  const [spaces, setSpaces] = useState<Space[]>(initialSpaces);
+  const [spaces, setSpaces] = useState<Space[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newSpace, setNewSpace] = useState<Omit<Space, 'id'>>({ 
+  const [newSpace, setNewSpace] = useState<Omit<Space, "id">>({
     name: "",
     type: "",
     description: "",
     capacity: 0,
     price: 0,
     location: "",
-    imageUrl: ""
+    imageUrl: "",
   });
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5234/Space") // or use `baseUrl`
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          const mappedSpaces = res.data.map((space: any) => ({
+            id: space.id,
+            name: space.name,
+            type: space.type,
+            description: space.description,
+            capacity: space.capacity,
+            price: space.price,
+            location: space.location,
+            imageUrl: space.image_URL,
+          }));
+          setSpaces(mappedSpaces);
+        } else {
+          console.error("Expected array but got:", res.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching spaces:", err);
+      });
+  }, []);
 
   // CRUD Operations
   const toggleSelect = (id: string) => {
-    setSelectedSpaces(prev => 
-      prev.includes(id) ? prev.filter(spaceId => spaceId !== id) : [...prev, id]
+    setSelectedSpaces((prev) =>
+      prev.includes(id)
+        ? prev.filter((spaceId) => spaceId !== id)
+        : [...prev, id]
     );
   };
 
@@ -65,52 +71,62 @@ const Spaces = () => {
     if (selectedSpaces.length === spaces.length) {
       setSelectedSpaces([]);
     } else {
-      setSelectedSpaces(spaces.map(space => space.id));
+      setSelectedSpaces(spaces.map((space) => space.id));
     }
   };
 
   const handleDelete = (id: string) => {
-    setSpaces(prev => prev.filter(space => space.id !== id));
+    setSpaces((prev) => prev.filter((space) => space.id !== id));
   };
 
   const handleBulkDelete = () => {
-    setSpaces(prev => prev.filter(space => !selectedSpaces.includes(space.id)));
+    setSpaces((prev) =>
+      prev.filter((space) => !selectedSpaces.includes(space.id))
+    );
     setSelectedSpaces([]);
     setShowConfirmModal(false);
   };
 
   const handleSaveEdit = () => {
     if (editingSpace) {
-      setSpaces(prev => 
-        prev.map(space => space.id === editingSpace.id ? editingSpace : space)
+      setSpaces((prev) =>
+        prev.map((space) =>
+          space.id === editingSpace.id ? editingSpace : space
+        )
       );
       setEditingSpace(null);
     }
   };
 
   const handleAddSpace = () => {
-    setSpaces(prev => [...prev, {
-      ...newSpace,
-      id: (prev.length + 1).toString()
-    }]);
+    setSpaces((prev) => [
+      ...prev,
+      {
+        ...newSpace,
+        id: (prev.length + 1).toString(),
+      },
+    ]);
     setShowAddModal(false);
-    setNewSpace({ 
+    setNewSpace({
       name: "",
       type: "",
       description: "",
       capacity: 0,
       price: 0,
       location: "",
-      imageUrl: ""
+      imageUrl: "",
     });
   };
 
   // Stats Calculations
   const totalSpaces = spaces.length;
   const totalCapacity = spaces.reduce((sum, space) => sum + space.capacity, 0);
-  const averagePrice = spaces.length > 0 
-    ? (spaces.reduce((sum, space) => sum + space.price, 0) / spaces.length).toFixed(2)
-    : 0;
+  const averagePrice =
+    spaces.length > 0
+      ? (
+          spaces.reduce((sum, space) => sum + space.price, 0) / spaces.length
+        ).toFixed(2)
+      : 0;
 
   return (
     <div className="flex h-screen">
@@ -125,11 +141,15 @@ const Spaces = () => {
             </div>
             <div className="bg-gray-800 p-4 rounded-lg shadow">
               <p className="text-sm text-gray-400">Total Capacity</p>
-              <h2 className="text-2xl font-bold text-green-400">{totalCapacity}</h2>
+              <h2 className="text-2xl font-bold text-green-400">
+                {totalCapacity}
+              </h2>
             </div>
             <div className="bg-gray-800 p-4 rounded-lg shadow">
               <p className="text-sm text-gray-400">Avg. Price</p>
-              <h2 className="text-2xl font-bold text-blue-400">${averagePrice}</h2>
+              <h2 className="text-2xl font-bold text-blue-400">
+                ${averagePrice}
+              </h2>
             </div>
           </div>
 
@@ -172,7 +192,10 @@ const Spaces = () => {
                     <input
                       type="checkbox"
                       onChange={toggleSelectAll}
-                      checked={selectedSpaces.length === spaces.length && spaces.length > 0}
+                      checked={
+                        selectedSpaces.length === spaces.length &&
+                        spaces.length > 0
+                      }
                       className="accent-blue-600"
                     />
                   </th>
@@ -186,12 +209,20 @@ const Spaces = () => {
               </thead>
               <tbody>
                 {spaces
-                  .filter(space =>
-                    space.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    space.location.toLowerCase().includes(searchTerm.toLowerCase())
+                  .filter(
+                    (space) =>
+                      space.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()) ||
+                      space.location
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
                   )
-                  .map(space => (
-                    <tr key={space.id} className="border-b border-gray-700 hover:bg-gray-800">
+                  .map((space) => (
+                    <tr
+                      key={space.id}
+                      className="border-b border-gray-700 hover:bg-gray-800"
+                    >
                       <td className="p-3">
                         <input
                           type="checkbox"
@@ -202,8 +233,8 @@ const Spaces = () => {
                       </td>
                       <td className="p-3">
                         <div className="flex items-center gap-3">
-                          <img 
-                            src={space.imageUrl} 
+                          <img
+                            src={space.imageUrl}
                             alt={space.name}
                             className="w-8 h-8 rounded-full object-cover"
                           />
@@ -222,7 +253,9 @@ const Spaces = () => {
                       </td>
                       <td className="p-3">{space.capacity}</td>
                       <td className="p-3">${space.price.toFixed(2)}</td>
-                      <td className="p-3 text-gray-300 text-sm">{space.location}</td>
+                      <td className="p-3 text-gray-300 text-sm">
+                        {space.location}
+                      </td>
                       <td className="p-3 flex gap-2">
                         <button
                           onClick={() => setEditingSpace(space)}
@@ -252,7 +285,8 @@ const Spaces = () => {
               <div className="bg-gray-800 p-6 rounded shadow-lg w-96">
                 <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
                 <p className="text-sm text-gray-300 mb-6">
-                  Are you sure you want to delete {selectedSpaces.length} selected space(s)?
+                  Are you sure you want to delete {selectedSpaces.length}{" "}
+                  selected space(s)?
                 </p>
                 <div className="flex justify-end gap-2">
                   <button
@@ -278,7 +312,7 @@ const Spaces = () => {
               <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-w-2xl">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Edit Space</h3>
-                  <button 
+                  <button
                     onClick={() => setEditingSpace(null)}
                     className="text-gray-400 hover:text-white"
                   >
@@ -288,20 +322,34 @@ const Spaces = () => {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Name</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Name
+                    </label>
                     <input
                       type="text"
                       value={editingSpace.name}
-                      onChange={(e) => setEditingSpace({...editingSpace, name: e.target.value})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          name: e.target.value,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Type</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Type
+                    </label>
                     <select
                       value={editingSpace.type}
-                      onChange={(e) => setEditingSpace({...editingSpace, type: e.target.value})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          type: e.target.value,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
                       <option>Conference</option>
@@ -312,51 +360,86 @@ const Spaces = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Capacity</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Capacity
+                    </label>
                     <input
                       type="number"
                       value={editingSpace.capacity}
-                      onChange={(e) => setEditingSpace({...editingSpace, capacity: parseInt(e.target.value) || 0})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          capacity: parseInt(e.target.value) || 0,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Price ($)</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Price ($)
+                    </label>
                     <input
                       type="number"
                       step="0.01"
                       value={editingSpace.price}
-                      onChange={(e) => setEditingSpace({...editingSpace, price: parseFloat(e.target.value) || 0})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          price: parseFloat(e.target.value) || 0,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div className="col-span-2">
-                    <label className="block text-sm text-gray-300 mb-1">Description</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Description
+                    </label>
                     <textarea
                       value={editingSpace.description}
-                      onChange={(e) => setEditingSpace({...editingSpace, description: e.target.value})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          description: e.target.value,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full h-20"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Location</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Location
+                    </label>
                     <input
                       type="text"
                       value={editingSpace.location}
-                      onChange={(e) => setEditingSpace({...editingSpace, location: e.target.value})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          location: e.target.value,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Image URL</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Image URL
+                    </label>
                     <input
                       type="text"
                       value={editingSpace.imageUrl}
-                      onChange={(e) => setEditingSpace({...editingSpace, imageUrl: e.target.value})}
+                      onChange={(e) =>
+                        setEditingSpace({
+                          ...editingSpace,
+                          imageUrl: e.target.value,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
@@ -386,7 +469,7 @@ const Spaces = () => {
               <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-w-2xl">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Add New Space</h3>
-                  <button 
+                  <button
                     onClick={() => setShowAddModal(false)}
                     className="text-gray-400 hover:text-white"
                   >
@@ -396,21 +479,29 @@ const Spaces = () => {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Name*</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Name*
+                    </label>
                     <input
                       type="text"
                       value={newSpace.name}
-                      onChange={(e) => setNewSpace({...newSpace, name: e.target.value})}
+                      onChange={(e) =>
+                        setNewSpace({ ...newSpace, name: e.target.value })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Type*</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Type*
+                    </label>
                     <select
                       value={newSpace.type}
-                      onChange={(e) => setNewSpace({...newSpace, type: e.target.value})}
+                      onChange={(e) =>
+                        setNewSpace({ ...newSpace, type: e.target.value })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     >
@@ -423,54 +514,83 @@ const Spaces = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Capacity*</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Capacity*
+                    </label>
                     <input
                       type="number"
                       value={newSpace.capacity || ""}
-                      onChange={(e) => setNewSpace({...newSpace, capacity: parseInt(e.target.value) || 0})}
+                      onChange={(e) =>
+                        setNewSpace({
+                          ...newSpace,
+                          capacity: parseInt(e.target.value) || 0,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Price ($)*</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Price ($)*
+                    </label>
                     <input
                       type="number"
                       step="0.01"
                       value={newSpace.price || ""}
-                      onChange={(e) => setNewSpace({...newSpace, price: parseFloat(e.target.value) || 0})}
+                      onChange={(e) =>
+                        setNewSpace({
+                          ...newSpace,
+                          price: parseFloat(e.target.value) || 0,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
 
                   <div className="col-span-2">
-                    <label className="block text-sm text-gray-300 mb-1">Description</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Description
+                    </label>
                     <textarea
                       value={newSpace.description}
-                      onChange={(e) => setNewSpace({...newSpace, description: e.target.value})}
+                      onChange={(e) =>
+                        setNewSpace({
+                          ...newSpace,
+                          description: e.target.value,
+                        })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full h-20"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Location*</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Location*
+                    </label>
                     <input
                       type="text"
                       value={newSpace.location}
-                      onChange={(e) => setNewSpace({...newSpace, location: e.target.value})}
+                      onChange={(e) =>
+                        setNewSpace({ ...newSpace, location: e.target.value })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Image URL</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Image URL
+                    </label>
                     <input
                       type="text"
                       value={newSpace.imageUrl}
-                      onChange={(e) => setNewSpace({...newSpace, imageUrl: e.target.value})}
+                      onChange={(e) =>
+                        setNewSpace({ ...newSpace, imageUrl: e.target.value })
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
