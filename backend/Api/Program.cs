@@ -7,18 +7,27 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
 using Persistence.UnitOfWork;
 using Application.Services.SpaceEquipments;
+using Application.Services.Users;
+
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Application.Services.Auth;
 using Application.Services.Equipments;
+using Application.Services.IUserServices;
+using Application.Services.Users;
 
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddScoped<IUserService, UserService>();
+
+
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend",
