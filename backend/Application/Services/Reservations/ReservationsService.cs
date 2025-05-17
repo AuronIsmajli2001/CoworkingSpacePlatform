@@ -54,23 +54,32 @@ namespace Application.Services.Reservations
                 Status = reservation.Status
             };
         }
-
         public async Task CreateReservationAsync(ReservationDTOCreate dto)
         {
-            var reservation = new Reservation
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                UserId = dto.UserId,
-                SpaceId = dto.SpaceId,
-                StartDateTime = dto.StartDateTime,
-                EndDateTime = dto.EndDateTime,
-                Created_at = DateTime.Now,
-                Status = Domain.Enums.ReservationStatus.Pending
-            };
+                var reservation = new Reservation
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = dto.UserId,
+                    SpaceId = dto.SpaceId,
+                    StartDateTime = dto.StartDateTime,
+                    EndDateTime = dto.EndDateTime,
+                    Created_at = DateTime.Now,
+                    Status = dto.Status
+                };
 
-            _unitOfWork.Repository<Reservation>().Create(reservation);
-            await _unitOfWork.CompleteAsync();
+                _unitOfWork.Repository<Reservation>().Create(reservation);
+                await _unitOfWork.CompleteAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"[CreateReservationAsync] Failed: {ex.Message}");
+                throw; // Optional: keep this to let Swagger show the 500
+            }
         }
+
+
 
         public async Task<Reservation> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
         {

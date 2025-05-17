@@ -18,6 +18,7 @@ using Application.Services.Auth;
 using Application.Services.Equipments;
 using Application.Services.IUserServices;
 using Application.Services.Users;
+using Application.Services.Reservations;
 
 public class Program
 {
@@ -41,7 +42,12 @@ public class Program
 
 
         // Add services to the container
-        builder.Services.AddControllers();
+   builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
         builder.Services.AddEndpointsApiExplorer();
 
         // Add your existing services
@@ -52,6 +58,8 @@ public class Program
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IEquipmentService, EquipmentService>();
+        builder.Services.AddScoped<IReservationsService, ReservationService>();
+
 
         // Add JWT Authentication
         builder.Services.AddAuthentication(options =>
