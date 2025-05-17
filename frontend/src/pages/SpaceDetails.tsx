@@ -1,4 +1,5 @@
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -89,6 +90,7 @@ export default function SpaceDetails() {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

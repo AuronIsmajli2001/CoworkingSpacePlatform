@@ -16,5 +16,6 @@ namespace Application.Interfaces.Repository
         void Delete(Tentity entity);
         void DeleteRange(List<Tentity> entities);
         Task SaveChangesAsync();
+        object GetQuery();
     }
 }

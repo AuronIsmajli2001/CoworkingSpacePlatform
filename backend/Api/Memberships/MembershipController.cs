@@ -20,33 +20,46 @@ namespace Api.Memberships
             _logger = logger;
         }
 
-        [HttpPost(Name = "CreateMembership")]
-        public async Task<IActionResult> CreateMembership([FromBody] MembershipDTOCreate membershipDto)
+        // MembershipController.cs
+        [ApiController]
+        [Route("[controller]")]
+        public class MembershipsController : ControllerBase
         {
-            try
-            {
-                await _membershipService.CreateMembershipAsync(membershipDto);
-                return Ok("Membership created successfully.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error in CreateMembership: {ex.Message}");
-                return StatusCode(500, "Internal server error");
-            }
-        }
+            private readonly IMembershipService _service;
 
-        [HttpGet(Name = "GetAllMemberships")]
-        public async Task<IActionResult> GetAllMemberships()
-        {
-            try
+            public MembershipsController(IMembershipService service)
             {
-                var memberships = await _membershipService.GetAllMemberships();
+                _service = service;
+            }
+
+            [HttpGet]
+            public async Task<IActionResult> GetAll()
+            {
+                var memberships = await _service.GetAllMemberships();
                 return Ok(memberships);
             }
-            catch (Exception ex)
+
+            [HttpPost]
+            [Consumes("multipart/form-data")]
+            public async Task<IActionResult> Create([FromForm] MembershipCreateDto dto)
             {
-                _logger.LogError($"Error in GetAllMemberships: {ex.Message}");
-                return StatusCode(500, "Internal server error");
+                var createdMembership = await _service.CreateMembership(dto);
+                return CreatedAtAction(nameof(GetAll), new { id = createdMembership.Id }, createdMembership);
+            }
+
+            [HttpPut("{id}")]
+            [Consumes("multipart/form-data")]
+            public async Task<IActionResult> Update(string id, [FromForm] MembershipUpdateDto dto)
+            {
+                var updatedMembership = await _service.UpdateMembership(id, dto);
+                return Ok(updatedMembership);
+            }
+
+            [HttpDelete("{id}")]
+            public async Task<IActionResult> Delete(string id)
+            {
+                await _service.DeleteMembership(id);
+                return NoContent();
             }
         }
     }

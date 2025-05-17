@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import React from "react";
-// import { isAuthenticated } from "../utils/auth";
+import Footer from "../components/Footer";
 
 import { useNavigate } from "react-router-dom";
 
@@ -225,6 +224,8 @@ export default function Spaces() {
           })}
         </div>
       </div>
+
+      <Footer/>
     </>
   );
 }

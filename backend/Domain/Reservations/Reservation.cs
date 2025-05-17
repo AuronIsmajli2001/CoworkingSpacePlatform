@@ -27,5 +27,7 @@ namespace Domain.Reservations
         public ICollection<ReservationEquipment> ReservationEquipment { get; set; }
         public User User { get; set; }
         public Space Space { get; set; }
+        public string PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
     }
 }
