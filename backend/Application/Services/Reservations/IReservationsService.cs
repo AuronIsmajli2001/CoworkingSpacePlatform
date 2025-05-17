@@ -8,7 +8,7 @@ using Domain.Reservations;
 
 namespace Application.Services.Reservations
 {
-    interface IReservationsService
+    public interface IReservationsService
     {
         Task<IEnumerable<ReservationDTORead>> GetAllReservationsAsync();
         Task<ReservationDTORead> GetReservationByIdAsync(string id);

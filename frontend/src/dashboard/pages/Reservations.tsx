@@ -3,6 +3,8 @@ import CalendarView from "../pages/CalendarView";
 import { useState } from "react";
 import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
 type User = {
   id: string;
@@ -41,50 +43,6 @@ type Reservation = {
   reservationEquipment: ReservationEquipment[];
 };
 
-const sampleReservations: Reservation[] = [
-  {
-    id: "1",
-    userId: "user1",
-    spaceId: "space1",
-    startDateTime: new Date("2025-04-15T10:00:00"),
-    endDateTime: new Date("2025-04-15T12:00:00"),
-    createdAt: new Date("2025-04-20"),
-    status: ReservationStatus.Confirmed,
-    user: {
-      id: "user1",
-      name: "Neil Sims",
-      email: "neil.sims@fswabs.com",
-    },
-    space: {
-      id: "space1",
-      name: "Conference Room A",
-    },
-    reservationEquipment: [
-      { id: "eq1", name: "Projector", quantity: 1 },
-      { id: "eq2", name: "Whiteboard", quantity: 1 },
-    ],
-  },
-  {
-    id: "2",
-    userId: "user2",
-    spaceId: "space2",
-    startDateTime: new Date("2025-04-16T14:00:00"),
-    endDateTime: new Date("2025-04-16T16:00:00"),
-    createdAt: new Date("2025-04-21"),
-    status: ReservationStatus.Pending,
-    user: {
-      id: "user2",
-      name: "Roberta Cazar",
-      email: "roberta.casas@fswabs.com",
-    },
-    space: {
-      id: "space2",
-      name: "Meeting Room B",
-    },
-    reservationEquipment: [{ id: "eq3", name: "TV Screen", quantity: 1 }],
-  },
-];
-
 const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedReservations, setSelectedReservations] = useState<string[]>(
@@ -93,11 +51,24 @@ const Reservations = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [editingReservation, setEditingReservation] =
     useState<Reservation | null>(null);
-  const [reservations, setReservations] =
-    useState<Reservation[]>(sampleReservations);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [currentPage, setCurrentPage] = useState(1);
   const reservationsPerPage = 5;
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const response = await axios.get("https://localhost:5234/reservations");
+        setReservations(response.data);
+      } catch (error) {
+        console.error("Failed to fetch reservations:", error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
 
   const indexOfLastReservation = currentPage * reservationsPerPage;
   const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage;
