@@ -37,7 +37,9 @@ namespace Application.Services.Reservations
             }).ToList();
         }
 
-        public async Task<ReservationDTORead> GetReservationByIdAsync(string id)
+#pragma warning disable CS8613 // Nullability of reference types in return type doesn't match implicitly implemented member.
+        public async Task<ReservationDTORead?> GetReservationByIdAsync(string id)
+#pragma warning restore CS8613 // Nullability of reference types in return type doesn't match implicitly implemented member.
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
 
@@ -72,7 +74,9 @@ namespace Application.Services.Reservations
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<Reservation> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
+#pragma warning disable CS8613 // Nullability of reference types in return type doesn't match implicitly implemented member.
+        public async Task<Reservation?> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
+#pragma warning restore CS8613 // Nullability of reference types in return type doesn't match implicitly implemented member.
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null) return null;
@@ -97,5 +101,7 @@ namespace Application.Services.Reservations
 
             return true;
         }
+
+      
     }
 }

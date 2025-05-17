@@ -12,7 +12,10 @@ namespace Application.DTOs.Memberships
        
         public string UserId { get; set; }  
         public string Type { get; set; }
+        public string PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
         public DateTime EndDate { get; set; }  
-        public decimal Price { get; set; }  
+        public decimal Price { get; set; }
+        public object Id { get; set; }
     }
 }

@@ -28,6 +28,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { isAuthenticated } from "../utils/auth";
+import { reservationApi } from "../api/reservationApi";
+import { getCurrentUser } from "../api/authApi";
+import { membershipApi } from "../api/membershipApi";
 
 type Plan = {
   id: string;
@@ -56,8 +59,16 @@ const PricingPlans = () => {
   const [selectedAddOns, setSelectedAddOns] = useState<Record<string, number>>({});
   const [bookingDate, setBookingDate] = useState('');
   const [bookingDuration, setBookingDuration] = useState(1);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showCardForm, setShowCardForm] = useState(false);
+  const [cardDetails, setCardDetails] = useState({
+    number: '',
+    name: '',
+    expiry: '',
+    cvv: ''
+  });
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
- 
   const plans: Plan[] = [
     {
       id: 'daily',
@@ -186,6 +197,7 @@ const PricingPlans = () => {
     setSelectedAddOns({});
     setBookingDate('');
     setBookingDuration(1);
+    setBookingSuccess(false);
   };
 
   const handleAddOnChange = (addOnId: string, quantity: number) => {
@@ -218,17 +230,62 @@ const PricingPlans = () => {
   };
 
   const handleBookingSubmit = () => {
-    const bookingData = {
-      plan: selectedPlan?.title,
-      date: bookingDate,
-      duration: bookingDuration,
-      addOns: selectedAddOns,
-      totalPrice: calculateTotal()
-    };
-    
-    console.log('Booking submitted:', bookingData);
-    alert(`Booking confirmed for ${selectedPlan?.title}! Total: €${calculateTotal()}`);
+    if (!selectedPlan || !bookingDate) return;
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentMethodSelect = (method: 'Online' | 'OnSite') => {
+    if (method === 'Online') {
+      setShowCardForm(true);
+    } else {
+      handlePaymentConfirm(method);
+    }
+  };
+
+  const handleCardSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, you would validate the card details here
+    handlePaymentConfirm('Online');
+  };
+
+  const handlePaymentConfirm = async (method: 'Online' | 'OnSite') => {
+    try {
+      const currentUser = await getCurrentUser();
+      const total = calculateTotal();
+
+      if (selectedPlan?.period === 'month') {
+        await membershipApi.createMembership({
+          type: selectedPlan.id,
+          price: total,
+          paymentMethod: method,
+          isPaid: method === 'Online' // Assuming online payments are immediately processed
+        });
+      } else {
+        await reservationApi.createReservation({
+          userId: currentUser.id,
+          spaceId: "default-space-id",
+          startDateTime: new Date(bookingDate).toISOString(),
+          endDateTime: new Date(
+            new Date(bookingDate).getTime() + 
+            (bookingDuration * 24 * 60 * 60 * 1000)
+          ).toISOString(),
+          paymentMethod: method,
+          isPaid: method === 'Online',
+          status: 'Confirmed'
+        });
+      }
+
+      setBookingSuccess(true);
+      setShowPaymentModal(false);
+      setShowCardForm(false);
+    } catch (error) {
+      alert(`Payment failed: ${error.message}`);
+    }
+  };
+
+  const resetBookingFlow = () => {
     setSelectedPlan(null);
+    setBookingSuccess(false);
   };
 
   if (isLoading) {
@@ -261,9 +318,10 @@ const PricingPlans = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan) => (
               <div 
-                key={plan.id}
-                className={`border ${plan.popular ? 'border-2 border-blue-500 shadow-lg' : 'border-gray-200 hover:border-blue-300'} rounded-2xl p-6 transition-all relative`}
-              >
+                  key={plan.id}
+                  className={`flex flex-col justify-between border ${plan.popular ? 'border-2 border-blue-500 shadow-lg' : 'border-gray-200 hover:border-blue-300'} rounded-2xl p-6 transition-all relative`}
+                >
+
                 {plan.popular && (
                   <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
                     POPULAR CHOICE
@@ -313,7 +371,7 @@ const PricingPlans = () => {
       </section>
 
       {/* Booking Modal */}
-      {selectedPlan && (
+      {selectedPlan && !bookingSuccess && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
@@ -458,7 +516,157 @@ const PricingPlans = () => {
               className="w-full mt-6 py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
               disabled={selectedPlan.period === 'day' && !bookingDate}
             >
-              {selectedPlan.period === 'month' ? 'Start Membership' : 'Confirm Booking'}
+              {selectedPlan.period === 'month' ? 'Start Membership' : 'Proceed to Payment'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Options Modal */}
+      {showPaymentModal && !showCardForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Payment Method</h2>
+              <button 
+                onClick={() => setShowPaymentModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <button
+                onClick={() => handlePaymentMethodSelect('Online')}
+                className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <CreditCard className="w-6 h-6 text-blue-600" />
+                  <span className="font-medium">Pay with Card</span>
+                </div>
+                <span className="text-gray-500">Visa, Mastercard, etc.</span>
+              </button>
+
+              <button
+                onClick={() => handlePaymentMethodSelect('OnSite')}
+                className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <Wallet className="w-6 h-6 text-blue-600" />
+                  <span className="font-medium">Pay On Site</span>
+                </div>
+                <span className="text-gray-500">Cash or card at our office</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Card Payment Form */}
+      {showCardForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Card Payment</h2>
+              <button 
+                onClick={() => {
+                  setShowCardForm(false);
+                  setShowPaymentModal(true);
+                }}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCardSubmit} className="space-y-4">
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">Card Number</label>
+                <input
+                  type="text"
+                  placeholder="1234 5678 9012 3456"
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                  value={cardDetails.number}
+                  onChange={(e) => setCardDetails({...cardDetails, number: e.target.value})}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700 font-medium mb-2">Cardholder Name</label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                  value={cardDetails.name}
+                  onChange={(e) => setCardDetails({...cardDetails, name: e.target.value})}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">Expiry Date</label>
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    value={cardDetails.expiry}
+                    onChange={(e) => setCardDetails({...cardDetails, expiry: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">CVV</label>
+                  <input
+                    type="text"
+                    placeholder="123"
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    value={cardDetails.cvv}
+                    onChange={(e) => setCardDetails({...cardDetails, cvv: e.target.value})}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-200 mt-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-medium">Total:</span>
+                  <span className="font-bold text-lg">€{calculateTotal()}</span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full mt-6 py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+              >
+                Confirm Payment
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Booking Success Modal */}
+      {bookingSuccess && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full text-center">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+              <Check className="h-6 w-6 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Booking Successful!</h2>
+            <p className="text-gray-600 mb-6">
+              Your {selectedPlan?.title.toLowerCase()} has been confirmed.
+              {selectedPlan?.period === 'month' ? ' Welcome to our coworking space!' : 
+               ' We look forward to seeing you!'}
+            </p>
+            <button
+              onClick={resetBookingFlow}
+              className="w-full py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+            >
+              Done
             </button>
           </div>
         </div>
@@ -480,85 +688,85 @@ const PricingPlans = () => {
         </div>
       </section>
 
-       {/* Footer */}
-          <footer className="bg-gray-900 text-white">
-            <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
-              {/* 1️⃣ Logo + Desc */}
-              <div className="space-y-6">
-                <h2 className="text-3xl font-extrabold tracking-wider">
-                  Co<span className="text-blue-500">Space</span>
-                </h2>
-                <p className="max-w-xs text-sm text-neutral-300">
-                  Work for yourself, not by yourself. Flexible, connected,
-                  inspiring.
-                </p>
-              </div>
-    
-              {/* 2️⃣ Socials + Payments */}
-              <div className="space-y-10">
-                <div>
-                  <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
-                  <p className="text-white text-[16px] mb-6">
-                    A monthly digest of the latest news and resources.
-                  </p>
-                  <div className="flex gap-3">
-                    {[Facebook, Instagram, Twitter, Linkedin, Youtube].map(
-                      (Icon, i) => (
-                        <a
-                          key={i}
-                          href="#"
-                          className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition"
-                        >
-                          <Icon className="w-5 h-5 text-white" />
-                        </a>
-                      )
-                    )}
-                  </div>
-                </div>
-    
-                <div>
-                  <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
-                  <div className="flex gap-3">
-                    {[CreditCard, Wallet].map((Icon, i) => (
-                      <span
-                        key={i}
-                        className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center"
-                      >
-                        <Icon className="w-5 h-5 text-white" />
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-    
-              {/* 3️⃣ Contacts */}
-              <div className="space-y-8">
-                <h4 className="text-2xl font-semibold">Our Contacts</h4>
-                {[
-                  { icon: MapPin, text: "10 B St, Prishtinë, 10000" },
-                  { icon: Mail, text: "info@cospace.com" },
-                  { icon: Phone, text: "+383 48 739 738" },
-                ].map(({ icon: Icon, text }) => (
-                  <div key={text} className="flex items-center gap-4">
-                    <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white">
+        <div className="container mx-auto px-6 py-16 grid gap-12 md:grid-cols-3">
+          {/* 1️⃣ Logo + Desc */}
+          <div className="space-y-6">
+            <h2 className="text-3xl font-extrabold tracking-wider">
+              Co<span className="text-blue-500">Space</span>
+            </h2>
+            <p className="max-w-xs text-sm text-neutral-300">
+              Work for yourself, not by yourself. Flexible, connected,
+              inspiring.
+            </p>
+          </div>
+
+          {/* 2️⃣ Socials + Payments */}
+          <div className="space-y-10">
+            <div>
+              <h4 className="text-2xl font-semibold mb-4">Our Socials</h4>
+              <p className="text-white text-[16px] mb-6">
+                A monthly digest of the latest news and resources.
+              </p>
+              <div className="flex gap-3">
+                {[Facebook, Instagram, Twitter, Linkedin, Youtube].map(
+                  (Icon, i) => (
+                    <a
+                      key={i}
+                      href="#"
+                      className="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center transition"
+                    >
                       <Icon className="w-5 h-5 text-white" />
-                    </span>
-                    <span>{text}</span>
-                  </div>
+                    </a>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div>
+              <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
+              <div className="flex gap-3">
+                {[CreditCard, Wallet].map((Icon, i) => (
+                  <span
+                    key={i}
+                    className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center"
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </span>
                 ))}
               </div>
             </div>
-    
-            {/* Bottom Bar */}
-            <div className="border-t border-neutral-700 text-sm flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-6 container mx-auto">
-              <span>
-                © {new Date().getFullYear()} CoSpace. All rights reserved.
-              </span>
-              <a href="#" className="hover:text-neutral-400">
-                Terms of use
-              </a>
-            </div>
-          </footer>
+          </div>
+
+          {/* 3️⃣ Contacts */}
+          <div className="space-y-8">
+            <h4 className="text-2xl font-semibold">Our Contacts</h4>
+            {[
+              { icon: MapPin, text: "10 B St, Prishtinë, 10000" },
+              { icon: Mail, text: "info@cospace.com" },
+              { icon: Phone, text: "+383 48 739 738" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-4">
+                <span className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-white" />
+                </span>
+                <span>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-neutral-700 text-sm flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-6 container mx-auto">
+          <span>
+            © {new Date().getFullYear()} CoSpace. All rights reserved.
+          </span>
+          <a href="#" className="hover:text-neutral-400">
+            Terms of use
+          </a>
+        </div>
+      </footer>
     </>
   );
 };

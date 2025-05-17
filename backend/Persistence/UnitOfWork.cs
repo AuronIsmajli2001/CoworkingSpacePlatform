@@ -4,6 +4,7 @@ using Persistence.Database;
 using Persistence.Repository;
 using Domain.Users;
 using System.Collections;
+using Domain.Memberships;
 
 namespace Persistence.UnitOfWork
 {
@@ -18,6 +19,7 @@ namespace Persistence.UnitOfWork
         }
 
         public IRepository<User> Users => Repository<User>();
+        public IRepository<Membership> Memberships => Repository<Membership>();
 
         public async Task<bool> CompleteAsync()
         {
