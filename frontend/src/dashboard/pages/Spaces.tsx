@@ -23,6 +23,7 @@ const Spaces = () => {
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
+
   const [newSpace, setNewSpace] = useState<Omit<Space, "id">>({
     name: "",
     type: "",
@@ -32,6 +33,12 @@ const Spaces = () => {
     location: "",
     imageUrl: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const spacesPerPage = 6;
+
+  const indexOfLastSpace = currentPage * spacesPerPage;
+  const indexOfFirstSpace = indexOfLastSpace - spacesPerPage;
+  const currentSpaces = spaces.slice(indexOfFirstSpace, indexOfLastSpace);
 
   useEffect(() => {
     axios
@@ -208,7 +215,7 @@ const Spaces = () => {
                 </tr>
               </thead>
               <tbody>
-                {spaces
+                {currentSpaces
                   .filter(
                     (space) =>
                       space.name
@@ -277,6 +284,43 @@ const Spaces = () => {
                   ))}
               </tbody>
             </table>
+            <div className="flex justify-center items-center gap-4 mt-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`px-4 py-1 rounded ${
+                  currentPage === 1
+                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-700 text-white hover:bg-gray-600"
+                }`}
+              >
+                ←
+              </button>
+
+              <span className="text-sm text-gray-300">
+                Page {currentPage} of {Math.ceil(spaces.length / spacesPerPage)}
+              </span>
+
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    prev < Math.ceil(spaces.length / spacesPerPage)
+                      ? prev + 1
+                      : prev
+                  )
+                }
+                disabled={
+                  currentPage === Math.ceil(spaces.length / spacesPerPage)
+                }
+                className={`px-4 py-1 rounded ${
+                  currentPage === Math.ceil(spaces.length / spacesPerPage)
+                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    : "bg-gray-700 text-white hover:bg-gray-600"
+                }`}
+              >
+                →
+              </button>
+            </div>
           </div>
 
           {/* Delete Confirmation Modal */}
