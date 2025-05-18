@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
 using Persistence.UnitOfWork;
 using Application.Services.SpaceEquipments;
+using Application.Services.Users;
+
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -13,12 +16,19 @@ using Microsoft.OpenApi.Models;
 using Application.Services.Auth;
 using Application.Services.Equipments;
 using Application.Services.Memberships;
+using Application.Services.IUserServices;
+using Application.Services.Users;
+using Application.Services.Reservations;
 
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddScoped<IUserService, UserService>();
+
+
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowFrontend",
@@ -34,7 +44,12 @@ public class Program
 
 
         // Add services to the container
-        builder.Services.AddControllers();
+   builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
         builder.Services.AddEndpointsApiExplorer();
 
         // Add your existing services
@@ -45,6 +60,8 @@ public class Program
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IEquipmentService, EquipmentService>();
+        builder.Services.AddScoped<IReservationsService, ReservationService>();
+
 
         // Add JWT Authentication
         builder.Services.AddAuthentication(options =>

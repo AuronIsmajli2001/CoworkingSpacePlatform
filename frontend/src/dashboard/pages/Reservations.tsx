@@ -3,6 +3,8 @@ import CalendarView from "../pages/CalendarView";
 import { useState } from "react";
 import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
 type User = {
   id: string;
@@ -41,57 +43,40 @@ type Reservation = {
   reservationEquipment: ReservationEquipment[];
 };
 
-const sampleReservations: Reservation[] = [
-  {
-    id: "1",
-    userId: "user1",
-    spaceId: "space1",
-    startDateTime: new Date("2025-04-15T10:00:00"),
-    endDateTime: new Date("2025-04-15T12:00:00"),
-    createdAt: new Date("2025-04-20"),
-    status: ReservationStatus.Confirmed,
-    user: {
-      id: "user1",
-      name: "Neil Sims",
-      email: "neil.sims@fswabs.com",
-    },
-    space: {
-      id: "space1",
-      name: "Conference Room A",
-    },
-    reservationEquipment: [
-      { id: "eq1", name: "Projector", quantity: 1 },
-      { id: "eq2", name: "Whiteboard", quantity: 1 },
-    ],
-  },
-  {
-    id: "2",
-    userId: "user2",
-    spaceId: "space2",
-    startDateTime: new Date("2025-04-16T14:00:00"),
-    endDateTime: new Date("2025-04-16T16:00:00"),
-    createdAt: new Date("2025-04-21"),
-    status: ReservationStatus.Pending,
-    user: {
-      id: "user2",
-      name: "Roberta Cazar",
-      email: "roberta.casas@fswabs.com",
-    },
-    space: {
-      id: "space2",
-      name: "Meeting Room B",
-    },
-    reservationEquipment: [{ id: "eq3", name: "TV Screen", quantity: 1 }],
-  },
-];
-
 const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
+  const [selectedReservations, setSelectedReservations] = useState<string[]>(
+    []
+  );
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
-  const [reservations, setReservations] = useState<Reservation[]>(sampleReservations);
+  const [editingReservation, setEditingReservation] =
+    useState<Reservation | null>(null);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
+  const [currentPage, setCurrentPage] = useState(1);
+  const reservationsPerPage = 5;
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const response = await axios.get("https://localhost:5234/reservations");
+        setReservations(response.data);
+      } catch (error) {
+        console.error("Failed to fetch reservations:", error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
+  const indexOfLastReservation = currentPage * reservationsPerPage;
+  const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage;
+  const currentReservations = reservations.slice(
+    indexOfFirstReservation,
+    indexOfLastReservation
+  );
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [newReservation, setNewReservation] = useState({
     user: { name: "", email: "" },
@@ -99,7 +84,7 @@ const Reservations = () => {
     startDateTime: new Date(),
     endDateTime: new Date(Date.now() + 3600000), // 1 hour later
     status: ReservationStatus.Pending,
-    equipment: [{ name: "", quantity: 1 }]
+    equipment: [{ name: "", quantity: 1 }],
   });
 
   const toggleSelect = (id: string) => {
@@ -152,19 +137,19 @@ const Reservations = () => {
       user: {
         id: `user-${Date.now()}`,
         name: newReservation.user.name,
-        email: newReservation.user.email
+        email: newReservation.user.email,
       },
       space: {
         id: `space-${Date.now()}`,
-        name: newReservation.space.name
+        name: newReservation.space.name,
       },
       reservationEquipment: newReservation.equipment.map((eq, idx) => ({
         id: `eq-${Date.now()}-${idx}`,
         name: eq.name,
-        quantity: eq.quantity
-      }))
+        quantity: eq.quantity,
+      })),
     };
-    
+
     setReservations([...reservations, reservation]);
     setShowAddModal(false);
     resetNewReservationForm();
@@ -177,58 +162,70 @@ const Reservations = () => {
       startDateTime: new Date(),
       endDateTime: new Date(Date.now() + 3600000),
       status: ReservationStatus.Pending,
-      equipment: [{ name: "", quantity: 1 }]
+      equipment: [{ name: "", quantity: 1 }],
     });
   };
 
   const addEquipmentField = () => {
-    setNewReservation(prev => ({
+    setNewReservation((prev) => ({
       ...prev,
-      equipment: [...prev.equipment, { name: "", quantity: 1 }]
+      equipment: [...prev.equipment, { name: "", quantity: 1 }],
     }));
   };
 
   const removeEquipmentField = (index: number) => {
-    setNewReservation(prev => ({
+    setNewReservation((prev) => ({
       ...prev,
-      equipment: prev.equipment.filter((_, i) => i !== index)
+      equipment: prev.equipment.filter((_, i) => i !== index),
     }));
   };
 
-  const handleEquipmentChange = (index: number, field: 'name' | 'quantity', value: string | number) => {
+  const handleEquipmentChange = (
+    index: number,
+    field: "name" | "quantity",
+    value: string | number
+  ) => {
     const newEquipment = [...newReservation.equipment];
     newEquipment[index] = {
       ...newEquipment[index],
-      [field]: field === 'quantity' ? Number(value) : value
+      [field]: field === "quantity" ? Number(value) : value,
     };
-    setNewReservation(prev => ({ ...prev, equipment: newEquipment }));
+    setNewReservation((prev) => ({ ...prev, equipment: newEquipment }));
   };
 
   const exportToCSV = () => {
     const headers = [
-      'ID', 'User Name', 'User Email', 'Space', 
-      'Start Date', 'End Date', 'Status', 'Equipment'
+      "ID",
+      "User Name",
+      "User Email",
+      "Space",
+      "Start Date",
+      "End Date",
+      "Status",
+      "Equipment",
     ];
-    
-    const csvContent = [
-      headers.join(','),
-      ...reservations.map(res => [
-        res.id,
-        `"${res.user.name}"`,
-        `"${res.user.email}"`,
-        `"${res.space.name}"`,
-        `"${formatDate(res.startDateTime)} ${formatTime(res.startDateTime)}"`,
-        `"${formatTime(res.endDateTime)}"`,
-        res.status,
-        `"${getEquipmentSummary(res.reservationEquipment)}"`
-      ].join(','))
-    ].join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const csvContent = [
+      headers.join(","),
+      ...reservations.map((res) =>
+        [
+          res.id,
+          `"${res.user.name}"`,
+          `"${res.user.email}"`,
+          `"${res.space.name}"`,
+          `"${formatDate(res.startDateTime)} ${formatTime(res.startDateTime)}"`,
+          `"${formatTime(res.endDateTime)}"`,
+          res.status,
+          `"${getEquipmentSummary(res.reservationEquipment)}"`,
+        ].join(",")
+      ),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.setAttribute('download', 'reservations.csv');
+    link.setAttribute("download", "reservations.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -287,13 +284,13 @@ const Reservations = () => {
                   Delete selected ({selectedReservations.length})
                 </button>
               )}
-              <button 
+              <button
                 onClick={() => setShowAddModal(true)}
                 className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm flex items-center gap-1"
               >
                 <Plus size={16} /> Add Reservation
               </button>
-              <button 
+              <button
                 onClick={exportToCSV}
                 className="border border-gray-500 px-4 py-2 rounded text-sm flex items-center gap-1"
               >
@@ -336,7 +333,7 @@ const Reservations = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {reservations
+                  {currentReservations
                     .filter(
                       (res) =>
                         res.user.name
@@ -414,6 +411,34 @@ const Reservations = () => {
                     ))}
                 </tbody>
               </table>
+              <div className="flex justify-center items-center gap-4 mt-4">
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+                >
+                  ←
+                </button>
+                <span className="text-sm text-gray-300">
+                  Page {currentPage} of{" "}
+                  {Math.ceil(reservations.length / reservationsPerPage)}
+                </span>
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) =>
+                      indexOfLastReservation < reservations.length
+                        ? prev + 1
+                        : prev
+                    )
+                  }
+                  disabled={indexOfLastReservation >= reservations.length}
+                  className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+                >
+                  →
+                </button>
+              </div>
             </div>
           ) : (
             <div className="mt-4 p-4 bg-gray-800 rounded-lg">
@@ -591,7 +616,9 @@ const Reservations = () => {
           {showAddModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-auto">
-                <h3 className="text-lg font-semibold mb-4">Add New Reservation</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  Add New Reservation
+                </h3>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
@@ -682,7 +709,9 @@ const Reservations = () => {
                     </label>
                     <input
                       type="datetime-local"
-                      value={newReservation.startDateTime.toISOString().slice(0, 16)}
+                      value={newReservation.startDateTime
+                        .toISOString()
+                        .slice(0, 16)}
                       onChange={(e) =>
                         setNewReservation({
                           ...newReservation,
@@ -699,7 +728,9 @@ const Reservations = () => {
                     </label>
                     <input
                       type="datetime-local"
-                      value={newReservation.endDateTime.toISOString().slice(0, 16)}
+                      value={newReservation.endDateTime
+                        .toISOString()
+                        .slice(0, 16)}
                       onChange={(e) =>
                         setNewReservation({
                           ...newReservation,
@@ -713,7 +744,9 @@ const Reservations = () => {
 
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
-                    <label className="block text-sm text-gray-300">Equipment</label>
+                    <label className="block text-sm text-gray-300">
+                      Equipment
+                    </label>
                     <button
                       onClick={addEquipmentField}
                       className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1"
@@ -727,7 +760,9 @@ const Reservations = () => {
                         type="text"
                         placeholder="Equipment name"
                         value={eq.name}
-                        onChange={(e) => handleEquipmentChange(index, 'name', e.target.value)}
+                        onChange={(e) =>
+                          handleEquipmentChange(index, "name", e.target.value)
+                        }
                         className="bg-gray-700 text-white rounded px-3 py-2"
                       />
                       <div className="flex gap-2">
@@ -736,7 +771,13 @@ const Reservations = () => {
                           placeholder="Quantity"
                           min="1"
                           value={eq.quantity}
-                          onChange={(e) => handleEquipmentChange(index, 'quantity', e.target.value)}
+                          onChange={(e) =>
+                            handleEquipmentChange(
+                              index,
+                              "quantity",
+                              e.target.value
+                            )
+                          }
                           className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                         />
                         <button

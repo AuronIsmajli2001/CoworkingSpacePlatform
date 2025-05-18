@@ -1,12 +1,33 @@
-﻿namespace Application.DTOs.Users
+﻿namespace Application.DTOs.Users;
+    using System.ComponentModel.DataAnnotations;
+using Domain.Enums; 
+
+
+public class UserDTOCreate
 {
-    public class UserDTOCreate
-    {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public string Role { get; set; } // Enum as string
-    }
+    [Required]
+    [MaxLength(50)]
+    public string FirstName { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string LastName { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string UserName { get; set; }
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Required]
+    [MinLength(6)]
+    public string Password { get; set; }
+
+    [Required]
+    [EnumDataType(typeof(Role))] // works only if Role is an enum
+    public string Role { get; set; }
 }
+
+

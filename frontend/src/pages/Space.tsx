@@ -111,22 +111,9 @@ const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 export default function Spaces() {
   const navigate = useNavigate();
-  // const [isLoading, setIsLoading] = useState(true);
 
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
-
-  // useEffect(() => {
-  //   if (!isAuthenticated()) {
-  //     navigate("/auth");
-  //   } else {
-  //     setIsLoading(false);
-  //   }
-  // }, [navigate]);
-
-  // if (isLoading) {
-  //   return null;
-  // }
 
   useEffect(() => {
     const url = `${baseUrl}/Space`;

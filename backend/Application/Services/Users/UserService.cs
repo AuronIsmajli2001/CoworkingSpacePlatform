@@ -28,7 +28,8 @@ namespace Application.Services.Users
                 LastName = userDto.LastName,
                 UserName = userDto.UserName,
                 Email = userDto.Email,
-                Password = userDto.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password), 
+
                 Role = Enum.Parse<Role>(userDto.Role),
                 Created_at = DateTime.UtcNow,
                 Active = true

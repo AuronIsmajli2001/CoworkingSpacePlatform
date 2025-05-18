@@ -1,28 +1,10 @@
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import Sidebar from "../components/Sidebar";
-import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
-
-const initialUsers = [
-  {
-    id: 1,
-    name: "Neil Sims",
-    email: "neil.sims@flowbite.com",
-    role: "User",
-    status: "Active",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: 2,
-    name: "Roberta Casas",
-    email: "roberta.casas@flowbite.com",
-    role: "User",
-    status: "Inactive",
-    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-  },
-];
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,8 +13,45 @@ const Users = () => {
   const [editUserEditable, setEditUserEditable] = useState<User | null>(null);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState<User[]>([]);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+  const handleNextPage = () => {
+    if (indexOfLastUser < users.length) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:5234/User");
+        const mappedUsers = response.data.map((user: any) => ({
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role,
+          status: user.active ? "Active" : "Inactive",
+          avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(
+            Math.random() * 10
+          )}.jpg`,
+        }));
+        setUsers(mappedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   type User = {
     id: number;
@@ -272,7 +291,7 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                {users
+                {currentUsers
                   .filter((user) =>
                     user.name.toLowerCase().includes(searchTerm.toLowerCase())
                   )
@@ -345,6 +364,25 @@ const Users = () => {
                   ))}
               </tbody>
             </table>
+            <div className="flex justify-center items-center gap-4 mt-4">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+                className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+              >
+                ←
+              </button>
+              <span className="text-sm text-gray-300">
+                Page {currentPage} of {Math.ceil(users.length / usersPerPage)}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={indexOfLastUser >= users.length}
+                className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+              >
+                →
+              </button>
+            </div>
           </div>
 
           {/* Delete Confirmation Modal */}
