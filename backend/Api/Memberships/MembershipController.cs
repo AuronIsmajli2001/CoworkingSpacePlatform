@@ -1,65 +1,76 @@
 ﻿using Application.DTOs.Memberships;
 using Application.Services.Memberships;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Api.Memberships
+namespace Api.Membership
 {
     [ApiController]
-    [Route("[controller]")]
-    public class MembershipsController : ControllerBase
+    [Route("api/[controller]")]
+    public class MembershipController : ControllerBase
     {
-        private readonly IMembershipService _membershipService;
-        private readonly ILogger<MembershipsController> _logger;
+        private readonly IMembershipService _service;
 
-        public MembershipsController(
-            IMembershipService membershipService,
-            ILogger<MembershipsController> logger)
+        public MembershipController(IMembershipService service)
         {
-            _membershipService = membershipService;
-            _logger = logger;
+            _service = service;
         }
 
-        // MembershipController.cs
-        [ApiController]
-        [Route("[controller]")]
-        public class MembershipsController : ControllerBase
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<MembershipDTORead>>> GetAll()
         {
-            private readonly IMembershipService _service;
+            return Ok(await _service.GetAllAsync());
+        }
 
-            public MembershipsController(IMembershipService service)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<MembershipDTORead>> GetById(int id)
+        {
+            var membership = await _service.GetByIdAsync(id);
+            if (membership == null) return NotFound();
+            return Ok(membership);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<MembershipDTORead>> Create(MembershipDTOCreate dto)
+        {
+            try
             {
-                _service = service;
+                var created = await _service.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
             }
-
-            [HttpGet]
-            public async Task<IActionResult> GetAll()
+            catch (Exception ex)
             {
-                var memberships = await _service.GetAllMemberships();
-                return Ok(memberships);
+                return BadRequest(ex.Message);
             }
+        }
 
-            [HttpPost]
-            [Consumes("multipart/form-data")]
-            public async Task<IActionResult> Create([FromForm] MembershipCreateDto dto)
+        [HttpPut]
+        public async Task<IActionResult> Update(MembershipDTOUpdate dto)
+        {
+            try
             {
-                var createdMembership = await _service.CreateMembership(dto);
-                return CreatedAtAction(nameof(GetAll), new { id = createdMembership.Id }, createdMembership);
-            }
-
-            [HttpPut("{id}")]
-            [Consumes("multipart/form-data")]
-            public async Task<IActionResult> Update(string id, [FromForm] MembershipUpdateDto dto)
-            {
-                var updatedMembership = await _service.UpdateMembership(id, dto);
-                return Ok(updatedMembership);
-            }
-
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> Delete(string id)
-            {
-                await _service.DeleteMembership(id);
+                await _service.UpdateAsync(dto);
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _service.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

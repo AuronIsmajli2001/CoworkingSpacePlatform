@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Domain.Memberships;
 
 namespace Application.Interfaces.Repository
 {
@@ -17,5 +18,7 @@ namespace Application.Interfaces.Repository
         void DeleteRange(List<Tentity> entities);
         Task SaveChangesAsync();
         object GetQuery();
+        Task CreateAsync(Membership membership);
+        Task CreateAsync(Tentity entity);
     }
 }

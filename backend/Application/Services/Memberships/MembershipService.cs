@@ -1,11 +1,11 @@
 ﻿using Application.DTOs.Memberships;
+using Application.Interfaces;
 using Application.Interfaces.IUnitOfWork;
+using Application.Interfaces.Repository;
 using Domain.Memberships;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Services.Memberships
@@ -21,113 +21,103 @@ namespace Application.Services.Memberships
             _logger = logger;
         }
 
-        public async Task<IEnumerable<MembershipDTORead>> GetAllMemberships()
+        public async Task<MembershipDTORead> CreateAsync(MembershipDTOCreate membershipDTO)
         {
-            _logger.LogInformation("Fetching all memberships.");
-            var memberships = await _unitOfWork.Repository<Membership>().GetAllAsync();
-
-            return memberships.Select(m => new MembershipDTORead
+            try
             {
-                Id = m.Id,
-                Type = m.Type,
-                StartDate = m.StartDate,
-                EndDate = m.EndDate,
-                Price = (double)m.Price,
-                Status = m.Status,
-                UserId = m.UserId
-            }).ToList();
+                var membership = new Membership
+                {
+                    Title = membershipDTO.Title,
+                    Price = membershipDTO.Price,
+                    IncludesVAT = membershipDTO.IncludesVAT,
+                    BillingType = membershipDTO.BillingType,
+                    Description = membershipDTO.Description,
+                    AdditionalServices = membershipDTO.AdditionalServices
+                };
+
+                await _unitOfWork.Memberships.CreateAsync(membership);
+                await _unitOfWork.CompleteAsync();
+
+                return new MembershipDTORead
+                {
+                    Id = membership.Id,
+                    Title = membership.Title,
+                    Price = membership.Price,
+                    IncludesVAT = membership.IncludesVAT,
+                    BillingType = membership.BillingType,
+                    Description = membership.Description,
+                    AdditionalServices = membership.AdditionalServices
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating membership");
+                throw;
+            }
         }
 
-        public async Task<MembershipDTORead> GetMembershipById(string id)
+        public async Task<IEnumerable<MembershipDTORead>> GetAllAsync()
         {
-            _logger.LogInformation("Fetching membership with ID: {Id}", id);
-            var membership = await _unitOfWork.Repository<Membership>().GetByIdAsync(id);
+            var memberships = await _unitOfWork.Memberships.GetAllAsync();
+            var result = new List<MembershipDTORead>();
 
-            if (membership == null)
+            foreach (var m in memberships)
             {
-                _logger.LogWarning("Membership with ID {Id} not found.", id);
-                return null;
+                result.Add(new MembershipDTORead
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Price = m.Price,
+                    IncludesVAT = m.IncludesVAT,
+                    BillingType = m.BillingType,
+                    Description = m.Description,
+                    AdditionalServices = m.AdditionalServices
+                });
             }
+
+            return result;
+        }
+
+        public async Task<MembershipDTORead> GetByIdAsync(int id)
+        {
+            var membership = await _unitOfWork.Memberships.GetByIdAsync(id.ToString());
+            if (membership == null) return null;
 
             return new MembershipDTORead
             {
                 Id = membership.Id,
-                Type = membership.Type,
-                StartDate = membership.StartDate,
-                EndDate = membership.EndDate,
-                Price = (double)membership.Price,
-                Status = membership.Status,
-                UserId = membership.UserId
+                Title = membership.Title,
+                Price = membership.Price,
+                IncludesVAT = membership.IncludesVAT,
+                BillingType = membership.BillingType,
+                Description = membership.Description,
+                AdditionalServices = membership.AdditionalServices
             };
         }
 
-        public async Task CreateMembershipAsync(MembershipDTOCreate membershipDTO)
+        public async Task UpdateAsync(MembershipDTOUpdate membershipDTO)
         {
-            _logger.LogInformation("Creating a new membership for UserId: {UserId}", membershipDTO.UserId);
+            var existing = await _unitOfWork.Memberships.GetByIdAsync(membershipDTO.Id.ToString());
+            if (existing == null) throw new Exception("Membership not found");
 
-            var membership = new Membership
-            {
-                Id = Guid.NewGuid().ToString(),
-                UserId = membershipDTO.UserId,
-                Type = membershipDTO.Type,
-                StartDate = DateTime.UtcNow,
-                EndDate = CalculateEndDate(membershipDTO.Type),
-                Price = membershipDTO.Price,
-                Status = "Active"
-            };
+            if (!string.IsNullOrEmpty(membershipDTO.Title)) existing.Title = membershipDTO.Title;
+            if (!string.IsNullOrEmpty(membershipDTO.Price)) existing.Price = membershipDTO.Price;
+            if (membershipDTO.IncludesVAT.HasValue) existing.IncludesVAT = membershipDTO.IncludesVAT.Value;
+            if (!string.IsNullOrEmpty(membershipDTO.BillingType)) existing.BillingType = membershipDTO.BillingType;
+            if (!string.IsNullOrEmpty(membershipDTO.Description)) existing.Description = membershipDTO.Description;
+            if (!string.IsNullOrEmpty(membershipDTO.AdditionalServices)) existing.AdditionalServices = membershipDTO.AdditionalServices;
 
-            _unitOfWork.Repository<Membership>().Create(membership);
+            _unitOfWork.Memberships.Update(existing);
             await _unitOfWork.CompleteAsync();
-            _logger.LogInformation("Membership created successfully with ID: {Id}", membership.Id);
         }
 
-        public async Task<Membership> UpdateMembershipAsync(MembershipDTOUpdate membershipDTO)
+        public async Task DeleteAsync(int id)
         {
-            _logger.LogInformation("Updating membership with ID: {Id}", membershipDTO.Id);
-            var membership = await _unitOfWork.Repository<Membership>().GetByIdAsync(membershipDTO.Id);
+            var membership = await _unitOfWork.Memberships.GetByIdAsync(id.ToString());
+            if (membership == null) throw new Exception("Membership not found");
 
-            if (membership == null)
-            {
-                _logger.LogWarning("Cannot update. Membership with ID {Id} not found.", membershipDTO.Id);
-                return null;
-            }
-
-            membership.Type = membershipDTO.Type;
-            membership.Status = membershipDTO.Status;
-            membership.EndDate = CalculateEndDate(membershipDTO.Type);
-
-            _unitOfWork.Repository<Membership>().Update(membership);
+            _unitOfWork.Memberships.Delete(membership);
             await _unitOfWork.CompleteAsync();
-            _logger.LogInformation("Successfully updated membership with ID: {Id}", membershipDTO.Id);
-
-            return membership;
-        }
-
-        public async Task<bool> DeleteMembershipAsync(string id)
-        {
-            _logger.LogInformation("Deleting membership with ID: {Id}", id);
-            var membership = await _unitOfWork.Repository<Membership>().GetByIdAsync(id);
-
-            if (membership == null)
-            {
-                _logger.LogWarning("Membership with ID {Id} not found.", id);
-                return false;
-            }
-
-            _unitOfWork.Repository<Membership>().Delete(membership);
-            await _unitOfWork.CompleteAsync();
-            _logger.LogInformation("Membership with ID: {Id} deleted successfully.", id);
-            return true;
-        }
-
-        private DateTime CalculateEndDate(string type)
-        {
-            return type.ToLower() switch
-            {
-                "monthly" => DateTime.UtcNow.AddMonths(1),
-                "yearly" => DateTime.UtcNow.AddYears(1),
-                _ => throw new ArgumentException("Invalid membership type")
-            };
         }
     }
 }
