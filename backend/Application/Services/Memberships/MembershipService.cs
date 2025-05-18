@@ -113,11 +113,14 @@ namespace Application.Services.Memberships
 
         public async Task DeleteAsync(int id)
         {
-            var membership = await _unitOfWork.Memberships.GetByIdAsync(id.ToString());
-            if (membership == null) throw new Exception("Membership not found");
+            var membership = await _unitOfWork.Memberships.GetByIdAsync(id); // ✅ Use int directly
+
+            if (membership == null)
+                throw new Exception("Membership not found");
 
             _unitOfWork.Memberships.Delete(membership);
             await _unitOfWork.CompleteAsync();
         }
+
     }
 }

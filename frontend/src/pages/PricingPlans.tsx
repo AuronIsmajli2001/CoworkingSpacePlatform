@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import api from "../api/axiosConfig";
 import { Check, Calendar, User, Lock } from "lucide-react";
+import BookingModal from "./BookingModal";
 
 type MembershipPlan = {
   id: number;
   title: string;
   price: string;
+  billingType: 'Daily' | 'Monthly'; // Add this
   includesVAT: boolean;
   description: string;
   additionalServices: string;
@@ -18,6 +20,7 @@ type MembershipPlan = {
 
 export default function PricingPlans() {
   const navigate = useNavigate();
+  const [selectedPlan, setSelectedPlan] = useState<MembershipPlan | null>(null);
    const handleContactClick = () => {
     navigate("/contact");
   };
@@ -27,16 +30,19 @@ export default function PricingPlans() {
     api.get("/api/Membership")
       .then((res) => {
         if (Array.isArray(res.data)) {
-          setPlans(res.data.map((plan: any) => ({
-            id: plan.id,
-            title: plan.title,
-            price: plan.price,
-            includesVAT: plan.includesVAT,
-            description: plan.description,
-            additionalServices: plan.additionalServices,
-            features: plan.description.split(', '),
-            isPopular: plan.title.includes("Desk")
-          })));
+            setPlans(
+              res.data.map((plan: any) => ({
+                id: plan.id,
+                title: plan.title,
+                price: plan.price,
+                billingType: plan.billingType as 'Daily' | 'Monthly', 
+                includesVAT: plan.includesVAT,
+                description: plan.description,
+                additionalServices: plan.additionalServices,
+                features: plan.description.split(', '),
+                isPopular: plan.title.includes("Desk")
+              }))
+            );
         }
       })
       .catch(console.error);
@@ -127,13 +133,12 @@ export default function PricingPlans() {
                     )}
                   </div>
 
-                  {/* Button with consistent styling and alignment */}
-                  <button
-                    onClick={() => navigate(`/pricing/${plan.id}`)}
-                    className="w-full py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition mt-auto"
-                  >
-                    {getButtonText(plan.title)}
-                  </button>
+                 <button
+                        onClick={() => setSelectedPlan(plan)}
+                        className="w-full py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition mt-auto"
+                      >
+                        {getButtonText(plan.title)}
+                      </button>
                 </div>
               ))}
             </div>
@@ -159,7 +164,12 @@ export default function PricingPlans() {
         </div>
       </section>
 
-
+          {selectedPlan && (
+          <BookingModal 
+            plan={selectedPlan} 
+            onClose={() => setSelectedPlan(null)} 
+          />
+        )}      
 
 
       <Footer />

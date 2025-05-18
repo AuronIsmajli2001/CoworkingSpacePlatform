@@ -71,6 +71,11 @@ namespace Persistence.Repository
             return _dbContext.Set<Tentity>().Where(expression);
         }
 
+        public async Task<Tentity?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Set<Tentity>().FindAsync(id);
+        }
+
         public async Task<Tentity?> GetByIdAsync(string id)
         {
             return await _dbContext.Set<Tentity>().FindAsync(id);
