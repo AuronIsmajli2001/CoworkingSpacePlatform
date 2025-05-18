@@ -1,7 +1,6 @@
 using Application.Interfaces.IUnitOfWork;
 using Application.Services.ISpaceServices;
 /*using Application.Services.Payments;*/
-using Application.Services.Memberships;
 using Application.Services.Spaces;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
@@ -16,6 +15,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Application.Services.Auth;
 using Application.Services.Equipments;
+using Application.Services.Memberships;
 using Application.Services.IUserServices;
 using Application.Services.Users;
 using Application.Services.Reservations;
@@ -36,7 +36,9 @@ public class Program
                 {
                     policy.WithOrigins("http://localhost:5173") // frontend Vite port
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+
                 });
         });
 
@@ -53,7 +55,7 @@ public class Program
         // Add your existing services
         builder.Services.AddScoped<ISpaceService, SpaceService>();
         builder.Services.AddScoped<IMembershipService, MembershipService>();
-      /*builder.Services.AddScoped<IPaymentService, PaymentService>();*/
+        /*builder.Services.AddScoped<IPaymentService, PaymentService>();*/
         builder.Services.AddScoped<ISpaceEquipmentService, SpaceEquipmentService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<IAuthService, AuthService>();

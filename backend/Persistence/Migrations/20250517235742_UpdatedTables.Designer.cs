@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence.Database;
 
@@ -11,9 +12,11 @@ using Persistence.Database;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DatabaseService))]
-    partial class DatabaseServiceModelSnapshot : ModelSnapshot
+    [Migration("20250517235742_UpdatedTables")]
+    partial class UpdatedTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,36 +51,61 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Memberships.Membership", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AdditionalServices")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("BillingType")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("IncludesVAT")
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Price")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("Popular")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("VatIncluded")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Memberships");
                 });
@@ -247,9 +275,6 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("MembershipId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -262,8 +287,6 @@ namespace Persistence.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MembershipId");
 
                     b.ToTable("Users");
                 });
@@ -296,6 +319,15 @@ namespace Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("Domain.Memberships.Membership", b =>
+                {
+                    b.HasOne("Domain.Users.User", null)
+                        .WithOne("Membership")
+                        .HasForeignKey("Domain.Memberships.Membership", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Payments.Payment", b =>
@@ -374,17 +406,6 @@ namespace Persistence.Migrations
                     b.Navigation("Space");
                 });
 
-            modelBuilder.Entity("Domain.Users.User", b =>
-                {
-                    b.HasOne("Domain.Memberships.Membership", "Membership")
-                        .WithMany()
-                        .HasForeignKey("MembershipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Membership");
-                });
-
             modelBuilder.Entity("RefreshToken", b =>
                 {
                     b.HasOne("Domain.Users.User", "User")
@@ -415,6 +436,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
+                    b.Navigation("Membership")
+                        .IsRequired();
+
                     b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618

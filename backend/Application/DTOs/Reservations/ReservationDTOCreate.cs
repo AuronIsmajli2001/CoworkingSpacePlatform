@@ -16,9 +16,11 @@ namespace Application.DTOs.Reservations
     {
         public string UserId { get; set; }
         public string SpaceId { get; set; }
+        public string PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public ReservationStatus Status { get; set; }
-
+        public DateTime Created_at { get; set; }
     }
 }
