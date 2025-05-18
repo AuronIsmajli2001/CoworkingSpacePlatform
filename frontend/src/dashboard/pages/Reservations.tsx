@@ -100,13 +100,13 @@ const Reservations = () => {
           createdAt: new Date(res.createdAt),
           status: res.status as ReservationStatus,
           user: {
-            id: res.user?.id || "",
-            name: res.user?.name || "Unknown",
+            id: res.user?.id || res.userId || "", // Fallback to userId if user is null
+            name: res.user?.name || ` ${res.userId}`, // Show ID if name is missing
             email: res.user?.email || "",
           },
           space: {
-            id: res.space?.id || "",
-            name: res.space?.name || "Unknown",
+            id: res.space?.id || res.spaceId || "", // Fallback to spaceId if space is null
+            name: res.space?.name || ` ${res.spaceId}`, // Show ID if name is missing
           },
           reservationEquipment:
             res.reservationEquipment?.map((eq: any) => ({
@@ -307,9 +307,10 @@ const Reservations = () => {
   };
 
   const getEquipmentSummary = (equipment: ReservationEquipment[]) => {
-    return equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
+    return equipment.length === 0
+      ? "0"
+      : equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
   };
-
   return (
     <div className="flex h-screen">
       <Sidebar />
