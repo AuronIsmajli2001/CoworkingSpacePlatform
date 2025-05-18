@@ -4,7 +4,7 @@ namespace Application.Interfaces.Repository
 {
     public interface IRepository<Tentity> where Tentity : class
     {
-        Task<Tentity?> GetByIdAsync(string id); // ✅ Needed by your UserService
+        Task<Tentity?> GetByIdAsync(string id);
         Task<List<Tentity>> GetAllAsync();
         IQueryable<Tentity> GetAll();
         IQueryable<Tentity> GetByCondition(Expression<Func<Tentity, bool>> expression);

@@ -8,6 +8,8 @@ using Application.Interfaces.IUnitOfWork;
 using Domain.Reservations;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Application.Services.ReservationEquipments;
+
 
 namespace Application.Services.Reservations
 {
@@ -15,28 +17,69 @@ namespace Application.Services.Reservations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ReservationService> _logger;
+        private readonly IReservationEquipmentService _reservationEquipmentService;
 
-        public ReservationService(IUnitOfWork unitOfWork, ILogger<ReservationService> logger)
+
+        //public ReservationService(IUnitOfWork unitOfWork, ILogger<ReservationService> logger)
+        //{
+        //    _unitOfWork = unitOfWork;
+        //    _logger = logger;
+        //}
+        public ReservationService(
+    IUnitOfWork unitOfWork,
+    ILogger<ReservationService> logger,
+    IReservationEquipmentService reservationEquipmentService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _reservationEquipmentService = reservationEquipmentService;
         }
 
         public async Task<IEnumerable<ReservationDTORead>> GetAllReservationsAsync()
         {
-            var reservations = await _unitOfWork.Repository<Reservation>().GetAllAsync();
+            Console.WriteLine(">>> GET ALL RESERVATIONS CALLED");
+            _logger.LogInformation("Starting to fetch all reservations...");
 
-            return reservations.Select(r => new ReservationDTORead
+            var reservations = await _unitOfWork.Repository<Domain.Reservations.Reservation>().GetAllAsync();
+
+            Console.WriteLine($">>> Reservation count: {reservations.Count}");
+
+            //    return reservations.Select(r => new ReservationDTORead
+            //    {
+
+            //        UserId = r.UserId,
+            //        SpaceId = r.SpaceId,
+            //        StartDateTime = r.StartDateTime,
+            //        EndDateTime = r.EndDateTime,
+            //        Status = r.Status
+            //    }).ToList();
+            //}
+            _logger.LogInformation("Fetched {Count} reservations from DB.", reservations.Count);
+
+            var result = new List<ReservationDTORead>();
+
+
+            foreach (var r in reservations)
+
             {
-                
-                UserId = r.UserId,
-                SpaceId = r.SpaceId,
-                StartDateTime = r.StartDateTime,
-                EndDateTime = r.EndDateTime,
-                Status = r.Status
-            }).ToList();
-        }
+                _logger.LogInformation("Processing reservation with ID: {Id}", r.Id);
 
+                var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
+               
+
+                result.Add(new ReservationDTORead
+                {
+                    UserId = r.UserId,
+                    SpaceId = r.SpaceId,
+                    StartDateTime = r.StartDateTime,
+                    EndDateTime = r.EndDateTime,
+                    Status = r.Status,
+                    ReservationEquipment = equipments
+                });
+            }
+
+            return result;
+        }
         public async Task<ReservationDTORead> GetReservationByIdAsync(string id)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
@@ -58,9 +101,10 @@ namespace Application.Services.Reservations
         {
             try
             {
-                var reservation = new Reservation
+                var reservation = new Domain.Reservations.Reservation
                 {
                     Id = Guid.NewGuid().ToString(),
+
                     UserId = dto.UserId,
                     SpaceId = dto.SpaceId,
                     StartDateTime = dto.StartDateTime,
@@ -80,8 +124,23 @@ namespace Application.Services.Reservations
         }
 
 
+        //public async Task<ReservationDTORead> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
 
-        public async Task<Reservation> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
+        //{
+        //    var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+        //    if (reservation == null) return null;
+
+        //    reservation.StartDateTime = dto.StartDateTime;
+        //    reservation.EndDateTime = dto.EndDateTime;
+        //    reservation.Status = dto.Status;
+
+        //    _unitOfWork.Repository<Reservation>().Update(reservation);
+        //    await _unitOfWork.CompleteAsync();
+
+        //    return reservation;
+        //}
+
+        public async Task<ReservationDTORead> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
         {
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null) return null;
@@ -93,7 +152,17 @@ namespace Application.Services.Reservations
             _unitOfWork.Repository<Reservation>().Update(reservation);
             await _unitOfWork.CompleteAsync();
 
-            return reservation;
+            var equipments = await _reservationEquipmentService.GetByReservationIdAsync(reservation.Id);
+
+            return new ReservationDTORead
+            {
+                UserId = reservation.UserId,
+                SpaceId = reservation.SpaceId,
+                StartDateTime = reservation.StartDateTime,
+                EndDateTime = reservation.EndDateTime,
+                Status = reservation.Status,
+                ReservationEquipment = equipments
+            };
         }
 
         public async Task<bool> DeleteReservationAsync(string id)

@@ -12,13 +12,14 @@ using Domain.Users;
 namespace Application.DTOs.Reservations
 {
     public class ReservationDTOCreate
-
     {
         public string UserId { get; set; }
         public string SpaceId { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public ReservationStatus Status { get; set; }
-
     }
+
+
 }
+
