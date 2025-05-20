@@ -9,6 +9,8 @@ using Domain.Reservations;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.ReservationEquipments;
+using Application.DTOs.Spaces;
+using Application.DTOs.Users;
 
 
 namespace Application.Services.Reservations
@@ -35,46 +37,85 @@ namespace Application.Services.Reservations
             _reservationEquipmentService = reservationEquipmentService;
         }
 
+        //public async Task<IEnumerable<ReservationDTORead>> GetAllReservationsAsync()
+        //{
+        //    Console.WriteLine(">>> GET ALL RESERVATIONS CALLED");
+        //    _logger.LogInformation("Starting to fetch all reservations...");
+
+        //    var reservations = await _unitOfWork.Repository<Domain.Reservations.Reservation>().GetAllAsync();
+
+        //    Console.WriteLine($">>> Reservation count: {reservations.Count}");
+
+
+        //    _logger.LogInformation("Fetched {Count} reservations from DB.", reservations.Count);
+
+        //    var result = new List<ReservationDTORead>();
+
+
+        //    foreach (var r in reservations)
+
+        //    {
+        //        _logger.LogInformation("Processing reservation with ID: {Id}", r.Id);
+
+        //        var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
+
+
+        //        result.Add(new ReservationDTORead
+        //        {
+        //            UserId = r.UserId,
+        //            SpaceId = r.SpaceId,
+        //            StartDateTime = r.StartDateTime,
+        //            EndDateTime = r.EndDateTime,
+        //            Status = r.Status,
+        //            ReservationEquipment = equipments
+        //        });
+        //    }
+
+        //    return result;
+        //}
+
         public async Task<IEnumerable<ReservationDTORead>> GetAllReservationsAsync()
         {
-            Console.WriteLine(">>> GET ALL RESERVATIONS CALLED");
             _logger.LogInformation("Starting to fetch all reservations...");
 
-            var reservations = await _unitOfWork.Repository<Domain.Reservations.Reservation>().GetAllAsync();
+            // Include related User and Space data in the query
+            var reservations = await _unitOfWork.Repository<Reservation>().GetAll()
+          .Include(r => r.User)
+          .Include(r => r.Space)
+          .ToListAsync();
 
-            Console.WriteLine($">>> Reservation count: {reservations.Count}");
-
-            //    return reservations.Select(r => new ReservationDTORead
-            //    {
-
-            //        UserId = r.UserId,
-            //        SpaceId = r.SpaceId,
-            //        StartDateTime = r.StartDateTime,
-            //        EndDateTime = r.EndDateTime,
-            //        Status = r.Status
-            //    }).ToList();
-            //}
-            _logger.LogInformation("Fetched {Count} reservations from DB.", reservations.Count);
 
             var result = new List<ReservationDTORead>();
 
-
             foreach (var r in reservations)
-
             {
                 _logger.LogInformation("Processing reservation with ID: {Id}", r.Id);
 
                 var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
-               
 
                 result.Add(new ReservationDTORead
                 {
+                    Id = r.Id,
                     UserId = r.UserId,
                     SpaceId = r.SpaceId,
                     StartDateTime = r.StartDateTime,
                     EndDateTime = r.EndDateTime,
                     Status = r.Status,
-                    ReservationEquipment = equipments
+                    CreatedAt = r.Created_at,
+                    ReservationEquipment = equipments,
+                    // Add these lines to populate the User and Space DTOs
+                    User = r.User != null ? new UserDTORead
+                    {
+                        Id = r.User.Id,
+                        UserName = r.User.UserName // or whatever property has the username
+                                                   // Include other user properties as needed
+                    } : null,
+                    Space = r.Space != null ? new SpaceDTORead
+                    {
+                        Id = r.Space.Id,
+                        Name = r.Space.Name // or whatever property has the space name
+                                            // Include other space properties as needed
+                    } : null
                 });
             }
 

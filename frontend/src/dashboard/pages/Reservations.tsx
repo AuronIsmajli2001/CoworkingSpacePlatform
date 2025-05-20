@@ -8,7 +8,7 @@ import axios from "axios";
 
 type User = {
   id: string;
-  name: string;
+  userName: string;
   email: string;
 };
 
@@ -101,7 +101,7 @@ const Reservations = () => {
           status: res.status as ReservationStatus,
           user: {
             id: res.user?.id || res.userId || "", // Fallback to userId if user is null
-            name: res.user?.name || ` ${res.userId}`, // Show ID if name is missing
+            userName: res.user?.userName || `User ${res.userId}`, // Show ID if name is missing
             email: res.user?.email || "",
           },
           space: {
@@ -196,7 +196,7 @@ const Reservations = () => {
       createdAt: new Date(),
       user: {
         id: `user-${Date.now()}`,
-        name: newReservation.user.name,
+        userName: newReservation.user.name,
         email: newReservation.user.email,
       },
       space: {
@@ -270,7 +270,7 @@ const Reservations = () => {
       ...reservations.map((res) =>
         [
           res.id,
-          `"${res.user.name}"`,
+          `"${res.user.userName}"`,
           `"${res.user.email}"`,
           `"${res.space.name}"`,
           `"${formatDate(res.startDateTime)} ${formatTime(res.startDateTime)}"`,
@@ -416,7 +416,7 @@ const Reservations = () => {
                   {currentReservations
                     .filter(
                       (res) =>
-                        res.user.name
+                        res.user.userName
                           .toLowerCase()
                           .includes(searchTerm.toLowerCase()) ||
                         res.space.name
@@ -438,7 +438,9 @@ const Reservations = () => {
                         </td>
                         <td className="p-3">{res.id}</td>
                         <td className="p-3">
-                          <div className="font-semibold">{res.user.name}</div>
+                          <div className="font-semibold">
+                            {res.user.userName}
+                          </div>
                           <div className="text-gray-300 text-xs">
                             {res.user.email}
                           </div>
@@ -585,13 +587,13 @@ const Reservations = () => {
                     </label>
                     <input
                       type="text"
-                      value={editingReservation.user.name}
+                      value={editingReservation.user.userName}
                       onChange={(e) =>
                         setEditingReservation({
                           ...editingReservation,
                           user: {
                             ...editingReservation.user,
-                            name: e.target.value,
+                            userName: e.target.value,
                           },
                         })
                       }
