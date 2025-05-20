@@ -8,7 +8,7 @@ import axios from "axios";
 
 type User = {
   id: string;
-  name: string;
+  userName: string;
   email: string;
 };
 
@@ -56,19 +56,79 @@ const Reservations = () => {
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [currentPage, setCurrentPage] = useState(1);
   const reservationsPerPage = 5;
+  // useEffect(() => {
+  //   const fetchReservations = async () => {
+  //     try {
+  //       console.log(
+  //         "Fetching from:",
+  //         `${import.meta.env.VITE_API_BASE_URL}/reservation`
+  //       );
 
+  //       const response = await axios.get(
+  //         `${import.meta.env.VITE_API_BASE_URL}/reservation`
+  //       );
+
+  //       setReservations(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch reservations:", error);
+  //     }
+  //   };
+
+  //   fetchReservations();
+  // }, []);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Update your useEffect:
+  // Update your fetchReservations useEffect to properly map the data
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        const response = await axios.get("https://localhost:5234/reservations");
-        setReservations(response.data);
+        setIsLoading(true);
+        setError(null);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+        );
+
+        const mappedReservations = response.data.map((res: any) => ({
+          id: res.id,
+          userId: res.userId,
+          spaceId: res.spaceId,
+          startDateTime: new Date(res.startDateTime),
+          endDateTime: new Date(res.endDateTime),
+          createdAt: new Date(res.createdAt),
+          status: res.status as ReservationStatus,
+          user: {
+            id: res.user?.id || res.userId || "", // Fallback to userId if user is null
+            userName: res.user?.userName || `User ${res.userId}`, // Show ID if name is missing
+            email: res.user?.email || "",
+          },
+          space: {
+            id: res.space?.id || res.spaceId || "", // Fallback to spaceId if space is null
+            name: res.space?.name || ` ${res.spaceId}`, // Show ID if name is missing
+          },
+          reservationEquipment:
+            res.reservationEquipment?.map((eq: any) => ({
+              id: eq.id,
+              name: eq.name,
+              quantity: eq.quantity,
+            })) || [],
+        }));
+
+        setReservations(mappedReservations);
       } catch (error) {
         console.error("Failed to fetch reservations:", error);
+        setError("Failed to load reservations. Please try again later.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchReservations();
   }, []);
+
+  // Update your filter to include null checks
 
   const indexOfLastReservation = currentPage * reservationsPerPage;
   const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage;
@@ -136,7 +196,7 @@ const Reservations = () => {
       createdAt: new Date(),
       user: {
         id: `user-${Date.now()}`,
-        name: newReservation.user.name,
+        userName: newReservation.user.name,
         email: newReservation.user.email,
       },
       space: {
@@ -210,7 +270,7 @@ const Reservations = () => {
       ...reservations.map((res) =>
         [
           res.id,
-          `"${res.user.name}"`,
+          `"${res.user.userName}"`,
           `"${res.user.email}"`,
           `"${res.space.name}"`,
           `"${formatDate(res.startDateTime)} ${formatTime(res.startDateTime)}"`,
@@ -247,9 +307,10 @@ const Reservations = () => {
   };
 
   const getEquipmentSummary = (equipment: ReservationEquipment[]) => {
-    return equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
+    return equipment.length === 0
+      ? "0"
+      : equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
   };
-
   return (
     <div className="flex h-screen">
       <Sidebar />
@@ -307,7 +368,25 @@ const Reservations = () => {
             className="bg-gray-800 text-white border border-gray-700 rounded px-4 py-2 text-sm w-64 mb-4"
           />
 
-          {viewMode === "table" ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : error ? (
+            <div className="bg-red-900/20 border border-red-700 text-red-300 p-4 rounded">
+              {error}
+              <button
+                onClick={() => window.location.reload()}
+                className="ml-2 text-blue-400 hover:text-blue-300"
+              >
+                Retry
+              </button>
+            </div>
+          ) : reservations.length === 0 ? (
+            <div className="text-center py-12 text-gray-400">
+              No reservations found. Create your first reservation!
+            </div>
+          ) : viewMode === "table" ? (
             <div className="overflow-x-auto">
               <table className="w-full table-auto text-sm">
                 <thead className="bg-gray-800 text-left uppercase text-gray-400">
@@ -326,7 +405,8 @@ const Reservations = () => {
                     <th className="p-3">ID</th>
                     <th className="p-3">User</th>
                     <th className="p-3">Space</th>
-                    <th className="p-3">Date & Time</th>
+                    <th className="p-3">Start Date</th>
+                    <th className="p-3">End Date</th>
                     <th className="p-3">Equipment</th>
                     <th className="p-3">Status</th>
                     <th className="p-3">Actions</th>
@@ -336,7 +416,7 @@ const Reservations = () => {
                   {currentReservations
                     .filter(
                       (res) =>
-                        res.user.name
+                        res.user.userName
                           .toLowerCase()
                           .includes(searchTerm.toLowerCase()) ||
                         res.space.name
@@ -358,7 +438,9 @@ const Reservations = () => {
                         </td>
                         <td className="p-3">{res.id}</td>
                         <td className="p-3">
-                          <div className="font-semibold">{res.user.name}</div>
+                          <div className="font-semibold">
+                            {res.user.userName}
+                          </div>
                           <div className="text-gray-300 text-xs">
                             {res.user.email}
                           </div>
@@ -367,10 +449,16 @@ const Reservations = () => {
                         <td className="p-3">
                           <div>{formatDate(res.startDateTime)}</div>
                           <div className="text-gray-300 text-xs">
-                            {formatTime(res.startDateTime)} -{" "}
+                            {formatTime(res.startDateTime)}
+                          </div>
+                        </td>
+                        <td className="p-3">
+                          <div>{formatDate(res.endDateTime)}</div>
+                          <div className="text-gray-300 text-xs">
                             {formatTime(res.endDateTime)}
                           </div>
                         </td>
+
                         <td className="p-3 text-gray-300 text-sm">
                           {getEquipmentSummary(res.reservationEquipment)}
                         </td>
@@ -499,13 +587,13 @@ const Reservations = () => {
                     </label>
                     <input
                       type="text"
-                      value={editingReservation.user.name}
+                      value={editingReservation.user.userName}
                       onChange={(e) =>
                         setEditingReservation({
                           ...editingReservation,
                           user: {
                             ...editingReservation.user,
-                            name: e.target.value,
+                            userName: e.target.value,
                           },
                         })
                       }

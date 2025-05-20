@@ -96,5 +96,19 @@ namespace Application.Services.ReservationEquipments
 
             return true;
         }
+        public async Task<List<ReservationEquipmentDTORead>> GetByReservationIdAsync(string reservationId)
+        {
+            var items = await _unitOfWork.Repository<ReservationEquipment>()
+                .GetByCondition(x => x.ReservationId == reservationId)
+                .ToListAsync();
+
+            return items.Select(x => new ReservationEquipmentDTORead
+            {
+                ReservationId = x.ReservationId,
+                EquipmentId = x.EquipmentId,
+                Quantity = x.Quantity
+            }).ToList();
+        }
+
     }
 }

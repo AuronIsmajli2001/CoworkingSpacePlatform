@@ -11,8 +11,9 @@ namespace Api.Reservation
     
     
         [ApiController]
-        [Route("[controller]")]
-        public class ReservationController : ControllerBase
+    [Route("[controller]")]
+    //[Route("[controller]")]
+    public class ReservationController : ControllerBase
         {
             private readonly IReservationsService _reservationService;
             private readonly ILogger<ReservationController> _logger;

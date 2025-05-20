@@ -12,7 +12,6 @@ using Domain.Users;
 namespace Application.DTOs.Reservations
 {
     public class ReservationDTOCreate
-
     {
         public string UserId { get; set; }
         public string SpaceId { get; set; }
@@ -21,6 +20,8 @@ namespace Application.DTOs.Reservations
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public ReservationStatus Status { get; set; }
-        public DateTime Created_at { get; set; }
     }
+
+
 }
+

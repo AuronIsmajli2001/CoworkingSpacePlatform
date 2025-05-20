@@ -19,6 +19,7 @@ using Application.Services.Memberships;
 using Application.Services.IUserServices;
 using Application.Services.Users;
 using Application.Services.Reservations;
+using Application.Services.ReservationEquipments;
 
 public class Program
 {
@@ -61,6 +62,8 @@ public class Program
         builder.Services.AddScoped<IAuthService, AuthService>();
         builder.Services.AddScoped<IEquipmentService, EquipmentService>();
         builder.Services.AddScoped<IReservationsService, ReservationService>();
+        builder.Services.AddScoped<IReservationEquipmentService, ReservationEquipmentService>();
+
 
 
         // Add JWT Authentication
