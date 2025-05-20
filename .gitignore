@@ -26,3 +26,4 @@ obj/
 *.vsconfig
 
 /node_modules
+backend/.vs/CoworkingSpacePlatform/DesignTimeBuild/.dtbcache.v2
