@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+<<<<<<< HEAD
 import Footer from "../components/Footer";
 
+=======
+import React from "react";
+>>>>>>> aur_loginChange
 import { useNavigate } from "react-router-dom";
-
 import Header from "../components/Header";
 
 type Space = {
@@ -111,7 +114,6 @@ const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 export default function Spaces() {
   const navigate = useNavigate();
-
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
 

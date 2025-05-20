@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import Header from "../components/Header";
 import api from "../api/axiosConfig";
 import { Check, Calendar, User, Lock } from "lucide-react";
 import BookingModal from "./BookingModal";
+=======
+>>>>>>> aur_loginChange
 
 type MembershipPlan = {
   id: number;

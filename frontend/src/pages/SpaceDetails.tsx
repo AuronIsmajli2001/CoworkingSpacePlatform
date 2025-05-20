@@ -90,7 +90,7 @@ export default function SpaceDetails() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }
