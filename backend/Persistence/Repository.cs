@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Persistence.Repository
 {
-    public class Repository<Tentity> : IRepository<Tentity> where Tentity : class
+    public class Repository<Tentity> :  IRepository<Tentity> where Tentity : class
     {
         private readonly DatabaseService _dbContext;
 

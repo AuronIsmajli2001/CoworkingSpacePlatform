@@ -15,7 +15,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Application.Services.Auth;
 using Application.Services.Equipments;
-using Application.Services.Memberships;
+/*using Application.Services.Memberships;*/
 using Application.Services.IUserServices;
 using Application.Services.Users;
 using Application.Services.Reservations;
@@ -55,7 +55,7 @@ public class Program
 
         // Add your existing services
         builder.Services.AddScoped<ISpaceService, SpaceService>();
-        builder.Services.AddScoped<IMembershipService, MembershipService>();
+       /* builder.Services.AddScoped<IMembershipService, MembershipService>();*/
         /*builder.Services.AddScoped<IPaymentService, PaymentService>();*/
         builder.Services.AddScoped<ISpaceEquipmentService, SpaceEquipmentService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -63,7 +63,7 @@ public class Program
         builder.Services.AddScoped<IEquipmentService, EquipmentService>();
         builder.Services.AddScoped<IReservationsService, ReservationService>();
         builder.Services.AddScoped<IReservationEquipmentService, ReservationEquipmentService>();
-
+        builder.Services.AddScoped<IUserService, UserService>();
 
 
         // Add JWT Authentication

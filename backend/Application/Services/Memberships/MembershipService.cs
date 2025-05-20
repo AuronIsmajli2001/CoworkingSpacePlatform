@@ -1,4 +1,4 @@
-﻿using Application.DTOs.Memberships;
+﻿/*using Application.DTOs.Memberships;
 using Application.Interfaces;
 using Application.Interfaces.IUnitOfWork;
 using Application.Interfaces.Repository;
@@ -111,9 +111,9 @@ namespace Application.Services.Memberships
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
-            var membership = await _unitOfWork.Memberships.GetByIdAsync(id); // ✅ Use int directly
+            var membership = await _unitOfWork.Memberships.GetByIdAsync(id);
 
             if (membership == null)
                 throw new Exception("Membership not found");
@@ -123,4 +123,4 @@ namespace Application.Services.Memberships
         }
 
     }
-}
+}*/
