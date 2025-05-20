@@ -10,6 +10,6 @@ namespace Application.Services.Memberships
         Task<IEnumerable<MembershipDTORead>> GetAllAsync();
         Task<MembershipDTORead> GetByIdAsync(int id);
         Task UpdateAsync(MembershipDTOUpdate membershipDTO);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
     }
 }

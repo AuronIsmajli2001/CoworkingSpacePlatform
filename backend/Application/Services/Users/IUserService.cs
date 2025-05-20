@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Users;
+﻿using Application.DTOs.Dashboard;
+using Application.DTOs.Users;
 
 namespace Application.Services.IUserServices
 {
@@ -9,5 +10,6 @@ namespace Application.Services.IUserServices
         Task<IEnumerable<UserDTORead>> GetAllUsersAsync();
         Task<UserDTORead> UpdateUserAsync(string id, UserDTOUpdate userDto);
         Task DeleteUserAsync(string id);
+        Task<UserStatsDTO> GetUserStatsAsync();
     }
 }

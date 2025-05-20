@@ -111,7 +111,7 @@ namespace Application.Services.Memberships
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var membership = await _unitOfWork.Memberships.GetByIdAsync(id); // ✅ Use int directly
 

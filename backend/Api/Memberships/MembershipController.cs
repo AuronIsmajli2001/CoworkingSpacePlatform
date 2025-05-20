@@ -63,15 +63,10 @@ namespace Api.Membership
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)  // ✅ Accepts strings
         {
-            // Convert string to number safely
-            if (!int.TryParse(id, out int numericId))
-            {
-                return BadRequest("ID must be a valid number.");
-            }
 
             try
             {
-                await _service.DeleteAsync(numericId);
+                await _service.DeleteAsync(id);
                 return NoContent();
             }
             catch (Exception ex)

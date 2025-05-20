@@ -1,10 +1,66 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\",
+  "WorkspaceRootPath": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\",
   "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\user\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\users\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\users\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\dashboardoverview\\userstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\dashboardoverview\\userstatsdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\dashboardoverview\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\dashboardoverview\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\users\\userdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\users\\userdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\users\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\api\\memberships\\membershipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{611577A4-2F26-4381-AC91-7420FD2B8424}|Api\\Api.csproj|solutionrelative:api\\memberships\\membershipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\memberships\\imembershipservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\memberships\\imembershipservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\memberships\\membershipservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\memberships\\membershipservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\domain\\reservations\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\reservations\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\users\\userdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\users\\userdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
     {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\reservations\\reservationsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\reservations\\reservationsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\reservations\\reservationdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\reservations\\reservationdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\spaces\\spacedtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\spaces\\spacedtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\persistence\\unitofwork.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,20 +71,12 @@
       "RelativeMoniker": "D:0:0:{36FF8103-0A22-4A52-843A-BBCFA39D0555}|Persistence\\Persistence.csproj|solutionrelative:persistence\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\users\\userdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\users\\userdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\services\\reservations\\ireservationsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\services\\reservations\\ireservationsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\reservations\\reservationdtoupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\reservations\\reservationdtoupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\reservations\\reservationdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\reservations\\reservationdtoread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\dtos\\reservations\\reservationdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,10 +99,6 @@
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\dtos\\reservationequipments\\reservationequipmentdtocreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\domain\\reservations\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{765D5322-CDC6-4054-99E8-776F058E237E}|Domain\\Domain.csproj|solutionrelative:domain\\reservations\\reservation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|c:\\users\\pulse electronics\\desktop\\semestri 4\\lab1\\coworkingspaceplatform\\backend\\application\\interfaces\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8E68AE22-E3BC-4646-B80A-381544FF9C93}|Application\\Application.csproj|solutionrelative:application\\interfaces\\irepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -70,47 +114,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 150,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UnitOfWork.cs",
-              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Persistence\\UnitOfWork.cs",
-              "RelativeDocumentMoniker": "Persistence\\UnitOfWork.cs",
-              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Persistence\\UnitOfWork.cs",
-              "RelativeToolTip": "Persistence\\UnitOfWork.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwCMAAAA6AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-20T14:56:02.267Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserDTORead.cs",
-              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Users\\UserDTORead.cs",
-              "RelativeDocumentMoniker": "Application\\DTOs\\Users\\UserDTORead.cs",
-              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Users\\UserDTORead.cs",
-              "RelativeToolTip": "Application\\DTOs\\Users\\UserDTORead.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-20T14:51:01.153Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ReservationDTOUpdate.cs",
-              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
-              "RelativeDocumentMoniker": "Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
-              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
-              "RelativeToolTip": "Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T10:23:29.922Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:129:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
@@ -121,7 +126,189 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\User\\UserController.cs",
+              "RelativeDocumentMoniker": "Api\\User\\UserController.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\User\\UserController.cs",
+              "RelativeToolTip": "Api\\User\\UserController.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAgwEkAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:51:42.239Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Users\\IUserService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Users\\IUserService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Users\\IUserService.cs",
+              "RelativeToolTip": "Application\\Services\\Users\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:30:24.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserStatsDTO.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\DashboardOverview\\UserStatsDTO.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\DashboardOverview\\UserStatsDTO.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\DashboardOverview\\UserStatsDTO.cs",
+              "RelativeToolTip": "Application\\DTOs\\DashboardOverview\\UserStatsDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:16:51.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserDTORead.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Users\\UserDTORead.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Users\\UserDTORead.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Users\\UserDTORead.cs",
+              "RelativeToolTip": "Application\\DTOs\\Users\\UserDTORead.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T14:51:01.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\DashboardOverview\\DashboardController.cs",
+              "RelativeDocumentMoniker": "Api\\DashboardOverview\\DashboardController.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\DashboardOverview\\DashboardController.cs",
+              "RelativeToolTip": "Api\\DashboardOverview\\DashboardController.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAYwCYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:11:48.605Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Users\\UserService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Users\\UserService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Users\\UserService.cs",
+              "RelativeToolTip": "Application\\Services\\Users\\UserService.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAgwIkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:15:06.85Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
+              "RelativeDocumentMoniker": "Api\\Program.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Program.cs",
+              "RelativeToolTip": "Api\\Program.cs",
+              "ViewState": "AgIAAHUAAAAAAAAAAAAtwI8AAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:50:22.656Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "MembershipService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Memberships\\MembershipService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
+              "RelativeToolTip": "Application\\Services\\Memberships\\MembershipService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:32:13.402Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IMembershipService.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\IMembershipService.cs",
+              "RelativeDocumentMoniker": "Application\\Services\\Memberships\\IMembershipService.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\IMembershipService.cs",
+              "RelativeToolTip": "Application\\Services\\Memberships\\IMembershipService.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAuwA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:33:03.863Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MembershipController.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Memberships\\MembershipController.cs",
+              "RelativeDocumentMoniker": "Api\\Memberships\\MembershipController.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Memberships\\MembershipController.cs",
+              "RelativeToolTip": "Api\\Memberships\\MembershipController.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAAAE0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:33:24.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "UserDTOCreate.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Users\\UserDTOCreate.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Users\\UserDTOCreate.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Users\\UserDTOCreate.cs",
+              "RelativeToolTip": "Application\\DTOs\\Users\\UserDTOCreate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T16:06:58.059Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "SpaceDTORead.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Spaces\\SpaceDTORead.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Spaces\\SpaceDTORead.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Spaces\\SpaceDTORead.cs",
+              "RelativeToolTip": "Application\\DTOs\\Spaces\\SpaceDTORead.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T14:59:12.852Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Reservation.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Reservations\\Reservation.cs",
+              "RelativeDocumentMoniker": "Domain\\Reservations\\Reservation.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Reservations\\Reservation.cs",
+              "RelativeToolTip": "Domain\\Reservations\\Reservation.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-18T09:15:15.261Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UnitOfWork.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Persistence\\UnitOfWork.cs",
+              "RelativeDocumentMoniker": "Persistence\\UnitOfWork.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Persistence\\UnitOfWork.cs",
+              "RelativeToolTip": "Persistence\\UnitOfWork.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwCkAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-20T14:56:02.267Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
               "Title": "IReservationsService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Reservations\\IReservationsService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Reservations\\IReservationsService.cs",
@@ -134,77 +321,72 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "MembershipService.cs",
-              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
-              "RelativeDocumentMoniker": "Application\\Services\\Memberships\\MembershipService.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Application\\Services\\Memberships\\MembershipService.cs",
-              "RelativeToolTip": "Application\\Services\\Memberships\\MembershipService.cs",
-              "ViewState": "AgIAAGEAAAAAAAAAAAAkwHEAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-15T19:51:36.997Z",
-              "DocumentIndex": 6,
+              "DocumentIndex": 13,
               "Title": "ReservationDTORead.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Reservations\\ReservationDTORead.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTORead.cs",
               "RelativeToolTip": "Application\\DTOs\\Reservations\\ReservationDTORead.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-18T10:21:51.968Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Repository.cs",
-              "DocumentMoniker": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Persistence\\Repository.cs",
-              "RelativeDocumentMoniker": "Persistence\\Repository.cs",
-              "ToolTip": "C:\\Users\\abdul\\OneDrive\\Documents\\GitHub\\CoworkingSpacePlatform\\backend\\Persistence\\Repository.cs",
-              "RelativeToolTip": "Persistence\\Repository.cs",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAcwEkAAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-17T22:57:40.921Z",
-              "DocumentIndex": 0,
+              "DocumentIndex": 12,
               "Title": "ReservationsService.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Reservations\\ReservationsService.cs",
               "RelativeDocumentMoniker": "Application\\Services\\Reservations\\ReservationsService.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Services\\Reservations\\ReservationsService.cs",
               "RelativeToolTip": "Application\\Services\\Reservations\\ReservationsService.cs",
-              "ViewState": "AgIAAC8AAAAAAAAAAAAkwEQAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAACkAAAAAAAAAAAAkwEMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-18T09:15:25.597Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 18,
+              "Title": "ReservationDTOUpdate.cs",
+              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
+              "RelativeDocumentMoniker": "Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
+              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
+              "RelativeToolTip": "Application\\DTOs\\Reservations\\ReservationDTOUpdate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-18T10:23:29.922Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
               "Title": "Repository.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Persistence\\Repository.cs",
               "RelativeDocumentMoniker": "Persistence\\Repository.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Persistence\\Repository.cs",
               "RelativeToolTip": "Persistence\\Repository.cs",
-              "ViewState": "AgIAADIAAAAAAAAAAAAAwFQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAAwGcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-18T09:31:36.876Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 19,
               "Title": "ReservationDTOCreate.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTOCreate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\Reservations\\ReservationDTOCreate.cs",
               "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\Reservations\\ReservationDTOCreate.cs",
               "RelativeToolTip": "Application\\DTOs\\Reservations\\ReservationDTOCreate.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-18T10:21:39.848Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 20,
               "Title": "ReservationController.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Reservation\\ReservationController.cs",
               "RelativeDocumentMoniker": "Api\\Reservation\\ReservationController.cs",
@@ -217,7 +399,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 21,
               "Title": "ReservationEquipmentDTOUpdate.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\ReservationEquipments\\ReservationEquipmentDTOUpdate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\ReservationEquipments\\ReservationEquipmentDTOUpdate.cs",
@@ -230,7 +412,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 22,
               "Title": "ReservationEquipmentDTORead.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\ReservationEquipments\\ReservationEquipmentDTORead.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\ReservationEquipments\\ReservationEquipmentDTORead.cs",
@@ -243,7 +425,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 23,
               "Title": "ReservationEquipmentDTOCreate.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\DTOs\\ReservationEquipments\\ReservationEquipmentDTOCreate.cs",
               "RelativeDocumentMoniker": "Application\\DTOs\\ReservationEquipments\\ReservationEquipmentDTOCreate.cs",
@@ -256,7 +438,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 24,
               "Title": "IRepository.cs",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Application\\Interfaces\\IRepository.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\IRepository.cs",
@@ -268,20 +450,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Reservation.cs",
-              "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Reservations\\Reservation.cs",
-              "RelativeDocumentMoniker": "Domain\\Reservations\\Reservation.cs",
-              "ToolTip": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Domain\\Reservations\\Reservation.cs",
-              "RelativeToolTip": "Domain\\Reservations\\Reservation.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAiwBkAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-18T09:15:15.261Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 25,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\PULSE Electronics\\Desktop\\Semestri 4\\Lab1\\CoworkingSpacePlatform\\backend\\Api\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Api\\Properties\\launchSettings.json",

@@ -56,26 +56,6 @@ const Reservations = () => {
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [currentPage, setCurrentPage] = useState(1);
   const reservationsPerPage = 5;
-  // useEffect(() => {
-  //   const fetchReservations = async () => {
-  //     try {
-  //       console.log(
-  //         "Fetching from:",
-  //         `${import.meta.env.VITE_API_BASE_URL}/reservation`
-  //       );
-
-  //       const response = await axios.get(
-  //         `${import.meta.env.VITE_API_BASE_URL}/reservation`
-  //       );
-
-  //       setReservations(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch reservations:", error);
-  //     }
-  //   };
-
-  //   fetchReservations();
-  // }, []);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

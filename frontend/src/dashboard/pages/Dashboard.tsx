@@ -1,13 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Sidebar from "../components/Sidebar";
+import { FiUsers, FiCalendar, FiMapPin, FiDollarSign } from "react-icons/fi";
 
 const Dashboard = () => {
-  const stats = [
-    { title: "Total Users", value: "1,024", change: "+12%", trend: "up" },
-    { title: "Active Reservations", value: "56", change: "+5%", trend: "up" },
-    { title: "Available Spaces", value: "24", change: "-3%", trend: "down" },
-    { title: "Revenue", value: "$8,450", change: "+18%", trend: "up" },
-  ];
+  // Simplified initial state - only keep what we need for users
+  const [stats, setStats] = useState([
+    {
+      title: "Total Users",
+      value: "Loading...",
+      icon: FiUsers,
+      active: "Loading...",
+      inactive: "Loading...",
+    },
+    // Keep other cards as loading placeholders
+    {
+      title: "Active Reservations",
+      value: "Loading...",
+      icon: FiCalendar,
+    },
+    {
+      title: "Available Spaces",
+      value: "Loading...",
+      icon: FiMapPin,
+    },
+    {
+      title: "Revenue",
+      value: "Loading...",
+      icon: FiDollarSign,
+    },
+  ]);
+
+  useEffect(() => {
+    // Only fetch user stats for now
+    axios
+      .get("https://localhost:7100/dashboard/user-stats") // Full URL to avoid confusion
+      .then((res) => {
+        console.log("Successfully fetched user stats:", res.data); // Debug log
+
+        setStats((prevStats) => {
+          // Create a new array with updated user stats
+          const newStats = [...prevStats];
+          newStats[0] = {
+            ...newStats[0],
+            value: res.data.totalUsers,
+            active: res.data.activeUsers,
+            inactive: res.data.inactiveUsers,
+          };
+          return newStats;
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch user stats:", error);
+
+        setStats((prevStats) => {
+          const newStats = [...prevStats];
+          newStats[0] = {
+            ...newStats[0],
+            value: "Error",
+            active: "Error",
+            inactive: "Error",
+          };
+          return newStats;
+        });
+      });
+  }, []); // Empty dependency array = runs once on mount
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -19,106 +76,33 @@ const Dashboard = () => {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
+          {stats.map((stat) => (
             <div
-              key={index}
+              key={stat.title}
               className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
             >
-              <p className="text-sm font-medium text-gray-500">{stat.title}</p>
+              <div className="flex items-center mb-2">
+                <stat.icon size={24} className="mr-2" />
+                <p className="text-sm font-medium text-gray-500">
+                  {stat.title}
+                </p>
+              </div>
               <div className="flex items-end justify-between mt-2">
                 <p className="text-2xl font-bold">{stat.value}</p>
-                <span
-                  className={`flex items-center text-sm ${
-                    stat.trend === "up" ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {stat.change}
-                  {stat.trend === "up" ? (
-                    <svg
-                      className="w-4 h-4 ml-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 15l7-7 7 7"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-4 h-4 ml-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  )}
-                </span>
+                {stat.title === "Total Users" && (
+                  <div>
+                    <p className="text-sm text-gray-600">
+                      Active: {stat.active}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Inactive: {stat.inactive}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
-
-        {/* Recent Activity Section */}
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-          <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-          <div className="space-y-4">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="flex items-start pb-4 border-b border-gray-100 last:border-0"
-              >
-                <div className="bg-blue-100 p-2 rounded-full mr-4">
-                  <svg
-                    className="w-5 h-5 text-blue-600"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-medium">New reservation created</p>
-                  <p className="text-sm text-gray-500">
-                    Conference Room A • 2 hours ago
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="font-medium mb-4">Reservations This Week</h3>
-            <div className="h-64 bg-gray-50 rounded flex items-center justify-center text-gray-400">
-              [Chart Placeholder]
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="font-medium mb-4">Space Utilization</h3>
-            <div className="h-64 bg-gray-50 rounded flex items-center justify-center text-gray-400">
-              [Chart Placeholder]
-            </div>
-          </div>
-        </div>
-        
       </div>
     </div>
   );
