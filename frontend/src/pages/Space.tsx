@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import React from "react";
-import { isAuthenticated } from "../utils/auth";
-
 import { useNavigate } from "react-router-dom";
-
 import Header from "../components/Header";
 
 type Space = {
@@ -112,20 +109,6 @@ const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 export default function Spaces() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
-
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/auth");
-    } else {
-      setIsLoading(false); // Only show content when authenticated
-    }
-  }, [navigate]);
-
-  if (isLoading) {
-    return null; // Or return a loading spinner
-  }
-
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
 
