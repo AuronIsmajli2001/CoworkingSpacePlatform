@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, LogOut, Settings, Key } from "lucide-react";
+import { User, LogOut, Settings, Icon, Book } from "lucide-react";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
 
@@ -15,7 +15,7 @@ const Header = () => {
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        setUserName(decoded.username || "User");
+        setUserName(decoded.name);
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -84,12 +84,20 @@ const Header = () => {
                 Edit Profile
               </Link>
               <Link
-                to="/change-password"
+                to="/mymemberships"
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <Key size={18} />
-                Change Password
+                <Book size={18} />
+                My Memberships
+              </Link>
+              <Link
+                to="/myreservations"
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Book size={18} />
+                My Reservations
               </Link>
               <button
                 onClick={() => {
