@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-<<<<<<< HEAD
 import Footer from "../components/Footer";
 
-=======
-import React from "react";
->>>>>>> aur_loginChange
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
@@ -214,7 +210,7 @@ export default function Spaces() {
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 }

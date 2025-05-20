@@ -1,13 +1,10 @@
-import {Phone, Mail, MapPin, Send, Calendar, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Send, Calendar, Clock } from "lucide-react";
 import Header from "../components/Header";
-<<<<<<< HEAD
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { isAuthenticated } from "../utils/auth";
 import { useState } from "react";
-=======
->>>>>>> aur_loginChange
 
 const Contact = () => {
   return (
@@ -198,7 +195,7 @@ const Contact = () => {
         </div>
       </section>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };
