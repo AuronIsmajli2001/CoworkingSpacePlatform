@@ -7,7 +7,7 @@ namespace Application.Services.IUserServices
         Task<UserDTORead> CreateUserAsync(UserDTOCreate userDto);
         Task<UserDTORead> GetUserByIdAsync(string id);
         Task<IEnumerable<UserDTORead>> GetAllUsersAsync();
-        Task<UserDTORead> UpdateUserAsync(string id, UserDTOUpdate userDto);
-        Task DeleteUserAsync(string id);
+        Task<bool> UpdateUserAsync(string id, UserDTOUpdate userDto);
+        Task<bool> DeleteUserAsync(string id);
     }
 }
