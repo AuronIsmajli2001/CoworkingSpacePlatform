@@ -1,7 +1,8 @@
 ﻿using Application.DTOs.Users;
-/*using Application.Services.Users;*/
+using Application.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Application.Services.IUserServices;
+using Application.DTOs.Spaces;
 namespace Api.Users
 {
     [ApiController]
@@ -63,6 +64,22 @@ namespace Api.Users
                 _logger.LogError($"Error in GetAllUsersAsync method: {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        [HttpPut("{id}", Name = "UpdateUser")]
+        public async Task<IActionResult> UpdateSpace(string id, [FromBody] UserDTOUpdate userDto)
+        {
+            try
+            {
+                var user = await _userService.UpdateUserAsync(id, userDto);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in UpdateUserAsync method : {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+
         }
 
         [HttpDelete("{id}", Name = "DeleteUser")]

@@ -1,4 +1,6 @@
-﻿using Domain.Memberships;
+﻿using Domain.Enums;
+using Domain.Memberships;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Application.DTOs.Users
 {
@@ -11,7 +13,7 @@ namespace Application.DTOs.Users
         public string Email { get; set; }
         public string Role { get; set; }
         public bool Active { get; set; }
-        public Membership Membership { get; set; }
+        public string MembershipId { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
