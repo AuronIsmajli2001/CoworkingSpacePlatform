@@ -16,24 +16,19 @@ namespace Domain.Reservations
     {
         [Key]
         public string Id { get; set; }
-
+        [ForeignKey("UserId")]
         public string UserId { get; set; }
-        public string SpaceId { get; set; }
 
+        [ForeignKey("SpaceId")]
+        public string SpaceId { get; set; }
+        public string PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public DateTime Created_at { get; set; } = DateTime.Now;
         public ReservationStatus Status { get; set; }
-
-        public ICollection<ReservationEquipment> ReservationEquipment { get; set; }
-
-        [ForeignKey("UserId")]
+        public List<ReservationEquipment> ReservationEquipment { get; set; }
         public User User { get; set; }
-
-        [ForeignKey("SpaceId")]
         public Space Space { get; set; }
-        public string PaymentMethod { get; set; }
-        public bool IsPaid { get; set; }
     }
-
 }

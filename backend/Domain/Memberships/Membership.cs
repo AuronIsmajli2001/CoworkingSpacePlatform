@@ -1,4 +1,5 @@
-﻿using Domain.Users;
+﻿using Domain.Enums;
+using Domain.Users;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,14 +10,15 @@ namespace Domain.Memberships
     {
         [Key]
         public string Id { get; set; }
-        [ForeignKey("UserId")]
-        public string UserId { get; set; }
-        public string Type { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string Title { get; set; }
+        public DateTime Created_At { get; set; }
         public decimal Price { get; set; }
-        public string Status { get; set; }
-        public User User { get; set; } 
+        public bool isActive { get; set; }
+        public bool IncludesVAT { get; set; }
+        public BillingType BillingType { get; set; }         
+        public string Description { get; set; }         
+        public string AdditionalServices { get; set; }
+        public List<User> Users { get; set; } = new List<User>();
     }
 
 }

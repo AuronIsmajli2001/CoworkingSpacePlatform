@@ -6,9 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
 using Persistence.UnitOfWork;
 using Application.Services.SpaceEquipments;
-using Application.Services.Users;
-
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -17,7 +14,7 @@ using Application.Services.Auth;
 using Application.Services.Equipments;
 /*using Application.Services.Memberships;*/
 using Application.Services.IUserServices;
-using Application.Services.Users;
+/*using Application.Services.Users;*/
 using Application.Services.Reservations;
 using Application.Services.ReservationEquipments;
 
@@ -26,7 +23,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddScoped<IUserService, UserService>();
+        
 
 
 
@@ -63,7 +60,8 @@ public class Program
         builder.Services.AddScoped<IEquipmentService, EquipmentService>();
         builder.Services.AddScoped<IReservationsService, ReservationService>();
         builder.Services.AddScoped<IReservationEquipmentService, ReservationEquipmentService>();
-        builder.Services.AddScoped<IUserService, UserService>();
+
+       /* builder.Services.AddScoped<IUserService, UserService>();*/
 
 
         // Add JWT Authentication

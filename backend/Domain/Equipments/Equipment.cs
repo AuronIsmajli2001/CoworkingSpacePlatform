@@ -18,8 +18,8 @@ namespace Domain.Equipments
         public string Name { get; set; }
         public int Quantity { get; set; }
         public double Price_per_piece { get; set; }
-        public ICollection<SpaceEquipment> SpaceEquipment { get; set; } = new List<SpaceEquipment>();
-        public ICollection<ReservationEquipment> ReservationEquipment { get; set; } = new List<ReservationEquipment>();
+        public List<SpaceEquipment> SpaceEquipment { get; set; } = new List<SpaceEquipment>();
+        public List<ReservationEquipment> ReservationEquipment { get; set; } = new List<ReservationEquipment>();
 
     }
 }

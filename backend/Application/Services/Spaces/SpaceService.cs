@@ -160,7 +160,6 @@ namespace Application.Services.Spaces
 
         public async Task<Space> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate,IFormFile image)
         {
-
             try 
             {
                 _logger.LogInformation("Updating space with ID: {Id}", id);

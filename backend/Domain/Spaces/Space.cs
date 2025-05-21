@@ -21,6 +21,6 @@ namespace Domain.Spaces
         public double Price {  get; set; }
         public string Location { get; set; }
         public string Image_URL { get; set; }
-        public ICollection<SpaceEquipment> SpaceEquipment { get; set; } = new List<SpaceEquipment>();
+        public List<SpaceEquipment> SpaceEquipment { get; set; } = new List<SpaceEquipment>();
     }
 }
