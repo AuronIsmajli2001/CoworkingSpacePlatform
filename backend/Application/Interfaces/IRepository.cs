@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Domain.Memberships;
 
 namespace Application.Interfaces.Repository
 {
@@ -9,6 +8,7 @@ namespace Application.Interfaces.Repository
         Task<List<Tentity>> GetAllAsync();
         IQueryable<Tentity> GetAll();
         IQueryable<Tentity> GetByCondition(Expression<Func<Tentity, bool>> expression);
+
         void Create(Tentity entity);
         void CreateRange(List<Tentity> entities);
         void Update(Tentity entity);
@@ -16,6 +16,5 @@ namespace Application.Interfaces.Repository
         void Delete(Tentity entity);
         void DeleteRange(List<Tentity> entities);
         Task SaveChangesAsync();
-
     }
 }

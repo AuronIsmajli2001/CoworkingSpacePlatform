@@ -1,16 +1,16 @@
 ﻿using Application.Interfaces.Repository;
-using Domain.Memberships;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Persistence.Repository
 {
-    public class Repository<Tentity> :  IRepository<Tentity> where Tentity : class
+    public class Repository<Tentity> : IRepository<Tentity> where Tentity : class
     {
         private readonly DatabaseService _dbContext;
 
@@ -19,23 +19,6 @@ namespace Persistence.Repository
             _dbContext = dbContext;
         }
 
-        // Add these three methods to fix your error
-        public async Task CreateAsync(Tentity entity)
-        {
-            await _dbContext.Set<Tentity>().AddAsync(entity);
-        }
-
-        public async Task CreateAsync(Membership membership)
-        {
-            await _dbContext.Set<Membership>().AddAsync(membership);
-        }
-
-        public IQueryable<Tentity> GetQuery()
-        {
-            return _dbContext.Set<Tentity>().AsQueryable();
-        }
-
-        // Keep all your existing methods below exactly as they are
         public void Create(Tentity entity)
         {
             _dbContext.Set<Tentity>().Add(entity);
@@ -71,15 +54,17 @@ namespace Persistence.Repository
             return _dbContext.Set<Tentity>().Where(expression);
         }
 
-        public async Task<Tentity?> GetByIdAsync(int id)
-        {
-            return await _dbContext.Set<Tentity>().FindAsync(id);
-        }
+        //public IQueryable<Tentity> GetById<Tkey>(Tkey id)
+        //{
+        //    // Assuming the ID property is named "Id"
+        //    return _dbContext.Set<Tentity>().Where(e => EF.Property<Tkey>(e, "Id")!.Equals(id));
+        //}
 
         public async Task<Tentity?> GetByIdAsync(string id)
         {
             return await _dbContext.Set<Tentity>().FindAsync(id);
         }
+
 
         public async Task SaveChangesAsync()
         {
@@ -94,11 +79,6 @@ namespace Persistence.Repository
         public void UpdateRange(List<Tentity> entities)
         {
             _dbContext.Set<Tentity>().UpdateRange(entities);
-        }
-
-        object IRepository<Tentity>.GetQuery()
-        {
-            return GetQuery();
         }
     }
 }
