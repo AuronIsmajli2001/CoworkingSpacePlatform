@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Users;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,15 +7,16 @@ namespace Domain.Memberships
 {
    public class Membership
     {
-        public int Id { get; set; }
-
-        public string Title { get; set; }               // e.g., "Desk Plans"
-        public string Price { get; set; }           // e.g., "€99-129 per month"
-        public bool IncludesVAT { get; set; }           // true or false
-        public string BillingType { get; set; }         // e.g., "Daily", "Monthly"
-
-        public string Description { get; set; }         // Main services
-        public string AdditionalServices { get; set; }  // Optional extras
+        [Key]
+        public string Id { get; set; }
+        [ForeignKey("UserId")]
+        public string UserId { get; set; }
+        public string Type { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public decimal Price { get; set; }
+        public string Status { get; set; }
+        public User User { get; set; } 
     }
 
 }

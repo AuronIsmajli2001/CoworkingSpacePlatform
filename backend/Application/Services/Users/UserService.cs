@@ -29,7 +29,6 @@ namespace Application.Services.Users
                 UserName = userDto.UserName,
                 Email = userDto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password), 
-
                 Role = Enum.Parse<Role>(userDto.Role),
                 Created_at = DateTime.UtcNow,
                 Active = true
@@ -73,53 +72,51 @@ namespace Application.Services.Users
         public async Task<IEnumerable<UserDTORead>> GetAllUsersAsync()
         {
             var users = await _unitOfWork.Users.GetAllAsync();
-            return users.Select(user => new UserDTORead
+
+            var usersDTO = users.Select(users => new UserDTORead
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Email = user.Email,
-                Role = user.Role.ToString(),
-                CreatedAt = user.Created_at,
-                Active = user.Active
-            });
+                Id = users.Id,
+                FirstName = users.FirstName,
+                LastName = users.LastName,
+                UserName = users.UserName,
+                Email = users.Email,
+                Role = users.Role.ToString(),
+                CreatedAt = users.Created_at,
+                Active = users.Active
+            }).ToList();
+            
+            return usersDTO;
         }
 
-        public async Task<UserDTORead> UpdateUserAsync(string id, UserDTOUpdate userDto)
+        public async Task<bool> UpdateUserAsync(string id, UserDTOUpdate userDto)
         {
+            
             var user = await _unitOfWork.Users.GetByIdAsync(id);
-            if (user == null) return null;
 
-            user.FirstName = userDto.FirstName;
-            user.LastName = userDto.LastName;
-            user.Role = Enum.Parse<Role>(userDto.Role);
-            user.Active = userDto.Active;
-
-            _unitOfWork.Users.Update(user);
-            await _unitOfWork.CompleteAsync();
-
-            return new UserDTORead
+            if (user != null)
             {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Email = user.Email,
-                Role = user.Role.ToString(),
-                CreatedAt = user.Created_at,
-                Active = user.Active
-            };
+                user.FirstName = userDto.FirstName;
+                user.LastName = userDto.LastName;
+                user.Email = userDto.Email;
+                user.Password = userDto.Password;
+                user.UserName = userDto.Username;
+                _unitOfWork.Users.Update(user);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            return false;
         }
 
-        public async Task DeleteUserAsync(string id)
+        public async Task<bool> DeleteUserAsync(string id)
         {
             var user = await _unitOfWork.Users.GetByIdAsync(id);
             if (user != null)
             {
                 _unitOfWork.Users.Delete(user);
                 await _unitOfWork.CompleteAsync();
+                return true;
             }
+            return false;
         }
     }
 }
