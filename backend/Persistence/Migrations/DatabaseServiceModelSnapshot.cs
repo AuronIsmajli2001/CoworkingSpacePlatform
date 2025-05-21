@@ -48,19 +48,18 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Memberships.Membership", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("AdditionalServices")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("BillingType")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("BillingType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -69,13 +68,15 @@ namespace Persistence.Migrations
                     b.Property<bool>("IncludesVAT")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("Price")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -247,8 +248,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("MembershipId")
-                        .HasColumnType("int");
+                    b.Property<string>("MembershipId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -377,7 +379,7 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
                     b.HasOne("Domain.Memberships.Membership", "Membership")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("MembershipId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -401,6 +403,11 @@ namespace Persistence.Migrations
                     b.Navigation("ReservationEquipment");
 
                     b.Navigation("SpaceEquipment");
+                });
+
+            modelBuilder.Entity("Domain.Memberships.Membership", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Domain.Reservations.Reservation", b =>
