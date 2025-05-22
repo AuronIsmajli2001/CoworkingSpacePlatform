@@ -115,7 +115,6 @@ export default function Auth() {
             const a: any = jwtDecode(accessToken);
             const role: string = a.role;
             const userId: string = a.userId;
-            localStorage.setItem("user_role", role);
 
             if (role === "User") {
               // Redirect to home page for User role
