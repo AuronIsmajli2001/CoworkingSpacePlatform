@@ -12,6 +12,7 @@ type Space = {
   imageUrl: string;
 };
 
+
 // const allSpaces: Space[] = [
 //   {
 //     id: "1",
@@ -114,11 +115,11 @@ export default function Spaces() {
   const [spaces, setSpaces] = useState<Space[]>([]);
 
   useEffect(() => {
-    const url = `${baseUrl}/Space`;
-    console.log("📡 Requesting spaces from:", url);
+    
+    console.log("📡 Requesting spaces from:");
 
     axios
-      .get("http://localhost:5234/Space")
+      .get(`${baseUrl}/Space`)
       .then((res) => {
         console.log("Spaces from backend:", res.data);
 
