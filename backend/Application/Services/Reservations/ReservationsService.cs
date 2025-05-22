@@ -28,9 +28,9 @@ namespace Application.Services.Reservations
         //    _logger = logger;
         //}
         public ReservationService(
-    IUnitOfWork unitOfWork,
-    ILogger<ReservationService> logger,
-    IReservationEquipmentService reservationEquipmentService)
+        IUnitOfWork unitOfWork,
+        ILogger<ReservationService> logger,
+        IReservationEquipmentService reservationEquipmentService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;

@@ -24,7 +24,7 @@ namespace Api.Users
             try
             {
                 var response = await _userService.CreateUserAsync(userDto);
-                return Ok(response);
+                return Ok("User created successfully.");
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace Api.Users
             try
             {
                 var user = await _userService.UpdateUserAsync(id, userDto);
-                return Ok(user);
+                return Ok("User updated successfully.");
             }
             catch (Exception ex)
             {

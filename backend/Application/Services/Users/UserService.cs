@@ -154,12 +154,31 @@ namespace Application.Services.Users
                             throw new Exception("This Email is already in use");
                         }
                     }
+                    if(userDto.FirstName != null)
+                    {
+                        user.FirstName = userDto.FirstName;
+                    }
 
-                    user.FirstName = userDto.FirstName;
-                    user.LastName = userDto.LastName;
-                    user.Email = userDto.Email;
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
-                    user.UserName = userDto.Username;
+                    if(userDto.LastName != null)
+                    {
+                        user.LastName = userDto.LastName;
+                    }
+
+                    if(userDto.Email != null)
+                    {
+                        user.Email = userDto.Email;
+                    }
+
+                    if(userDto.Password  != null)
+                    {
+                        user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+                    }
+
+                    if(userDto.Username != null)
+                    {
+                        user.UserName = userDto.Username;
+                    }
+                    
 
                     _unitOfWork.Repository<User>().Update(user);
                     await _unitOfWork.CompleteAsync();
