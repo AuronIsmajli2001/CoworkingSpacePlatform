@@ -216,5 +216,20 @@ namespace Application.Services.Reservations
 
             return true;
         }
+
+        Task<List<ReservationDTORead>> IReservationsService.GetAllReservationsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IReservationsService.CreateReservationAsync(ReservationDTOCreate dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IReservationsService.UpdateReservationAsync(string id, ReservationDTOUpdate dto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

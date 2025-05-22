@@ -11,10 +11,10 @@ namespace Application.Services.Reservations
     public interface IReservationsService
     {
        
-            Task<IEnumerable<ReservationDTORead>> GetAllReservationsAsync();
+            Task<List<ReservationDTORead>> GetAllReservationsAsync();
             Task<ReservationDTORead> GetReservationByIdAsync(string id);
-            Task CreateReservationAsync(ReservationDTOCreate dto);
-            Task<ReservationDTORead> UpdateReservationAsync(string id, ReservationDTOUpdate dto); 
+            Task<bool> CreateReservationAsync(ReservationDTOCreate dto);
+            Task<bool> UpdateReservationAsync(string id, ReservationDTOUpdate dto); 
             Task<bool> DeleteReservationAsync(string id);
         
     }
