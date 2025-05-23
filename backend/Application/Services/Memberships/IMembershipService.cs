@@ -7,7 +7,7 @@ namespace Application.Services.Memberships
         Task<bool> CreateAsync(MembershipDTOCreate membershipDTO);
         Task<List<MembershipDTORead>> GetAllAsync();
         Task<MembershipDTORead> GetByIdAsync(string id);
-        Task<bool> UpdateAsync(string id,MembershipDTOUpdate membershipDTO);
+        Task<bool> UpdateMembershipAsync(string id,MembershipDTOUpdate membershipDTO);
         Task<bool> DeleteAsync(string id);
     }
 }

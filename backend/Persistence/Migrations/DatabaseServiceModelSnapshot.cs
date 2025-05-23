@@ -249,7 +249,6 @@ namespace Persistence.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("MembershipId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Password")
@@ -380,9 +379,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Memberships.Membership", "Membership")
                         .WithMany("Users")
-                        .HasForeignKey("MembershipId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MembershipId");
 
                     b.Navigation("Membership");
                 });

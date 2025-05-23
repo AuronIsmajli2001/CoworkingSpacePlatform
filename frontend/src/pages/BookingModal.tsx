@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { X, Calendar, CreditCard, Building, Plus, Minus } from 'lucide-react';
+import { useState } from 'react';
+import { X, Calendar, CreditCard, Building, Check } from 'lucide-react';
 
 type BookingModalProps = {
   plan: {
@@ -8,142 +8,111 @@ type BookingModalProps = {
     price: string;
     billingType: 'Daily' | 'Monthly';
     description: string;
+    includesVAT?: boolean;
+    additionalServices?: string;
   };
   onClose: () => void;
 };
 
-type ExtraItem = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-};
-
 export default function BookingModal({ plan, onClose }: BookingModalProps) {
-  const [step, setStep] = useState<'selection' | 'payment'>('selection');
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [step, setStep] = useState<'details' | 'payment'>('details');
   const [paymentMethod, setPaymentMethod] = useState<'onsite' | 'card' | null>(null);
   const [cardDetails, setCardDetails] = useState({
     number: '',
     expiry: '',
     cvv: ''
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const availableExtras: ExtraItem[] = [
-    { id: '1', name: 'Additional Monitor', price: 15, quantity: 0 },
-    { id: '2', name: 'Whiteboard', price: 10, quantity: 0 },
-    { id: '3', name: 'Video Conference Setup', price: 20, quantity: 0 },
-    { id: '4', name: 'Professional Cleaning', price: 25, quantity: 0 }
-  ];
-
-  const [extras, setExtras] = useState<ExtraItem[]>(availableExtras);
-
-  // Calculate base price from plan.price (extract numbers)
-  const basePrice = Number(plan.price.replace(/[^0-9.-]+/g, ''));
-
-  // Calculate total
-  const extrasTotal = extras.reduce((sum, extra) => sum + (extra.price * extra.quantity), 0);
-  const total = basePrice + extrasTotal;
-
-  const handleExtraChange = (id: string, change: number) => {
-    setExtras(prev => prev.map(extra => 
-      extra.id === id 
-        ? { ...extra, quantity: Math.max(0, extra.quantity + change) } 
-        : extra
-    ));
-  };
-
-  const handleConfirmBooking = () => {
-    console.log({
-      planId: plan.id,
-      date: selectedDate,
-      extras: extras.filter(e => e.quantity > 0),
-      paymentMethod,
-      total
-    });
-    onClose();
-    alert(`Booking confirmed for €${total}!`);
-  };
+  // Extract numeric price
+  const priceValue = Number(plan.price.replace(/[^0-9.-]+/g, ''));
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold">{plan.title} Booking</h3>
+      <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4 sticky top-0 bg-white py-2">
+          <h3 className="text-xl font-bold">{plan.title} Membership</h3>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <X size={24} />
           </button>
         </div>
 
-        {step === 'selection' && (
+        {step === 'details' && (
           <div className="space-y-6">
-            {/* Date Selection */}
-            <div>
-              <h4 className="font-medium flex items-center gap-2 mb-2">
-                <Calendar className="text-blue-500" /> Booking Date
-              </h4>
-              <input
-                type={plan.billingType === 'Monthly' ? 'month' : 'date'}
-                className="w-full p-2 border rounded-lg"
-                onChange={(e) => setSelectedDate(new Date(e.target.value))}
-              />
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h4 className="font-bold text-lg mb-2">Membership Details</h4>
+              <div className="space-y-2">
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Plan:</span>
+                  <span className="font-medium">{plan.title}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Price:</span>
+                  <span className="font-medium">{plan.price}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span className="text-gray-600">Billing Cycle:</span>
+                  <span className="font-medium">{plan.billingType}</span>
+                </p>
+                {plan.includesVAT && (
+                  <p className="flex justify-between">
+                    <span className="text-gray-600">VAT:</span>
+                    <span className="font-medium">Included</span>
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Additional Equipment */}
             <div>
-              <h4 className="font-medium mb-3">Additional Equipment</h4>
-              <div className="space-y-3">
-                {extras.map((extra) => (
-                  <div key={extra.id} className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">{extra.name}</p>
-                      <p className="text-sm text-gray-500">€{extra.price} each</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button 
-                        onClick={() => handleExtraChange(extra.id, -1)}
-                        disabled={extra.quantity === 0}
-                        className="p-1 rounded-full bg-gray-100 disabled:opacity-50"
-                      >
-                        <Minus size={16} />
-                      </button>
-                      <span>{extra.quantity}</span>
-                      <button 
-                        onClick={() => handleExtraChange(extra.id, 1)}
-                        className="p-1 rounded-full bg-gray-100"
-                      >
-                        <Plus size={16} />
-                      </button>
-                    </div>
-                  </div>
+              <h4 className="font-bold mb-2">What's Included</h4>
+              <ul className="space-y-2">
+                {plan.description.split(', ').map((feature, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span>{feature}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            {/* Total Display */}
+            {plan.additionalServices && (
+              <div>
+                <h4 className="font-bold mb-2">Additional Services</h4>
+                <p className="text-gray-600">{plan.additionalServices}</p>
+              </div>
+            )}
+
             <div className="border-t pt-4">
-              <div className="flex justify-between mb-1">
-                <span>Base Price:</span>
-                <span>€{basePrice}</span>
+              <h4 className="font-bold mb-2">Terms & Conditions</h4>
+              <div className="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto text-sm">
+                <p className="mb-2">1. This membership will automatically renew at the end of each billing period.</p>
+                <p className="mb-2">2. You may cancel anytime before your next billing date.</p>
+                <p className="mb-2">3. All payments are non-refundable.</p>
+                <p className="mb-2">4. Membership access begins immediately after payment confirmation.</p>
+                <p>5. Violation of our community guidelines may result in membership termination.</p>
               </div>
-              <div className="flex justify-between mb-1">
-                <span>Extras:</span>
-                <span>€{extrasTotal}</span>
-              </div>
-              <div className="flex justify-between font-bold text-lg mt-2">
-                <span>Total:</span>
-                <span>€{total}</span>
+              <div className="mt-3 flex items-center">
+                <input
+                  type="checkbox"
+                  id="termsCheckbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                  className="mr-2"
+                />
+                <label htmlFor="termsCheckbox" className="text-sm">
+                  I agree to the terms and conditions
+                </label>
               </div>
             </div>
 
             <button
               onClick={() => setStep('payment')}
-              disabled={!selectedDate}
-              className={`w-full py-3 rounded-lg mt-2 ${
-                !selectedDate ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 text-white'
+              disabled={!acceptedTerms}
+              className={`w-full py-3 rounded-lg mt-4 ${
+                !acceptedTerms ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 text-white'
               }`}
             >
-              Proceed to Payment
+              Continue to Payment
             </button>
           </div>
         )}
@@ -153,14 +122,9 @@ export default function BookingModal({ plan, onClose }: BookingModalProps) {
             <div className="bg-blue-50 p-4 rounded-lg">
               <h4 className="font-medium mb-2">Order Summary</h4>
               <p className="text-sm">{plan.title} - {plan.price}</p>
-              {extras.filter(e => e.quantity > 0).map(extra => (
-                <p key={extra.id} className="text-sm">
-                  {extra.name} x{extra.quantity} - €{extra.price * extra.quantity}
-                </p>
-              ))}
               <div className="flex justify-between font-bold mt-2">
                 <span>Total:</span>
-                <span>€{total}</span>
+                <span>{plan.price}</span>
               </div>
             </div>
 
@@ -214,17 +178,28 @@ export default function BookingModal({ plan, onClose }: BookingModalProps) {
               </div>
             )}
 
-            <button
-              onClick={handleConfirmBooking}
-              disabled={!paymentMethod || (paymentMethod === 'card' && !cardDetails.number)}
-              className={`w-full py-3 rounded-lg mt-4 ${
-                (!paymentMethod || (paymentMethod === 'card' && !cardDetails.number))
-                  ? 'bg-gray-300 cursor-not-allowed'
-                  : 'bg-blue-600 text-white'
-              }`}
-            >
-              Confirm Booking (€{total})
-            </button>
+            <div className="flex gap-4 pt-2">
+              <button
+                onClick={() => setStep('details')}
+                className="flex-1 py-3 border border-gray-300 rounded-lg"
+              >
+                Back
+              </button>
+              <button
+                onClick={() => {
+                  onClose();
+                  alert(`Membership confirmed! Thank you for joining ${plan.title}`);
+                }}
+                disabled={!paymentMethod || (paymentMethod === 'card' && !cardDetails.number)}
+                className={`flex-1 py-3 rounded-lg ${
+                  (!paymentMethod || (paymentMethod === 'card' && !cardDetails.number))
+                    ? 'bg-gray-300 cursor-not-allowed'
+                    : 'bg-blue-600 text-white'
+                }`}
+              >
+                Confirm Membership
+              </button>
+            </div>
           </div>
         )}
       </div>

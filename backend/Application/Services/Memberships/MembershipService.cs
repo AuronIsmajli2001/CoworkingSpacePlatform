@@ -107,7 +107,7 @@ namespace Application.Services.Memberships
 
         }
 
-        public async Task<bool> UpdateAsync(string id,MembershipDTOUpdate membershipDTO)
+        public async Task<bool> UpdateMembershipAsync(string id,MembershipDTOUpdate membershipDTO)
         {
             try
             {
