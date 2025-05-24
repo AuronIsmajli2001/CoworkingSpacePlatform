@@ -148,6 +148,12 @@ export default function Spaces() {
           (space) => space.type.toLowerCase() === activeCategory.toLowerCase()
         );
 
+
+useEffect(() => {
+  window.scrollTo(0, 0); // Forces scroll to top on page load
+}, []);
+
+
   return (
     <>
       <Header />

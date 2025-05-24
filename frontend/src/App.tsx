@@ -3,6 +3,7 @@ import Dashboard from "./dashboard/pages/Dashboard";
 import Users from "./dashboard/pages/Users";
 import Spaces from "./dashboard/pages/Spaces";
 import Reservations from "./dashboard/pages/Reservations";
+import Memberships from "./dashboard/pages/Memberships";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Space from "./pages/Space";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/space/:id" element={<SpaceDetails />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/myreservations" element={<MyReservations />} />
+        <Route path="/memberships" element={<Memberships />} />
         <Route path="/profile" element={<EditProfile />} />
         
         <Route path="/dashboard" element={<Dashboard />} />

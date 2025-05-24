@@ -15,6 +15,22 @@ import { isAuthenticated } from "../utils/auth";
 import { useState } from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  // Function to scroll to the Address & Directions section
+  const scrollToBookTour = () => {
+    const element = document.getElementById("address-section");
+    if (element) {
+      const yOffset = -80; // Adjust this value as needed for header spacing
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+  window.scrollTo(0, 0); // Forces scroll to top on page load
+}, []);
+
   return (
     <>
       <Header />
@@ -45,6 +61,7 @@ const Home = () => {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button
+              onClick={() => navigate("/contact")}
               className="bg-white text-gray-900 px-8 py-3 rounded-xl 
                           font-medium hover:bg-gray-100 hover:text-blue-600 
                           transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -52,6 +69,7 @@ const Home = () => {
               CONTACT US
             </button>
             <button
+              onClick={scrollToBookTour}
               className="
                       border-2 border-white text-white px-8 py-3 rounded-xl font-medium
                       transition-all duration-300 shadow-lg
@@ -91,6 +109,7 @@ const Home = () => {
                 just your work self.
               </p>
               <button
+                onClick={() => navigate("/about")}
                 className="bg-blue-600 text-white font-medium border-gray-700 px-7 py-2 rounded-xl 
                   transition-all duration-300 
                   hover:bg-white hover:text-black 
@@ -177,6 +196,7 @@ const Home = () => {
           </p>
 
           <button
+            onClick={() => navigate("/space")}
             className="bg-blue-600 text-white font-medium px-7 py-3 rounded-xl
                                 border-2 border-transparent
                                 transition-all duration-300
@@ -232,7 +252,7 @@ const Home = () => {
       </section>
 
       {/* Address & Directions Section */}
-      <section className="relative py-24">
+      <section id="address-section" className="relative py-24">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img
@@ -324,7 +344,11 @@ const Home = () => {
                 />
                 <div className="p-6 w-full flex flex-col justify-between h-full">
                   <p className="text-gray-700 text-base mb-6 leading-relaxed">
-                    “{person.quote}”
+                    "{" "}
+                    <span className="text-gray-700 text-base mb-6 leading-relaxed">
+                      {person.quote}
+                    </span>{" "}
+                    "
                   </p>
                   <div className="flex items-center justify-between">
                     <div>

@@ -38,9 +38,15 @@ export default function PricingPlans() {
   };
 
   const formatPrice = (price: number, billingType: string) => {
-    const period = billingType === "Daily" ? "day" : "month";
-    return `£${price.toFixed(2)}/${period}`;
-  };
+  let period = "month"; 
+
+  if (billingType.toLowerCase() === "daily") period = "day";
+  else if (billingType.toLowerCase() === "monthly") period = "month";
+  else if (billingType.toLowerCase() === "yearly") period = "year";
+
+  return `£${price.toFixed(2)}/${period}`;
+};
+
 
   useEffect(() => {
     setLoading(true);

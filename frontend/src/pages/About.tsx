@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useEffect } from "react";
 import {
   Sparkles,
   Users,
@@ -19,7 +20,13 @@ import {
   Linkedin,
 } from "lucide-react";
 
+
+
 const About = () => {
+
+  useEffect(() => {
+  window.scrollTo(0, 0); // Forces scroll to top on page load
+}, []);
   return (
     <>
       <Header />
