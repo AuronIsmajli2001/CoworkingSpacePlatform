@@ -7,6 +7,25 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
+<<<<<<< HEAD
+=======
+
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
+interface ReservationData {
+  paymentMethod: "Cash" | "Card";
+  startDateTime: string;
+  endDateTime: string;
+}
+
+interface DecodedToken {
+  userId: string;
+  // Add other token fields if needed
+}
+>>>>>>> 7c6dcd7027182d468fb4c98199c1170ab3036ee1
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
