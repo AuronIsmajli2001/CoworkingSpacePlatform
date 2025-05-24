@@ -279,22 +279,35 @@ const Home = () => {
 
             {/* List Items */}
             <div className="flex flex-col gap-4">
-              <button className="flex items-center gap-3 w-fit bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 px-5 py-3 rounded-xl transition-all duration-300 group">
+             <button 
+                onClick={() => window.open('https://wa.me/38349123456?text=I%20want%20to%20book%20a%20tour')}
+                className="flex items-center gap-3 w-fit bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 px-5 py-3 rounded-xl transition-all duration-300 group"
+              >
                 <MessageCircle className="w-5 h-5 group-hover:text-blue-600" />
                 <span>Book a tour via WhatsApp</span>
               </button>
 
-              <button className="flex items-center gap-3 w-fit bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 px-5 py-3 rounded-xl transition-all duration-300 group">
-                <MapPin className="w-5 h-5 group-hover:text-blue-600" />
-                <div className="text-left">
-                  <span>Location #1</span>
-                </div>
-              </button>
+              <button 
+              onClick={() => window.open('https://www.google.com/maps?q=ZenVen+1+Str.+Enver+Maloku,+No.10,+Prishtinë,+Kosovo&hl=en&z=16&output=embed')} 
+              className="flex items-center gap-3 w-fit bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 px-5 py-3 rounded-xl transition-all duration-300 group"
+            >
+              <MapPin className="w-5 h-5 group-hover:text-blue-600" />
+              <div className="text-left">
+                <span>Location #1</span>
+                <p className="text-xs text-white/80 group-hover:text-blue-600/80">Str. Enver Maloku, Prishtinë</p>
+              </div>
+            </button>
 
-              <button className="flex items-center gap-3 w-fit bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 px-5 py-3 rounded-xl transition-all duration-300 group">
+              <button 
+                onClick={() => window.open('https://www.google.com/maps?q=CoSpace+2+Str.+Ganimete+Tërbeshi,+No.26,+Prishtinë,+Kosovo&hl=en&z=16&output=embed')} 
+                className="flex items-center gap-3 w-fit bg-blue-600 text-white hover:bg-white hover:text-blue-600 border border-blue-600 px-5 py-3 rounded-xl transition-all duration-300 group"
+              >
                 <MapPin className="w-5 h-5 group-hover:text-blue-600" />
                 <div className="text-left">
                   <span>Location #2</span>
+                  <p className="text-xs text-white/80 group-hover:text-blue-600/80">
+                    Str. Ganimete Tërbeshi, Prishtinë
+                  </p>
                 </div>
               </button>
             </div>
