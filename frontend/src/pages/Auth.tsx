@@ -183,6 +183,7 @@ export default function Auth() {
           <h2 className="text-2xl font-bold mb-6 text-gray-800">
             {isLogin ? "Login" : "Create Account"}
           </h2>
+          <div className="mt-4"></div>
 
           {apiError && (
             <div className="mb-4 p-3 bg-red-500/20 text-red-700 rounded-lg text-sm">
@@ -389,6 +390,17 @@ export default function Auth() {
               </button>
             </div>
           </form>
+          <br />
+          <br />
+          <br />
+          <div className="flex justify-center">
+            <a
+              href={`${frontUrl}`}
+              className="text-blue-600 hover:underline text-sm"
+            >
+              Back to Home
+            </a>
+          </div>
         </div>
       </div>
 
