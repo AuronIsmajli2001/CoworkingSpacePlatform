@@ -12,11 +12,8 @@ namespace Application.DTOs.Payments
     {
         [Required]
         public string UserId { get; set; }
-
-        [Required]
         public string ReservationId { get; set; }
 
-        [Required]
         public PaymentMethod PaymentMethod { get; set; }
         public Status Status { get; internal set; }
     }

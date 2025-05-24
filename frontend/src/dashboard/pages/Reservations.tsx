@@ -67,9 +67,12 @@ const Reservations = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/reservation`
-        );
+      // Add this debug log to verify the URL being used
+      console.log("API URL:", `${import.meta.env.VITE_API_BASE_URL}/reservation`);
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/reservation`
+      );
 
         const mappedReservations = response.data.map((res: any) => ({
           id: res.id,
