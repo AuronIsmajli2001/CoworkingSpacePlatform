@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { IconType } from "react-icons";
-
 import { FiUsers, FiCalendar, FiMapPin, FiDollarSign } from "react-icons/fi";
+
+enum ReservationStatus {
+  Pending = "Pending",
+  Confirmed = "Confirmed",
+  Cancelled = "Cancelled",
+  Completed = "Completed",
+}
 
 type User = {
   id: number;
@@ -12,6 +18,13 @@ type User = {
   role: string;
   status: string;
   avatar: string;
+};
+
+type Reservation = {
+  id: string;
+  startDateTime: Date;
+  endDateTime: Date;
+  status: ReservationStatus;
 };
 
 type StatItem = {
@@ -49,27 +62,63 @@ const Dashboard = () => {
   ]);
 
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [loading, setLoading] = useState({
+    users: true,
+    reservations: true,
+  });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5234/User");
-
-        const mappedUsers: User[] = response.data.map((user: any) => ({
+        // Fetch users data
+        const usersResponse = await axios.get("http://localhost:5234/User");
+        const mappedUsers: User[] = usersResponse.data.map((user: any) => ({
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role,
           status: user.active ? "Active" : "Inactive",
+          avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(
+            Math.random() * 10
+          )}.jpg`,
         }));
 
-        setUsers(mappedUsers);
-        setLoading(false);
+        // Fetch reservations data
+        const reservationsResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+        );
+        const mappedReservations: Reservation[] = reservationsResponse.data.map(
+          (res: any) => ({
+            id: res.id,
+            startDateTime: new Date(res.startDateTime),
+            endDateTime: new Date(res.endDateTime),
+            status: res.status,
+          })
+        );
 
-        // Update stats with user data
+        console.log("Fetched Reservations:", mappedReservations);
+
+        setUsers(mappedUsers);
+        setReservations(mappedReservations);
+
+        // Calculate statistics
         const totalUsers = mappedUsers.length;
         const activeUsers = mappedUsers.filter(
-          (u: User) => u.status === "Active"
+          (u) => u.status === "Active"
         ).length;
         const inactiveUsers = totalUsers - activeUsers;
+
+        const now = new Date();
+        const activeReservations = mappedReservations.filter((res) => {
+          const end = new Date(res.endDateTime);
+
+          // Count all confirmed reservations that haven't ended yet
+          return res.status === ReservationStatus.Confirmed && end >= now;
+        }).length;
+
+        console.log("Active Reservations Count:", activeReservations);
 
         setStats((prevStats) => {
           const newStats = [...prevStats];
@@ -79,40 +128,43 @@ const Dashboard = () => {
             active: activeUsers,
             inactive: inactiveUsers,
           };
+          newStats[1] = {
+            ...newStats[1],
+            value: activeReservations,
+          };
           return newStats;
         });
       } catch (err) {
-        console.error("Error fetching users:", err);
-        setError("Failed to load user data");
-        setLoading(false);
-
-        setStats((prevStats) => {
-          const newStats = [...prevStats];
-          newStats[0] = {
-            ...newStats[0],
-            value: "Error",
-            active: "Error",
-            inactive: "Error",
-          };
-          return newStats;
+        console.error("Error fetching data:", err);
+        setError("Failed to load dashboard data");
+      } finally {
+        setLoading({
+          users: false,
+          reservations: false,
         });
       }
     };
 
-    fetchUsers();
+    fetchData();
   }, []);
 
   return (
-    <div className="flex h-screen" style={{ backgroundColor: "#f5f5f5" }}>
+    <div className="flex h-screen bg-gray-900 text-white">
       <Sidebar />
       <div className="flex-1 overflow-auto p-6">
         <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+
+        {error && (
+          <div className="bg-red-900/20 border border-red-700 text-red-300 p-4 rounded mb-6">
+            {error}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="bg-gray-800 text-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
+              className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-md transition-shadow"
             >
               <div className="flex items-center mb-2">
                 <stat.icon size={20} className="mr-2 text-gray-400" />
@@ -122,7 +174,8 @@ const Dashboard = () => {
               </div>
               <div className="flex items-end justify-between mt-2">
                 <p className="text-2xl font-bold">
-                  {stat.title === "Total Users" && loading
+                  {(loading.users && index === 0) ||
+                  (loading.reservations && index === 1)
                     ? "Loading..."
                     : stat.value}
                 </p>
