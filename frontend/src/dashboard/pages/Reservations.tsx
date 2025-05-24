@@ -26,8 +26,6 @@ type ReservationEquipment = {
 enum ReservationStatus {
   Pending = "Pending",
   Confirmed = "Confirmed",
-  Cancelled = "Cancelled",
-  Completed = "Completed",
 }
 
 type Reservation = {
@@ -56,26 +54,6 @@ const Reservations = () => {
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [currentPage, setCurrentPage] = useState(1);
   const reservationsPerPage = 5;
-  // useEffect(() => {
-  //   const fetchReservations = async () => {
-  //     try {
-  //       console.log(
-  //         "Fetching from:",
-  //         `${import.meta.env.VITE_API_BASE_URL}/reservation`
-  //       );
-
-  //       const response = await axios.get(
-  //         `${import.meta.env.VITE_API_BASE_URL}/reservation`
-  //       );
-
-  //       setReservations(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch reservations:", error);
-  //     }
-  //   };
-
-  //   fetchReservations();
-  // }, []);
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,12 +65,15 @@ const Reservations = () => {
       try {
         setIsLoading(true);
         setError(null);
-      // Add this debug log to verify the URL being used
-      console.log("API URL:", `${import.meta.env.VITE_API_BASE_URL}/reservation`);
+        // Add this debug log to verify the URL being used
+        console.log(
+          "API URL:",
+          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+        );
 
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/reservation`
-      );
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+        );
 
         const mappedReservations = response.data.map((res: any) => ({
           id: res.id,
@@ -470,11 +451,7 @@ const Reservations = () => {
                             className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded ${
                               res.status === ReservationStatus.Confirmed
                                 ? "bg-green-600/20 text-green-400"
-                                : res.status === ReservationStatus.Pending
-                                ? "bg-yellow-600/20 text-yellow-400"
-                                : res.status === ReservationStatus.Cancelled
-                                ? "bg-red-600/20 text-red-400"
-                                : "bg-blue-600/20 text-blue-400"
+                                : "bg-yellow-600/20 text-yellow-400"
                             }`}
                           >
                             <span className="h-2 w-2 rounded-full bg-current"></span>
@@ -676,11 +653,10 @@ const Reservations = () => {
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
-                      {Object.values(ReservationStatus).map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
+                      <option value={ReservationStatus.Pending}>Pending</option>
+                      <option value={ReservationStatus.Confirmed}>
+                        Confirmed
+                      </option>
                     </select>
                   </div>
                 </div>
