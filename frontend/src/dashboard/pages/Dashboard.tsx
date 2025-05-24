@@ -296,7 +296,7 @@ const Dashboard = () => {
 
         <div className="bg-gray-800 p-4 rounded-lg shadow mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Reservations by Month</h2>
+            <h2 className="text-lg font-semibold">Reservations</h2>
             <div className="flex space-x-2">
               <button
                 onClick={() => setTimeRange("6m")}
