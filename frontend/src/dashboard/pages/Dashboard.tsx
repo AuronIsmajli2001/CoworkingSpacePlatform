@@ -7,8 +7,6 @@ import { FiUsers, FiCalendar, FiMapPin, FiDollarSign } from "react-icons/fi";
 enum ReservationStatus {
   Pending = "Pending",
   Confirmed = "Confirmed",
-  Cancelled = "Cancelled",
-  Completed = "Completed",
 }
 
 type User = {
@@ -61,76 +59,59 @@ const Dashboard = () => {
     },
   ]);
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState({
     users: true,
     reservations: true,
+    spaces: true,
   });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch users data
-        const usersResponse = await axios.get("http://localhost:5234/User");
-        const mappedUsers: User[] = usersResponse.data.map((user: any) => ({
-          id: user.id,
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-          role: user.role,
-          status: user.active ? "Active" : "Inactive",
-          avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(
-            Math.random() * 10
-          )}.jpg`,
-        }));
-
-        // Fetch reservations data
-        const reservationsResponse = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/reservation`
-        );
-        const mappedReservations: Reservation[] = reservationsResponse.data.map(
-          (res: any) => ({
-            id: res.id,
-            startDateTime: new Date(res.startDateTime),
-            endDateTime: new Date(res.endDateTime),
-            status: res.status,
-          })
-        );
-
-        console.log("Fetched Reservations:", mappedReservations);
-
-        setUsers(mappedUsers);
-        setReservations(mappedReservations);
+        // Fetch all data in parallel
+        const [usersResponse, reservationsResponse, spacesResponse] =
+          await Promise.all([
+            axios.get("http://localhost:5234/User"),
+            axios.get(`${import.meta.env.VITE_API_BASE_URL}/reservation`),
+            axios.get("http://localhost:5234/Space"), // Added spaces endpoint
+          ]);
 
         // Calculate statistics
-        const totalUsers = mappedUsers.length;
-        const activeUsers = mappedUsers.filter(
-          (u) => u.status === "Active"
+        const totalUsers = usersResponse.data.length;
+        const activeUsers = usersResponse.data.filter(
+          (u: any) => u.active
         ).length;
         const inactiveUsers = totalUsers - activeUsers;
 
         const now = new Date();
-        const activeReservations = mappedReservations.filter((res) => {
-          const end = new Date(res.endDateTime);
+        const activeReservations = reservationsResponse.data.filter(
+          (res: any) => {
+            const end = new Date(res.endDateTime);
+            return res.status === "Confirmed" && end >= now;
+          }
+        ).length;
 
-          // Count all confirmed reservations that haven't ended yet
-          return res.status === ReservationStatus.Confirmed && end >= now;
-        }).length;
-
-        console.log("Active Reservations Count:", activeReservations);
+        const totalSpaces = spacesResponse.data.length; // Get total spaces count
 
         setStats((prevStats) => {
           const newStats = [...prevStats];
           newStats[0] = {
+            // Users
             ...newStats[0],
             value: totalUsers,
             active: activeUsers,
             inactive: inactiveUsers,
           };
           newStats[1] = {
+            // Reservations
             ...newStats[1],
             value: activeReservations,
+          };
+          newStats[2] = {
+            // Spaces
+            ...newStats[2],
+            value: totalSpaces,
           };
           return newStats;
         });
@@ -141,6 +122,7 @@ const Dashboard = () => {
         setLoading({
           users: false,
           reservations: false,
+          spaces: false,
         });
       }
     };
@@ -175,7 +157,8 @@ const Dashboard = () => {
               <div className="flex items-end justify-between mt-2">
                 <p className="text-2xl font-bold">
                   {(loading.users && index === 0) ||
-                  (loading.reservations && index === 1)
+                  (loading.reservations && index === 1) ||
+                  (loading.spaces && index === 2)
                     ? "Loading..."
                     : stat.value}
                 </p>
