@@ -97,7 +97,6 @@ const handleAddMembership = async () => {
       billingType: newMembership.billingType,
     });
 
-    // Get the updated list with IDs
     const res = await axios.get("http://localhost:5234/Membership");
     setMemberships(res.data);
 
@@ -160,9 +159,9 @@ const handleAddMembership = async () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-900 text-white">
+    <div className="flex h-screen">
       <Sidebar />
-      <main className="flex-1 p-6 overflow-auto bg-gray-900 text-white">
+      <main className=" w-px flex-1 p-6 overflow-auto bg-gray-900 text-white">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Memberships</h2>
           <div className="flex gap-2">
