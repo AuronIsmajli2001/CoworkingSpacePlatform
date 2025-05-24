@@ -14,6 +14,7 @@ import MyReservations from "./pages/MyReseravtions";
 import React from "react";
 import Auth from "./pages/Auth";
 import EditProfile from "./pages/EditProfile";
+import MyMembership from "./pages/UserProfile/MyMembership";
 
 function App() {
   return (
@@ -29,7 +30,8 @@ function App() {
         <Route path="/myreservations" element={<MyReservations />} />
         <Route path="/memberships" element={<Memberships />} />
         <Route path="/profile" element={<EditProfile />} />
-        
+        <Route path="/userprofile/mymembership" element={<MyMembership />} />
+
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
         <Route path="/reservations" element={<Reservations />} />
