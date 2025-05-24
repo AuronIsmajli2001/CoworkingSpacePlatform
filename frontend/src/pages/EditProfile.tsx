@@ -10,7 +10,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 interface ProfileData {
   firstName: string;
   lastName: string;
-  username: string;
+  name: string;
   email: string;
   password: string;
 }
@@ -18,7 +18,7 @@ interface ProfileData {
 interface UpdateData {
   firstName: string | null;
   lastName: string | null;
-  username: string | null;
+  name: string | null;
   email: string | null;
   password: string | null;
 }
@@ -28,7 +28,7 @@ const EditProfile = () => {
   const [profileData, setProfileData] = useState<ProfileData>({
     firstName: "",
     lastName: "",
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -66,7 +66,7 @@ const EditProfile = () => {
         const userData = {
           firstName: response.data.firstName || "",
           lastName: response.data.lastName || "",
-          username: response.data.name || "",
+          name: response.data.name || "",
           email: response.data.email || "",
           password: "",
         };
@@ -93,13 +93,13 @@ const EditProfile = () => {
     setSuccess("");
 
     try {
-      // Convert empty strings to null for API call
+      // Only include fields that have changed from original data
       const updateData: UpdateData = {
-        firstName: profileData.firstName || null,
-        lastName: profileData.lastName || null,
-        username: profileData.username || null,
-        email: profileData.email || null,
-        password: profileData.password || null
+        firstName: profileData.firstName !== originalData?.firstName ? profileData.firstName : null,
+        lastName: profileData.lastName !== originalData?.lastName ? profileData.lastName : null,
+        name: profileData.name !== originalData?.name ? profileData.name : null,
+        email: profileData.email !== originalData?.email ? profileData.email : null,
+        password: profileData.password ? profileData.password : null
       };
 
       // Password validation only if password is provided
@@ -134,7 +134,7 @@ const EditProfile = () => {
         setOriginalData({
           firstName: updateData.firstName || "",
           lastName: updateData.lastName || "",
-          username: updateData.username || "",
+          name: updateData.name || "",
           email: updateData.email || "",
           password: ""
         });
@@ -160,7 +160,7 @@ const EditProfile = () => {
             <User size={64} className="text-blue-700" />
           </div>
           <div className="mb-8 text-lg font-semibold text-gray-700 text-center">
-            Hello {profileData.username}
+            Hello {profileData.name}
           </div>
           <button
             onClick={() => navigate("/")}
@@ -239,16 +239,16 @@ const EditProfile = () => {
           </div>
           <div>
             <label
-              htmlFor="username"
+              htmlFor="name"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Username
             </label>
             <input
               type="text"
-              id="username"
-              name="username"
-              value={profileData.username}
+              id="name"
+              name="name"
+              value={profileData.name}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
