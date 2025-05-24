@@ -6,6 +6,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 // import { isAuthenticated } from "../utils/auth";
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
 export default function SpaceDetails() {
   const navigate = useNavigate();
   // const [isLoading, setIsLoading] = useState(true); // Add loading state
@@ -26,7 +30,7 @@ export default function SpaceDetails() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5234/Space/${id}`)
+      .get(`${baseUrl}/Space/${id}`)
       .then((res) => {
         console.log("🧠 Space fetched:", res.data);
         setSpace({
@@ -90,7 +94,7 @@ export default function SpaceDetails() {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

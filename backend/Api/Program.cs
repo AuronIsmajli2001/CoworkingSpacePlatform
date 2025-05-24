@@ -6,9 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Database;
 using Persistence.UnitOfWork;
 using Application.Services.SpaceEquipments;
-using Application.Services.Users;
-
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -26,7 +23,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddScoped<IUserService, UserService>();
+        
 
 
 
@@ -35,19 +32,17 @@ public class Program
             options.AddPolicy("AllowFrontend",
                 policy =>
                 {
-                    policy.WithOrigins(
-                            "http://localhost:5173",  // Vite dev server
-                            "https://localhost:5173", // If frontend uses HTTPS
-                            "https://localhost:7100"   // Your API origin
-                        )
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
+                    policy.WithOrigins("http://localhost:5173") // frontend Vite port
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
+
                 });
         });
 
+
         // Add services to the container
-        builder.Services.AddControllers()
+   builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
@@ -65,7 +60,8 @@ public class Program
         builder.Services.AddScoped<IEquipmentService, EquipmentService>();
         builder.Services.AddScoped<IReservationsService, ReservationService>();
         builder.Services.AddScoped<IReservationEquipmentService, ReservationEquipmentService>();
-        builder.Services.AddScoped<IUserService, UserService>();
+
+       builder.Services.AddScoped<IUserService, UserService>();
 
 
         // Add JWT Authentication

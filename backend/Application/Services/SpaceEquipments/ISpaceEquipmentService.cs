@@ -10,8 +10,6 @@ namespace Application.Services.SpaceEquipments
 {
     public interface ISpaceEquipmentService
     {
-        Task CreateSpaceEquipmentAsync(SpaceEquipmentDTOCreate spaceEquipmentDTO); 
-        Task<IEnumerable<SpaceEquipmentDTORead>> GetAllSpaceEquipmentsAsync();   
-        Task<bool> DeleteSpaceEquipmentAsync(string spaceId, string equipmentId);
+
     }
 }

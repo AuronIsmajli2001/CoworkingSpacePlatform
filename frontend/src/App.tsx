@@ -12,6 +12,7 @@ import PricingPlans from "./pages/PricingPlans";
 import MyReservations from "./pages/MyReseravtions";
 import React from "react";
 import Auth from "./pages/Auth";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
         <Route path="/space/:id" element={<SpaceDetails />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/myreservations" element={<MyReservations />} />
-
+        <Route path="/profile" element={<EditProfile />} />
+        
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />
         <Route path="/reservations" element={<Reservations />} />

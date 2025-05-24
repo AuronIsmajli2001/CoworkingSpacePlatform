@@ -1,15 +1,13 @@
-﻿using Application.DTOs.Dashboard;
-using Application.DTOs.Users;
+﻿using Application.DTOs.Users;
 
 namespace Application.Services.IUserServices
 {
     public interface IUserService
     {
-        Task<UserDTORead> CreateUserAsync(UserDTOCreate userDto);
+        Task<bool> CreateUserAsync(UserDTOCreate userDto);
         Task<UserDTORead> GetUserByIdAsync(string id);
-        Task<IEnumerable<UserDTORead>> GetAllUsersAsync();
-        Task<UserDTORead> UpdateUserAsync(string id, UserDTOUpdate userDto);
-        Task DeleteUserAsync(string id);
-        Task<UserStatsDTO> GetUserStatsAsync();
+        Task<List<UserDTORead>> GetAllUsersAsync();
+        Task<bool> UpdateUserAsync(string id, UserDTOUpdate userDto);
+        Task<bool> DeleteUserAsync(string id);
     }
 }

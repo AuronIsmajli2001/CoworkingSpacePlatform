@@ -28,9 +28,9 @@ namespace Application.Services.Reservations
         //    _logger = logger;
         //}
         public ReservationService(
-    IUnitOfWork unitOfWork,
-    ILogger<ReservationService> logger,
-    IReservationEquipmentService reservationEquipmentService)
+        IUnitOfWork unitOfWork,
+        ILogger<ReservationService> logger,
+        IReservationEquipmentService reservationEquipmentService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -215,6 +215,21 @@ namespace Application.Services.Reservations
             await _unitOfWork.CompleteAsync();
 
             return true;
+        }
+
+        Task<List<ReservationDTORead>> IReservationsService.GetAllReservationsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IReservationsService.CreateReservationAsync(ReservationDTOCreate dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IReservationsService.UpdateReservationAsync(string id, ReservationDTOUpdate dto)
+        {
+            throw new NotImplementedException();
         }
     }
 }

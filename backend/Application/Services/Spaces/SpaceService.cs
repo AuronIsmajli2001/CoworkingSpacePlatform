@@ -26,7 +26,7 @@ namespace Application.Services.Spaces
             _logger = logger;
         }
 
-        public async Task<string> CreateSpaceAsync(SpaceDTOCreate spaceDTO,IFormFile imageFile)
+        public async Task<bool> CreateSpaceAsync(SpaceDTOCreate spaceDTO,IFormFile imageFile)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Application.Services.Spaces
                 _unitOfWork.Repository<Space>().Create(space);
                 await _unitOfWork.CompleteAsync();
                 _logger.LogInformation("Space created successfully with ID: {Id}", space.Id);
-                return "Space created successfully!";
+                return true;
             }
             catch (DbUpdateException dbEx)
             {
@@ -158,53 +158,51 @@ namespace Application.Services.Spaces
 
         }
 
-        public async Task<Space> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate,IFormFile image)
+        public async Task<bool> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate,IFormFile image)
         {
-
             try 
             {
                 _logger.LogInformation("Updating space with ID: {Id}", id);
 
                 var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
 
-                if (space == null)
+                if (space != null) 
                 {
-                    _logger.LogWarning("Cannot update. Space with ID {Id} not found.", id);
-                    return null;
-                }
+                    space.Name = spaceDTOUpdate.Name;
+                    space.Capacity = spaceDTOUpdate.Capacity;
+                    space.Price = spaceDTOUpdate.Price;
+                    space.Location = spaceDTOUpdate.Location;
+                    space.Description = spaceDTOUpdate.Description;
+                    space.Type = spaceDTOUpdate.Type;
+                    space.Image_URL = space.Image_URL;
 
-                space.Name = spaceDTOUpdate.Name;
-                space.Capacity = spaceDTOUpdate.Capacity;
-                space.Price = spaceDTOUpdate.Price;
-                space.Location = spaceDTOUpdate.Location;
-                space.Description = spaceDTOUpdate.Description;
-                space.Type = spaceDTOUpdate.Type;
-                space.Image_URL = space.Image_URL;
-
-                if (image != null)
-                {
-                    if (image.Length > 0)
+                    if (image != null)
                     {
-                        var tempFilePath = Path.GetTempFileName();
-                        using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                        if (image.Length > 0)
                         {
-                            await image.CopyToAsync(stream);
+                            var tempFilePath = Path.GetTempFileName();
+                            using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                            {
+                                await image.CopyToAsync(stream);
+                            }
+                            var imageUrl = await ImageUploaderService.UploadToImgur(tempFilePath, "YOUR_API_KEY");
+
+
+
+                            space.Image_URL = imageUrl;
+                            System.IO.File.Delete(tempFilePath);
                         }
-                        var imageUrl = await ImageUploaderService.UploadToImgur(tempFilePath, "YOUR_API_KEY");
-
-
-
-                        space.Image_URL = imageUrl;
-                        System.IO.File.Delete(tempFilePath);
                     }
+
+                    _unitOfWork.Repository<Space>().Update(space);
+                    await _unitOfWork.CompleteAsync();
+
+                    _logger.LogInformation("Successfully updated space with ID: {Id}", id);
+
+                    return true;
                 }
-
-                _unitOfWork.Repository<Space>().Update(space);
-                await _unitOfWork.CompleteAsync();
-
-                _logger.LogInformation("Successfully updated space with ID: {Id}", id);
-
-                return space;
+                return false;
+                
             }
             catch(DbUpdateException dbEx)
             {

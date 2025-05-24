@@ -76,7 +76,7 @@ namespace Api.Space
         }
 
         [HttpPut("{id}",Name = "UpdateSpace")]
-        public async Task<IActionResult> UpdateSpace(string id, [FromForm] SpaceDTOUpdate spaceDto,IFormFile image)
+        public async Task<IActionResult> UpdateSpace(string id, [FromBody] SpaceDTOUpdate spaceDto,IFormFile image)
         {
             try
             {

@@ -3,135 +3,225 @@ using Application.Interfaces.IUnitOfWork;
 using Application.Services.IUserServices;
 using Domain.Enums;
 using Domain.Users;
-using Microsoft.Extensions.Logging;
-using Application.DTOs.Dashboard;
-namespace Application.Services.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-public class UserService : IUserService
+namespace Application.Services.Users
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<UserService> _logger;
-
-    public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger)
+    public class UserService : IUserService
     {
-        _unitOfWork = unitOfWork;
-        _logger = logger;
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<UserService> _logger;
 
-    public async Task<UserDTORead> CreateUserAsync(UserDTOCreate userDto)
-    {
-        var user = new User
+        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger)
         {
-            Id = Guid.NewGuid().ToString(),
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-            UserName = userDto.UserName,
-            Email = userDto.Email,
-            Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
-
-            Role = Enum.Parse<Role>(userDto.Role),
-            Created_at = DateTime.UtcNow,
-            Active = true
-        };
-
-        _unitOfWork.Users.Create(user);
-
-        await _unitOfWork.CompleteAsync();
-
-        return new UserDTORead
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName = user.UserName,
-            Email = user.Email,
-            Role = user.Role.ToString(),
-            CreatedAt = user.Created_at,
-            Active = user.Active
-        };
-    }
-
-    public async Task<UserDTORead> GetUserByIdAsync(string id)
-    {
-        var user = await _unitOfWork.Users.GetByIdAsync(id);
-        if (user == null) return null;
-
-        return new UserDTORead
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName = user.UserName,
-            Email = user.Email,
-            Role = user.Role.ToString(),
-            CreatedAt = user.Created_at,
-            Active = user.Active
-        };
-    }
-
-    public async Task<IEnumerable<UserDTORead>> GetAllUsersAsync()
-    {
-        var users = await _unitOfWork.Users.GetAllAsync();
-        return users.Select(user => new UserDTORead
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName = user.UserName,
-            Email = user.Email,
-            Role = user.Role.ToString(),
-            CreatedAt = user.Created_at,
-            Active = user.Active
-        });
-    }
-
-    public async Task<UserDTORead> UpdateUserAsync(string id, UserDTOUpdate userDto)
-    {
-        var user = await _unitOfWork.Users.GetByIdAsync(id);
-        if (user == null) return null;
-
-        user.FirstName = userDto.FirstName;
-        user.LastName = userDto.LastName;
-        user.Role = Enum.Parse<Role>(userDto.Role);
-        user.Active = userDto.Active;
-
-        _unitOfWork.Users.Update(user);
-        await _unitOfWork.CompleteAsync();
-
-        return new UserDTORead
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            UserName = user.UserName,
-            Email = user.Email,
-            Role = user.Role.ToString(),
-            CreatedAt = user.Created_at,
-            Active = user.Active
-        };
-    }
-
-    public async Task DeleteUserAsync(string id)
-    {
-        var user = await _unitOfWork.Users.GetByIdAsync(id);
-        if (user != null)
-        {
-            _unitOfWork.Users.Delete(user);
-            await _unitOfWork.CompleteAsync();
+            _unitOfWork = unitOfWork;
+            _logger = logger;
         }
-    }
 
-    // Add to UserService.cs
-    public async Task<UserStatsDTO> GetUserStatsAsync()
-    {
-        var users = _unitOfWork.Users.GetAll(); // Gets IQueryable<User>
-
-        return new UserStatsDTO
+        public async Task<bool> CreateUserAsync(UserDTOCreate userDto)
         {
-            TotalUsers = await users.CountAsync(),
-            ActiveUsers = await users.CountAsync(u => u.Active),
-            InactiveUsers = await users.CountAsync(u => !u.Active)
-        };
+            try
+            {
+                var user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    FirstName = userDto.FirstName,
+                    LastName = userDto.LastName,
+                    UserName = userDto.UserName,
+                    Email = userDto.Email,
+                    Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
+                    Role = userDto.Role,
+                    Created_at = DateTime.UtcNow,
+                    Active = true
+                };
+                var users = _unitOfWork.Repository<User>().GetAll();
+
+                foreach (var person in users)
+                {
+                    if (person.Email == user.Email)
+                    {
+                        throw new Exception("Email is already registered");
+                    }
+                    if (person.UserName == user.UserName)
+                    {
+                        throw new Exception("This username is registered!");
+                    }
+                }
+
+                _unitOfWork.Repository<User>().Create(user);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while creating user with UserName: {Name}", userDto.UserName);
+                throw new Exception("Database error!" + dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while creating user with Name: {Name}", userDto.UserName);
+                throw;
+            }
+
+        }
+
+        public async Task<UserDTORead> GetUserByIdAsync(string id)
+        {
+            try
+            {
+                var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+                if (user == null) return null;
+
+                return new UserDTORead
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Role = user.Role.ToString(),
+                    CreatedAt = user.Created_at,
+                    MembershipId = user.MembershipId,
+                    Active = user.Active
+                };
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while retrieving user.");
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while retrieving user.");
+                throw;
+            }
+
+        }
+
+        public async Task<List<UserDTORead>> GetAllUsersAsync()
+        {
+            try
+            {
+                var users = await _unitOfWork.Repository<User>().GetAllAsync();
+
+                var usersDTO = users.Select(users => new UserDTORead
+                {
+                    Id = users.Id,
+                    FirstName = users.FirstName,
+                    LastName = users.LastName,
+                    UserName = users.UserName,
+                    Email = users.Email,
+                    Role = users.Role.ToString(),
+                    MembershipId = users.MembershipId,
+                    CreatedAt = users.Created_at,
+                    Active = users.Active
+                }).ToList();
+
+                return usersDTO;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while retrieving all users.");
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while retrieving all users.");
+                throw;
+            }
+
+        }
+
+        public async Task<bool> UpdateUserAsync(string id, UserDTOUpdate userDto)
+        {
+            try
+            {
+                var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+
+                var users = await _unitOfWork.Repository<User>().GetAllAsync();
+
+                if (user != null)
+                {
+                    foreach (var person in users)
+                    {
+                        if (person.UserName == userDto.Username)
+                        {
+                            throw new Exception("Username is being used");
+                        }
+                        if (person.Email == userDto.Email)
+                        {
+                            throw new Exception("This Email is already in use");
+                        }
+                    }
+                    if(userDto.FirstName != null)
+                    {
+                        user.FirstName = userDto.FirstName;
+                    }
+
+                    if(userDto.LastName != null)
+                    {
+                        user.LastName = userDto.LastName;
+                    }
+
+                    if(userDto.Email != null)
+                    {
+                        user.Email = userDto.Email;
+                    }
+
+                    if(userDto.Password  != null)
+                    {
+                        user.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
+                    }
+
+                    if(userDto.Username != null)
+                    {
+                        user.UserName = userDto.Username;
+                    }
+                    
+
+                    _unitOfWork.Repository<User>().Update(user);
+                    await _unitOfWork.CompleteAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while updating user with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user with ID: {Id}", id);
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteUserAsync(string id)
+        {
+            try
+            {
+                var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+                if (user != null)
+                {
+                    _unitOfWork.Repository<User>().Delete(user);
+                    await _unitOfWork.CompleteAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while deleting user with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while deleting user with ID: {Id}", id);
+                throw;
+            }
+        }
     }
 }

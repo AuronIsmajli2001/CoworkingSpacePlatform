@@ -3,7 +3,6 @@ import axios from "axios";
 import Footer from "../components/Footer";
 
 import { useNavigate } from "react-router-dom";
-
 import Header from "../components/Header";
 
 type Space = {
@@ -12,6 +11,7 @@ type Space = {
   type: string;
   imageUrl: string;
 };
+
 
 // const allSpaces: Space[] = [
 //   {
@@ -111,16 +111,15 @@ const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 export default function Spaces() {
   const navigate = useNavigate();
-
   const [activeCategory, setActiveCategory] = useState("All");
   const [spaces, setSpaces] = useState<Space[]>([]);
 
   useEffect(() => {
-    const url = `${baseUrl}/Space`;
-    console.log("📡 Requesting spaces from:", url);
+    
+    console.log("📡 Requesting spaces from:");
 
     axios
-      .get("http://localhost:5234/Space")
+      .get(`${baseUrl}/Space`)
       .then((res) => {
         console.log("Spaces from backend:", res.data);
 
@@ -212,7 +211,7 @@ export default function Spaces() {
         </div>
       </div>
 
-      <Footer/>
+      <Footer />
     </>
   );
 }

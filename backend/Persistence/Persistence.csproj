@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Equipments\" />
     <Folder Include="Memberships\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Payments\" />
     <Folder Include="ReservationEquipments\" />
     <Folder Include="Reservations\" />

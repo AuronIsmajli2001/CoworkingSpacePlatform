@@ -22,7 +22,7 @@ namespace Application.Services.ReservationEquipments
             _logger = logger;
         }
 
-        public async Task<IEnumerable<ReservationEquipmentDTORead>> GetAllAsync()
+        public async Task<List<ReservationEquipmentDTORead>> GetAllAsync()
         {
             var items = await _unitOfWork.Repository<ReservationEquipment>().GetAllAsync();
 
@@ -51,9 +51,7 @@ namespace Application.Services.ReservationEquipments
             };
         }
 
-        
-
-        public async Task CreateAsync(ReservationEquipmentDTOCreate dto)
+        public async Task<bool> CreateAsync(ReservationEquipmentDTOCreate dto)
         {
             var entity = new ReservationEquipment
             {
@@ -64,37 +62,42 @@ namespace Application.Services.ReservationEquipments
 
             _unitOfWork.Repository<ReservationEquipment>().Create(entity);
             await _unitOfWork.CompleteAsync();
+            return true;
         }
 
-        public async Task<ReservationEquipment> UpdateAsync(string reservationId, string equipmentId, ReservationEquipmentDTOUpdate dto)
+        public async Task<bool> UpdateAsync(string reservationId, string equipmentId, ReservationEquipmentDTOUpdate dto)
         {
             var entity = await _unitOfWork.Repository<ReservationEquipment>()
-     .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
-     .FirstOrDefaultAsync();
+            .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
+            .FirstOrDefaultAsync();
 
-            if (entity == null) return null;
+            if(entity != null)
+            {
+                entity.Quantity = dto.Quantity;
 
-            entity.Quantity = dto.Quantity;
-
-            _unitOfWork.Repository<ReservationEquipment>().Update(entity);
-            await _unitOfWork.CompleteAsync();
-
-            return entity;
+                _unitOfWork.Repository<ReservationEquipment>().Update(entity);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            return false;
         }
 
         public async Task<bool> DeleteAsync(string reservationId, string equipmentId)
         {
             var entity = await _unitOfWork.Repository<ReservationEquipment>()
-    .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
-    .FirstOrDefaultAsync();
+            .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
+            .FirstOrDefaultAsync();
 
-        
-            if (entity == null) return false;
+            if(entity != null)
+            {
+                _unitOfWork.Repository<ReservationEquipment>().Delete(entity);
+                await _unitOfWork.CompleteAsync();
 
-            _unitOfWork.Repository<ReservationEquipment>().Delete(entity);
-            await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            return false;
 
-            return true;
+            
         }
         public async Task<List<ReservationEquipmentDTORead>> GetByReservationIdAsync(string reservationId)
         {
