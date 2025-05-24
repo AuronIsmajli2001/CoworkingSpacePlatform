@@ -10,7 +10,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 interface ProfileData {
   firstName: string;
   lastName: string;
-  name: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -18,7 +18,7 @@ interface ProfileData {
 interface UpdateData {
   firstName: string | null;
   lastName: string | null;
-  name: string | null;
+  username: string | null;
   email: string | null;
   password: string | null;
 }
@@ -28,11 +28,10 @@ const EditProfile = () => {
   const [profileData, setProfileData] = useState<ProfileData>({
     firstName: "",
     lastName: "",
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
-  const [originalData, setOriginalData] = useState<ProfileData | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUserId] = useState<string>("");
@@ -42,42 +41,14 @@ const EditProfile = () => {
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        console.log("Decoded token:", decoded);
         const userId = decoded.userId;
-        if (!userId) {
-          console.error("No userId found in token");
-          return;
-        }
+        if (!userId) return;
         setUserId(userId);
-        fetchUserData(userId);
       } catch (error) {
         console.error("Error decoding token:", error);
       }
     }
   }, []);
-
-  const fetchUserData = async (id: string) => {
-    try {
-      console.log("Fetching user data for ID:", id);
-      const response = await axios.get(`${baseUrl}/User/${id}`);
-      console.log("API Response:", response.data);
-
-      if (response.data) {
-        const userData = {
-          firstName: response.data.firstName || "",
-          lastName: response.data.lastName || "",
-          name: response.data.name || "",
-          email: response.data.email || "",
-          password: "",
-        };
-        setProfileData(userData);
-        setOriginalData(userData);
-      }
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-      setError("Failed to fetch user data");
-    }
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -92,57 +63,30 @@ const EditProfile = () => {
     setError("");
     setSuccess("");
 
+    const updateData: UpdateData = {
+      firstName: profileData.firstName.trim() || null,
+      lastName: profileData.lastName.trim() || null,
+      username: profileData.username.trim() || null,
+      email: profileData.email.trim() || null,
+      password: profileData.password.trim() || null
+    };
+
     try {
-      // Only include fields that have changed from original data
-      const updateData: UpdateData = {
-        firstName: profileData.firstName !== originalData?.firstName ? profileData.firstName : null,
-        lastName: profileData.lastName !== originalData?.lastName ? profileData.lastName : null,
-        name: profileData.name !== originalData?.name ? profileData.name : null,
-        email: profileData.email !== originalData?.email ? profileData.email : null,
-        password: profileData.password ? profileData.password : null
-      };
-
-      // Password validation only if password is provided
-      if (updateData.password) {
-        const hasUpperCase = /[A-Z]/.test(updateData.password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(updateData.password);
-        const isLongEnough = updateData.password.length >= 8;
-
-        if (!hasUpperCase || !hasSpecialChar || !isLongEnough) {
-          setError("Password must be at least 8 characters long, contain one uppercase letter, and one special character");
-          return;
-        }
-      }
-
-      console.log("Sending update data:", JSON.stringify(updateData, null, 2));
-      console.log("User ID:", userId);
-      console.log("Request URL:", `${baseUrl}/User/${userId}`);
-
       const response = await axios.put(
         `${baseUrl}/User/${userId}`,
         updateData,
         {
           headers: {
             'Content-Type': 'application/json'
-          },
+          }
         }
       );
 
       if (response.status === 200) {
         setSuccess("Profile updated successfully!");
-        // Update original data with new values
-        setOriginalData({
-          firstName: updateData.firstName || "",
-          lastName: updateData.lastName || "",
-          name: updateData.name || "",
-          email: updateData.email || "",
-          password: ""
-        });
-        // Clear password field after successful update
         setProfileData(prev => ({ ...prev, password: "" }));
       }
     } catch (err: any) {
-      console.error("Error updating profile:", err);
       if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
@@ -160,7 +104,7 @@ const EditProfile = () => {
             <User size={64} className="text-blue-700" />
           </div>
           <div className="mb-8 text-lg font-semibold text-gray-700 text-center">
-            Hello {profileData.name}
+            Hello {profileData.username}
           </div>
           <button
             onClick={() => navigate("/")}
@@ -239,16 +183,16 @@ const EditProfile = () => {
           </div>
           <div>
             <label
-              htmlFor="name"
+              htmlFor="username"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Username
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={profileData.name}
+              id="username"
+              name="username"
+              value={profileData.username}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
