@@ -76,11 +76,11 @@ namespace Api.Space
         }
 
         [HttpPut("{id}",Name = "UpdateSpace")]
-        public async Task<IActionResult> UpdateSpace(string id, [FromBody] SpaceDTOUpdate spaceDto,IFormFile image)
+        public async Task<IActionResult> UpdateSpace(string id, [FromForm] SpaceDTOUpdate spaceDto)
         {
             try
             {
-                var space = await _spaceService.UpdateSpaceAsync(id, spaceDto,image);
+                var space = await _spaceService.UpdateSpaceAsync(id, spaceDto);
                 return Ok(space);
             }
             catch (Exception ex)
