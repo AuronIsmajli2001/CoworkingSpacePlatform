@@ -348,7 +348,7 @@ const Reservations = () => {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-1 pb-0 pt-0">
+      <div className="flex-1 pb-0 pt-0">
         <div className="p-6 bg-gray-900 text-white min-h-screen">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">All Reservations</h2>

@@ -162,7 +162,7 @@ const Users = () => {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-1 pb-0 pt-0">
+      <div className="flex-1 pb-0 pt-0">
         <div className="p-6 bg-gray-900 text-white min-h-screen">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
