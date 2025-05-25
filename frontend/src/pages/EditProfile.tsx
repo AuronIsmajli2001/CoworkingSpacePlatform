@@ -32,6 +32,13 @@ const EditProfile = () => {
     email: "",
     password: "",
   });
+  const [sidebarProfile, setSidebarProfile] = useState<ProfileData>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [userId, setUserId] = useState<string>("");
@@ -44,6 +51,18 @@ const EditProfile = () => {
         const userId = decoded.userId;
         if (!userId) return;
         setUserId(userId);
+        // Fetch user profile from backend for sidebar only
+        axios.get(`${baseUrl}/User/${userId}`).then(res => {
+          setSidebarProfile({
+            firstName: res.data.firstName || "",
+            lastName: res.data.lastName || "",
+            username: res.data.userName || "",
+            email: res.data.email || "",
+            password: ""
+          });
+        }).catch(err => {
+          console.error("Failed to fetch user profile:", err);
+        });
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -103,8 +122,14 @@ const EditProfile = () => {
           <div className="w-28 h-28 rounded-full bg-blue-100 flex items-center justify-center mb-8 mx-auto">
             <User size={64} className="text-blue-700" />
           </div>
-          <div className="mb-8 text-lg font-semibold text-gray-700 text-center">
-            Hello {profileData.username}
+          <div className="mb-4 text-lg font-semibold text-gray-700 text-center">
+            Hello {sidebarProfile.username}
+          </div>
+          <div className="mb-2 text-sm text-gray-600 text-center">
+            <div><span className="font-bold">First Name:</span> {sidebarProfile.firstName}</div>
+            <div><span className="font-bold">Last Name:</span> {sidebarProfile.lastName}</div>
+            <div><span className="font-bold">Email:</span> {sidebarProfile.email}</div>
+            <div><span className="font-bold">Username:</span> {sidebarProfile.username}</div>
           </div>
           <button
             onClick={() => navigate("/")}
