@@ -19,6 +19,38 @@ namespace Application.Services.Users
             _logger = logger;
         }
 
+        public async Task<bool> DeactivateUserOrChangeRole(string id, UserRoleDtoUpdate dto)
+        {
+            try
+            {
+                var user = await _unitOfWork.Repository<User>().GetByIdAsync(id);
+
+                if(user != null) 
+                {
+                    user.Role = dto.Role;
+                    user.Active = dto.isActive;
+
+                    _unitOfWork.Repository<User>().Update(user);
+                    await _unitOfWork.CompleteAsync();
+                    return true;
+                }   
+
+                return false;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while updating user with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user with ID: {Id}", id);
+                throw;
+            }
+
+        }
+
         public async Task<bool> CreateUserAsync(UserDTOCreate userDto)
         {
             try
