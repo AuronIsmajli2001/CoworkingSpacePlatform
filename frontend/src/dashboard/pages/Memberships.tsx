@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Pencil, Trash2, X, Check } from "lucide-react";
 import Sidebar from "../components/Sidebar";
@@ -20,18 +21,28 @@ const Memberships = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMemberships, setSelectedMemberships] = useState<string[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [editingMembership, setEditingMembership] = useState<Membership | null>(null);
+  const [editingMembership, setEditingMembership] = useState<{
+    id: string;
+    title: string;
+    price: number | null;
+    includesVAT: string;
+    description: string;
+    additionalServices: string;
+    isActive: string;
+    billingType: string;
+  } | null>(null);
 
-  const [newMembership, setNewMembership] = useState<Omit<Membership, "id">>({
+  const [newMembership, setNewMembership] = useState({
     title: "",
-    created_At: new Date().toISOString(),
-    price: 0,
-    isActive: true,
-    includesVAT: true,
-    billingType: "monthly",
+    price: null as number | null,
+    includesVAT: "",
     description: "",
     additionalServices: "",
+    billingType: "",
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const membershipsPerPage = 5;
 
   useEffect(() => {
     axios
@@ -86,63 +97,80 @@ const Memberships = () => {
     }
   };
 
-const handleAddMembership = async () => {
-  try {
-    await axios.post("http://localhost:5234/Membership", {
-      title: newMembership.title,
-      price: newMembership.price,
-      includesVAT: newMembership.includesVAT,
-      description: newMembership.description,
-      additionalServices: newMembership.additionalServices,
-      billingType: newMembership.billingType,
-    });
-
-    const res = await axios.get("http://localhost:5234/Membership");
-    setMemberships(res.data);
-
-    setShowAddModal(false);
-    setNewMembership({
+  const openEditModal = (membership: Membership) => {
+    setEditingMembership({
+      id: membership.id,
       title: "",
-      created_At: new Date().toISOString(),
-      price: 0,
-      isActive: true,
-      includesVAT: true,
-      billingType: "monthly",
+      price: null,
+      includesVAT: "",
       description: "",
       additionalServices: "",
+      isActive: "",
+      billingType: "",
     });
-  } catch (error) {
-    console.error("Add membership failed", error);
-  }
-};
+  };
 
-
-
-
-  // PUT update membership
   const handleEditMembership = async () => {
     if (!editingMembership) return;
     try {
-      const res = await axios.put(
+      const body = {
+        title: editingMembership.title.trim() === "" ? null : editingMembership.title,
+        price: editingMembership.price === null ? null : editingMembership.price,
+        includesVAT: editingMembership.includesVAT.trim() === "" ? null : editingMembership.includesVAT === "true",
+        description: editingMembership.description.trim() === "" ? null : editingMembership.description,
+        additionalServices: editingMembership.additionalServices.trim() === "" ? null : editingMembership.additionalServices,
+        isActive: editingMembership.isActive.trim() === "" ? null : editingMembership.isActive === "true",
+        billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
+      };
+      await axios.put(
         `http://localhost:5234/Membership/${editingMembership.id}`,
-        {
-          title: editingMembership.title,
-          price: editingMembership.price,
-          includesVAT: editingMembership.includesVAT,
-          description: editingMembership.description,
-          additionalServices: editingMembership.additionalServices,
-          created_At: editingMembership.created_At,
-          isActive: editingMembership.isActive,
-          billingType: newMembership.billingType.toLowerCase(),  
-
-        }
+        body
       );
-      setMemberships((prev) =>
-        prev.map((m) => (m.id === editingMembership.id ? res.data : m))
-      );
+      // Fetch all memberships after edit
+      const res = await axios.get("http://localhost:5234/Membership");
+      setMemberships(res.data);
       setEditingMembership(null);
     } catch (error) {
       console.error("Edit membership failed", error);
+    }
+  };
+
+  const handleAddMembership = async () => {
+    // Prevent submission if any field is blank
+    if (
+      !newMembership.title.trim() ||
+      !newMembership.price ||
+      !newMembership.includesVAT.trim() ||
+      !newMembership.description.trim() ||
+      !newMembership.additionalServices.trim() ||
+      !newMembership.billingType.trim()
+    ) {
+      alert("All fields are required.");
+      return;
+    }
+    try {
+      const body = {
+        title: newMembership.title,
+        price: newMembership.price,
+        includesVAT: newMembership.includesVAT === "true",
+        description: newMembership.description,
+        additionalServices: newMembership.additionalServices,
+        billingType: newMembership.billingType,
+      };
+      await axios.post("http://localhost:5234/Membership", body);
+      const res = await axios.get("http://localhost:5234/Membership");
+      setMemberships(res.data);
+      setShowAddModal(false);
+      setNewMembership({
+        title: "",
+        price: null,
+        includesVAT: "",
+        description: "",
+        additionalServices: "",
+        billingType: "",
+      });
+    } catch (error) {
+      console.error("Add membership failed", error);
     }
   };
 
@@ -150,7 +178,9 @@ const handleAddMembership = async () => {
   (m.title ?? "").toLowerCase().includes(searchTerm.toLowerCase())
 );
 
-
+  const indexOfLastMembership = currentPage * membershipsPerPage;
+  const indexOfFirstMembership = indexOfLastMembership - membershipsPerPage;
+  const currentMemberships = filteredMemberships.slice(indexOfFirstMembership, indexOfLastMembership);
 
   // Controlled inputs for edit modal
   const updateEditingField = (field: keyof Membership, value: any) => {
@@ -214,7 +244,7 @@ const handleAddMembership = async () => {
               </tr>
             </thead>
             <tbody>
-              {filteredMemberships.map((m) => (
+              {currentMemberships.map((m) => (
                 <tr
                   key={m.id}
                   className="border-b border-gray-700 hover:bg-gray-800"
@@ -235,7 +265,7 @@ const handleAddMembership = async () => {
                   <td className="p-3 flex gap-2">
                     <button
                       className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm flex items-center gap-1"
-                      onClick={() => setEditingMembership(m)}
+                      onClick={() => openEditModal(m)}
                     >
                       <Pencil size={14} /> Edit
                     </button>
@@ -250,6 +280,30 @@ const handleAddMembership = async () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-center items-center gap-4 mt-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+          >
+            ←
+          </button>
+          <span className="text-sm text-gray-300">
+            Page {currentPage} of {Math.ceil(filteredMemberships.length / membershipsPerPage)}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) =>
+                indexOfLastMembership < filteredMemberships.length ? prev + 1 : prev
+              )
+            }
+            disabled={indexOfLastMembership >= filteredMemberships.length}
+            className="bg-gray-700 px-4 py-2 rounded hover:bg-gray-600 disabled:opacity-50"
+          >
+            →
+          </button>
         </div>
 
         {/* ADD MODAL */}
@@ -271,11 +325,11 @@ const handleAddMembership = async () => {
               <input
                 type="number"
                 placeholder="Price"
-                value={newMembership.price}
-                onChange={(e) =>
+                value={newMembership.price ?? ""}
+                onChange={e =>
                   setNewMembership({
                     ...newMembership,
-                    price: Number(e.target.value),
+                    price: e.target.value === '' ? null : Number(e.target.value),
                   })
                 }
                 className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
@@ -297,11 +351,11 @@ const handleAddMembership = async () => {
               <label className="flex items-center gap-2 mb-2">
                 <input
                   type="checkbox"
-                  checked={newMembership.includesVAT}
+                  checked={newMembership.includesVAT === "true"}
                   onChange={() =>
                     setNewMembership({
                       ...newMembership,
-                      includesVAT: !newMembership.includesVAT,
+                      includesVAT: newMembership.includesVAT === "true" ? "false" : "true",
                     })
                   }
                 />
@@ -364,9 +418,9 @@ const handleAddMembership = async () => {
               <input
                 type="number"
                 placeholder="Price"
-                value={editingMembership.price}
-                onChange={(e) =>
-                  updateEditingField("price", Number(e.target.value))
+                value={editingMembership?.price ?? ""}
+                onChange={e =>
+                  updateEditingField('price', e.target.value === '' ? null : Number(e.target.value))
                 }
                 className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
               />
@@ -386,9 +440,12 @@ const handleAddMembership = async () => {
               <label className="flex items-center gap-2 mb-2">
                 <input
                   type="checkbox"
-                  checked={editingMembership.includesVAT}
+                  checked={editingMembership.includesVAT === "true"}
                   onChange={() =>
-                    updateEditingField("includesVAT", !editingMembership.includesVAT)
+                    updateEditingField(
+                      "includesVAT",
+                      editingMembership.includesVAT === "true" ? "false" : "true"
+                    )
                   }
                 />
                 Includes VAT
