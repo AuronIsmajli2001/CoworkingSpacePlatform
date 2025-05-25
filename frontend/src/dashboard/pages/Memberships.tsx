@@ -41,6 +41,21 @@ const Memberships = () => {
     billingType: "",
   });
 
+  type Notification = {
+  message: string;
+  type: "success" | "error";
+} | null;
+
+const [notification, setNotification] = useState<Notification>(null);
+
+useEffect(() => {
+  if (notification) {
+    const timer = setTimeout(() => setNotification(null), 3000);
+    return () => clearTimeout(timer);
+  }
+}, [notification]);
+
+
   const [currentPage, setCurrentPage] = useState(1);
   const membershipsPerPage = 5;
 
@@ -69,110 +84,121 @@ const Memberships = () => {
     }
   };
 
-  // DELETE single membership API call
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`http://localhost:5234/Membership/${id}`);
-      setMemberships((prev) => prev.filter((m) => m.id !== id));
-      setSelectedMemberships((prev) => prev.filter((sid) => sid !== id));
-    } catch (error) {
-      console.error("Delete failed", error);
-    }
-  };
+ // DELETE single membership API call
+ const handleDelete = async (id: string) => {
+  const confirmed = window.confirm("Are you sure you wanna delete this membership?");
+  if (!confirmed) return;
 
-  // BULK delete calling DELETE API for each
+  try {
+    await axios.delete(`http://localhost:5234/Membership/${id}`);
+    setMemberships((prev) => prev.filter((m) => m.id !== id));
+    setSelectedMemberships((prev) => prev.filter((sid) => sid !== id));
+    setNotification({ message: "Membership successfully deleted.", type: "error" });
+  } catch (error) {
+    console.error("Delete failed", error);
+    setNotification({ message: "Failed to delete membership.", type: "error" });
+  }
+};
+
+
+   // BULK delete calling DELETE API for each
   const handleBulkDelete = async () => {
-    try {
-      await Promise.all(
-        selectedMemberships.map((id) =>
-          axios.delete(`http://localhost:5234/Membership/${id}`)
-        )
-      );
-      setMemberships((prev) =>
-        prev.filter((m) => !selectedMemberships.includes(m.id))
-      );
-      setSelectedMemberships([]);
-    } catch (error) {
-      console.error("Bulk delete failed", error);
-    }
-  };
+  try {
+    await Promise.all(
+      selectedMemberships.map((id) =>
+        axios.delete(`http://localhost:5234/Membership/${id}`)
+      )
+    );
+    setMemberships((prev) =>
+      prev.filter((m) => !selectedMemberships.includes(m.id))
+    );
+    setSelectedMemberships([]);
+    setNotification({ message: "Selected memberships deleted.", type: "success" });
+  } catch (error) {
+    console.error("Bulk delete failed", error);
+    setNotification({ message: "Failed to delete selected memberships.", type: "error" });
+  }
+};
 
   const openEditModal = (membership: Membership) => {
-    setEditingMembership({
-      id: membership.id,
+  setEditingMembership({
+    id: membership.id,
+    title: membership.title,
+    price: membership.price,
+    includesVAT: membership.includesVAT.toString(),
+    description: membership.description,
+    additionalServices: membership.additionalServices,
+    isActive: membership.isActive.toString(),
+    billingType: membership.billingType,
+  });
+};
+
+
+  const handleEditMembership = async () => {
+  if (!editingMembership) return;
+  try {
+    const body = {
+      title: editingMembership.title.trim() === "" ? null : editingMembership.title,
+      price: editingMembership.price === null ? null : editingMembership.price,
+      includesVAT: editingMembership.includesVAT.trim() === "" ? null : editingMembership.includesVAT === "true",
+      description: editingMembership.description.trim() === "" ? null : editingMembership.description,
+      additionalServices: editingMembership.additionalServices.trim() === "" ? null : editingMembership.additionalServices,
+      isActive: editingMembership.isActive.trim() === "" ? null : editingMembership.isActive === "true",
+      billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
+    };
+    await axios.put(
+      `http://localhost:5234/Membership/${editingMembership.id}`,
+      body
+    );
+    const res = await axios.get("http://localhost:5234/Membership");
+    setMemberships(res.data);
+    setNotification({ message: "Membership successfully updated.", type: "success" });
+    setEditingMembership(null);
+  } catch (error) {
+    console.error("Edit membership failed", error);
+    setNotification({ message: "Failed to update membership.", type: "error" });
+  }
+};
+
+  const handleAddMembership = async () => {
+  if (
+    !newMembership.title.trim() ||
+    !newMembership.price ||
+    !newMembership.includesVAT.trim() ||
+    !newMembership.description.trim() ||
+    !newMembership.additionalServices.trim() ||
+    !newMembership.billingType.trim()
+  ) {
+    alert("All fields are required.");
+    return;
+  }
+  try {
+    const body = {
+      title: newMembership.title,
+      price: newMembership.price,
+      includesVAT: newMembership.includesVAT === "true",
+      description: newMembership.description,
+      additionalServices: newMembership.additionalServices,
+      billingType: newMembership.billingType,
+    };
+    await axios.post("http://localhost:5234/Membership", body);
+    const res = await axios.get("http://localhost:5234/Membership");
+    setMemberships(res.data);
+    setNotification({ message: "Membership successfully added.", type: "success" });
+    setShowAddModal(false);
+    setNewMembership({
       title: "",
       price: null,
       includesVAT: "",
       description: "",
       additionalServices: "",
-      isActive: "",
       billingType: "",
     });
-  };
-
-  const handleEditMembership = async () => {
-    if (!editingMembership) return;
-    try {
-      const body = {
-        title: editingMembership.title.trim() === "" ? null : editingMembership.title,
-        price: editingMembership.price === null ? null : editingMembership.price,
-        includesVAT: editingMembership.includesVAT.trim() === "" ? null : editingMembership.includesVAT === "true",
-        description: editingMembership.description.trim() === "" ? null : editingMembership.description,
-        additionalServices: editingMembership.additionalServices.trim() === "" ? null : editingMembership.additionalServices,
-        isActive: editingMembership.isActive.trim() === "" ? null : editingMembership.isActive === "true",
-        billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
-      };
-      await axios.put(
-        `http://localhost:5234/Membership/${editingMembership.id}`,
-        body
-      );
-      // Fetch all memberships after edit
-      const res = await axios.get("http://localhost:5234/Membership");
-      setMemberships(res.data);
-      setEditingMembership(null);
-    } catch (error) {
-      console.error("Edit membership failed", error);
-    }
-  };
-
-  const handleAddMembership = async () => {
-    // Prevent submission if any field is blank
-    if (
-      !newMembership.title.trim() ||
-      !newMembership.price ||
-      !newMembership.includesVAT.trim() ||
-      !newMembership.description.trim() ||
-      !newMembership.additionalServices.trim() ||
-      !newMembership.billingType.trim()
-    ) {
-      alert("All fields are required.");
-      return;
-    }
-    try {
-      const body = {
-        title: newMembership.title,
-        price: newMembership.price,
-        includesVAT: newMembership.includesVAT === "true",
-        description: newMembership.description,
-        additionalServices: newMembership.additionalServices,
-        billingType: newMembership.billingType,
-      };
-      await axios.post("http://localhost:5234/Membership", body);
-      const res = await axios.get("http://localhost:5234/Membership");
-      setMemberships(res.data);
-      setShowAddModal(false);
-      setNewMembership({
-        title: "",
-        price: null,
-        includesVAT: "",
-        description: "",
-        additionalServices: "",
-        billingType: "",
-      });
-    } catch (error) {
-      console.error("Add membership failed", error);
-    }
-  };
+  } catch (error) {
+    console.error("Add membership failed", error);
+    setNotification({ message: "Failed to add membership.", type: "error" });
+  }
+};
 
   const filteredMemberships = memberships.filter((m) =>
   (m.title ?? "").toLowerCase().includes(searchTerm.toLowerCase())
@@ -192,6 +218,22 @@ const Memberships = () => {
     <div className="flex h-screen">
       <Sidebar />
       <main className=" w-px flex-1 p-6 overflow-auto bg-gray-900 text-white">
+
+
+
+       {notification && (
+          <div
+            className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeInOut ${
+              notification.type === "success" ? "bg-green-500 text-white" : "bg-red-600 text-white"
+            }`}
+            style={{ minWidth: "280px", textAlign: "center", fontWeight: "600" }}
+          >
+            {notification.message}
+          </div>
+        )}
+
+
+
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Memberships</h2>
           <div className="flex gap-2">
@@ -342,6 +384,7 @@ const Memberships = () => {
                 }
                 className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
               >
+                <option value="0">Choose an option</option>
                 <option value="daily">Daily</option>
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
