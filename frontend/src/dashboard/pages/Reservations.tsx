@@ -6,13 +6,8 @@ import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
 
-declare global {
-  interface ImportMeta {
-    env: {
-      VITE_API_BASE_URL: string;
-    };
-  }
-}
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type User = {
   id: string;

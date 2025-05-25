@@ -195,7 +195,7 @@ const Dashboard = () => {
     if (allReservations.length === 0) return;
 
     const now = new Date();
-    let filtered = [];
+    let filtered: MonthlyReservations[] = [];
 
     if (timeRange === "6m") {
       const cutoffDate = new Date();

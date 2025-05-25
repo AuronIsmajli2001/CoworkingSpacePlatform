@@ -1,9 +1,8 @@
 import React, { useState, useRef } from "react";
-import FullCalendar, {
-  EventInput,
-  DateClickArg,
-  EventClickArg,
-} from "@fullcalendar/react";
+import FullCalendar from "@fullcalendar/react";
+import { EventInput } from "@fullcalendar/core";
+import { DateClickArg } from "@fullcalendar/interaction";
+import { EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
