@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Memberships;
 using Application.Interfaces.IUnitOfWork;
+using Domain.Enums;
 using Domain.Memberships;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -104,7 +105,6 @@ namespace Application.Services.Memberships
                 _logger.LogError(ex, "Unexpected error while retrieving membership.");
                 throw;
             }
-
         }
 
         public async Task<bool> UpdateMembershipAsync(string id,MembershipDTOUpdate membershipDTO)
@@ -120,16 +120,34 @@ namespace Application.Services.Memberships
                     _logger.LogWarning("Cannot update. Membership with ID {Id} not found.", id);
                     throw null;
                 }
-
-                membership.Title = membershipDTO.Title;
-                membership.Price = membershipDTO.Price;
-                membership.IncludesVAT = membershipDTO.IncludesVAT;
-                membership.BillingType = membershipDTO.BillingType;
-                membership.Description = membershipDTO.Description;
-                membership.AdditionalServices = membershipDTO.AdditionalServices;
-                membership.Created_At = membershipDTO.Created_At;
-                membership.isActive = membershipDTO.isActive;
-   
+                if(membershipDTO.Title != null)
+                {
+                    membership.Title = membershipDTO.Title;
+                }
+                if(membershipDTO.Price != null)
+                {
+                    membership.Price = (decimal)membershipDTO.Price;
+                }
+                if(membershipDTO.Description != null)
+                {
+                    membership.Description = membershipDTO.Description;
+                }
+                if(membershipDTO.IncludesVAT != null)
+                {
+                    membership.IncludesVAT = (bool)membershipDTO.IncludesVAT;
+                }
+                if(membershipDTO.BillingType != null)
+                {
+                    membership.BillingType = (BillingType)membershipDTO.BillingType;
+                }
+                if(membershipDTO.AdditionalServices != null)
+                {
+                    membership.AdditionalServices = membershipDTO.AdditionalServices;
+                }
+                if(membershipDTO.isActive != null)
+                {
+                    membership.isActive = (bool)membershipDTO.isActive;
+                }
                 _unitOfWork.Repository<Membership>().Update(membership);
                 await _unitOfWork.CompleteAsync();
 
@@ -158,10 +176,8 @@ namespace Application.Services.Memberships
 
                 if (membership == null)
                 {
-
                     throw new Exception("Membership does not exist");
                 }
-
                 _unitOfWork.Repository<Membership>().Delete(membership);
                 await _unitOfWork.CompleteAsync();
                 return true;

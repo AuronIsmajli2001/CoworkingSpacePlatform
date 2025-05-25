@@ -63,9 +63,6 @@ namespace Application.Services.Spaces
                         System.IO.File.Delete(tempFilePath);
                     }
                 }
-
-                
-
                 _unitOfWork.Repository<Space>().Create(space);
                 await _unitOfWork.CompleteAsync();
                 _logger.LogInformation("Space created successfully with ID: {Id}", space.Id);
