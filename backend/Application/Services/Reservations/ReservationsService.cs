@@ -113,28 +113,63 @@ namespace Application.Services.Reservations
 
         public async Task<bool> UpdateReservationAsync(string id, ReservationDTOUpdate dto)
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null) return false;
+            try
+            {
+                var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+                if (reservation != null)
+                {
+                    reservation.StartDateTime = dto.StartDateTime;
+                    reservation.EndDateTime = dto.EndDateTime;
+                    reservation.Status = dto.Status;
 
-            reservation.StartDateTime = dto.StartDateTime;
-            reservation.EndDateTime = dto.EndDateTime;
-            reservation.Status = dto.Status;
+                    _unitOfWork.Repository<Reservation>().Update(reservation);
+                    await _unitOfWork.CompleteAsync();
 
-            _unitOfWork.Repository<Reservation>().Update(reservation);
-            await _unitOfWork.CompleteAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch(DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while updating reservation with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
 
-            return true;
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating reservation with ID: {Id}", id);
+                throw;
+            }
+
         }
 
         public async Task<bool> DeleteReservationAsync(string id)
         {
-            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
-            if (reservation == null) return false;
+            try
+            {
+                var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+                if (reservation != null)
+                {
+                    _unitOfWork.Repository<Reservation>().Delete(reservation);
+                    await _unitOfWork.CompleteAsync();
 
-            _unitOfWork.Repository<Reservation>().Delete(reservation);
-            await _unitOfWork.CompleteAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while deleting reservation with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while deleting reservation with ID: {Id}", id);
+                throw;
+            }
 
-            return true;
+
+
         }
     }
 }

@@ -66,8 +66,23 @@ namespace Api.Users
             }
         }
 
+        [HttpPut("{id}/role", Name = "DeactivateOrUpdateUserRole")]
+        public async Task<IActionResult> UpdateRoleUser(string id, [FromBody] UserRoleDtoUpdate userDto)
+        {
+            try
+            {
+                var user = await _userService.DeactivateUserOrChangeRole(id, userDto);
+                return Ok("Deactivate or UserRole updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in UpdateUserAsync method : {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpPut("{id}", Name = "UpdateUser")]
-        public async Task<IActionResult> UpdateSpace(string id, [FromBody] UserDTOUpdate userDto)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UserDTOUpdate userDto)
         {
             try
             {
@@ -96,5 +111,7 @@ namespace Api.Users
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        
     }
 }

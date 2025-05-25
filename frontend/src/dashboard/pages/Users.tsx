@@ -18,6 +18,9 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
+  //@ts-ignore
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
@@ -79,42 +82,58 @@ const Users = () => {
     }
   };
 
-  const handleDeleteConfirmed = () => {
-    if (userToDelete !== null) {
-      setUsers((prev) => prev.filter((user) => user.id !== userToDelete));
-      setUserToDelete(null);
-    } else {
-      setUsers((prev) =>
-        prev.filter((user) => !selectedUsers.includes(user.id))
-      );
-      setSelectedUsers([]);
+  const handleDeleteConfirmed = async () => {
+    try {
+      if (userToDelete !== null) {
+        // Single user deletion
+        const response = await axios.delete(`${baseUrl}/User/${userToDelete}`);
+        if (response.status === 200) {
+          setUsers((prev) => prev.filter((user) => user.id !== userToDelete));
+          setUserToDelete(null);
+        }
+      } else {
+        // Bulk deletion
+        const deletePromises = selectedUsers.map(userId => 
+          axios.delete(`${baseUrl}/User/${userId}`)
+        );
+        await Promise.all(deletePromises);
+        setUsers((prev) =>
+          prev.filter((user) => !selectedUsers.includes(user.id))
+        );
+        setSelectedUsers([]);
+      }
+      setShowConfirmModal(false);
+    } catch (error) {
+      console.error("Error deleting user(s):", error);
+      alert("Failed to delete user(s). Please try again.");
     }
-    setShowConfirmModal(false);
   };
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [newUser, setNewUser] = useState({
-    name: "",
-    surname: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    password: "",
     role: "User",
-    status: "Active",
-    avatar: "",
+    status: "Active"
   });
 
   const [errors, setErrors] = useState<{
-    name?: string;
-    surname?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
+    password?: string;
   }>({});
 
   const validateFields = () => {
-    const newErrors: { name?: string; surname?: string; email?: string } = {};
+    const newErrors: { firstName?: string; lastName?: string; email?: string; password?: string } = {};
 
-    if (!newUser.name.trim()) newErrors.name = "First name is required";
-    if (!newUser.surname.trim()) newErrors.surname = "Surname is required";
+    if (!newUser.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!newUser.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!newUser.email.trim() || !isValidEmail(newUser.email))
       newErrors.email = "Valid email is required";
+    if (!newUser.password.trim()) newErrors.password = "Password is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -425,12 +444,11 @@ const Users = () => {
           )}
 
           {/* Edit Modal */}
-          {showEditModal && editUser && (
+          {showEditModal && editUserEditable && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-              {" "}
-              <div className="bg-gray-800 p-6 rounded shadow-lg w-[500px] max-w-full">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-[400px] max-w-full">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Edit user</h3>
+                  <h3 className="text-lg font-semibold text-white">Edit User Role</h3>
                   <button
                     onClick={() => setShowEditModal(false)}
                     className="text-gray-400 hover:text-white"
@@ -439,60 +457,11 @@ const Users = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="space-y-4 mb-6">
                   <div>
-                    <label className="text-sm block mb-1">First Name</label>
-                    <input
-                      type="text"
-                      value={editUserEditable?.name.split(" ")[0] || ""}
-                      onChange={(e) => {
-                        const last = editUserEditable?.name.split(" ")[1] || "";
-                        setEditUserEditable((prev) =>
-                          prev
-                            ? { ...prev, name: `${e.target.value} ${last}` }
-                            : null
-                        );
-                      }}
-                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm block mb-1">Last Name</label>
-                    <input
-                      type="text"
-                      value={editUserEditable?.name.split(" ")[1] || ""}
-                      onChange={(e) => {
-                        const first =
-                          editUserEditable?.name.split(" ")[0] || "";
-                        setEditUserEditable((prev) =>
-                          prev
-                            ? { ...prev, name: `${first} ${e.target.value}` }
-                            : null
-                        );
-                      }}
-                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm block mb-1">Email</label>
-                    <input
-                      type="email"
-                      value={editUserEditable?.email || ""}
-                      onChange={(e) =>
-                        setEditUserEditable((prev) =>
-                          prev ? { ...prev, email: e.target.value } : null
-                        )
-                      }
-                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm block mb-1">Role</label>
+                    <label className="text-sm block mb-1 text-gray-300">Role</label>
                     <select
-                      value={editUserEditable?.role || "User"}
+                      value={editUserEditable.role}
                       onChange={(e) =>
                         setEditUserEditable((prev) =>
                           prev ? { ...prev, role: e.target.value } : null
@@ -500,15 +469,16 @@ const Users = () => {
                       }
                       className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
                     >
-                      <option>User</option>
-                      <option>Admin</option>
+                      <option value="SuperAdmin">SuperAdmin</option>
+                      <option value="Staff">Staff</option>
+                      <option value="User">User</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="text-sm block mb-1">Status</label>
+                    <label className="text-sm block mb-1 text-gray-300">Status</label>
                     <select
-                      value={editUserEditable?.status || "Active"}
+                      value={editUserEditable.status}
                       onChange={(e) =>
                         setEditUserEditable((prev) =>
                           prev ? { ...prev, status: e.target.value } : null
@@ -520,56 +490,44 @@ const Users = () => {
                       <option value="Inactive">Inactive</option>
                     </select>
                   </div>
-
-                  <div className="col-span-2">
-                    <label className="text-sm block mb-1">
-                      Change Profile Picture
-                    </label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setEditUserEditable((prev) =>
-                              prev
-                                ? { ...prev, avatar: reader.result as string }
-                                : null
-                            );
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                      className="text-white text-sm"
-                    />
-                  </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => {
-                      if (
-                        !editUserEditable ||
-                        !isValidEmail(editUserEditable.email)
-                      ) {
-                        alert("Please provide a valid email.");
-                        return;
-                      }
-
-                      setUsers((prev) =>
-                        prev.map((u) =>
-                          u.id === editUserEditable.id ? editUserEditable : u
-                        )
-                      );
-                      setShowEditModal(false);
-                      setEditUser(null);
-                      setEditUserEditable(null);
-                    }}
-                    className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm rounded"
+                    onClick={() => setShowEditModal(false)}
+                    className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded text-white"
                   >
-                    Save all
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const response = await axios.put(
+                          `${baseUrl}/User/${editUserEditable.id}/role`,
+                          {
+                            role: editUserEditable.role,
+                            isActive: editUserEditable.status === "Active"
+                          }
+                        );
+
+                        if (response.status === 200) {
+                          setUsers((prev) =>
+                            prev.map((u) =>
+                              u.id === editUserEditable.id ? editUserEditable : u
+                            )
+                          );
+                          setShowEditModal(false);
+                          setEditUser(null);
+                          setEditUserEditable(null);
+                        }
+                      } catch (error) {
+                        console.error("Error updating user:", error);
+                        alert("Failed to update user. Please try again.");
+                      }
+                    }}
+                    className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white"
+                  >
+                    Save Changes
                   </button>
                 </div>
               </div>
@@ -577,10 +535,9 @@ const Users = () => {
           )}
           {showAddModal && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-              {" "}
               <div className="bg-gray-800 p-6 rounded shadow-lg w-[500px] max-w-full">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold">Add user</h3>
+                  <h3 className="text-lg font-semibold text-white">Add user</h3>
                   <button
                     onClick={() => setShowAddModal(false)}
                     className="text-gray-400 hover:text-white"
@@ -588,40 +545,39 @@ const Users = () => {
                     ✕
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="space-y-4 mb-6">
                   <div>
-                    <label className="text-sm block mb-1">First Name</label>
+                    <label className="text-sm block mb-1 text-gray-300">First Name</label>
                     <input
                       type="text"
-                      value={newUser.name}
+                      value={newUser.firstName}
                       onChange={(e) =>
-                        setNewUser({ ...newUser, name: e.target.value })
+                        setNewUser({ ...newUser, firstName: e.target.value })
                       }
                       className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
                     />
-                    {errors.name && (
-                      <p className="text-red-400 text-xs mt-1">{errors.name}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="text-sm block mb-1">Last Name</label>
-                    <input
-                      type="text"
-                      value={newUser.surname}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, surname: e.target.value })
-                      }
-                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
-                    />
-                    {errors.surname && (
-                      <p className="text-red-400 text-xs mt-1">
-                        {errors.surname}
-                      </p>
+                    {errors.firstName && (
+                      <p className="text-red-400 text-xs mt-1">{errors.firstName}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="text-sm block mb-1">Email</label>
+                    <label className="text-sm block mb-1 text-gray-300">Last Name</label>
+                    <input
+                      type="text"
+                      value={newUser.lastName}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, lastName: e.target.value })
+                      }
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                    />
+                    {errors.lastName && (
+                      <p className="text-red-400 text-xs mt-1">{errors.lastName}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="text-sm block mb-1 text-gray-300">Email</label>
                     <input
                       type="email"
                       value={newUser.email}
@@ -631,14 +587,27 @@ const Users = () => {
                       className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
                     />
                     {errors.email && (
-                      <p className="text-red-400 text-xs mt-1">
-                        {errors.email}
-                      </p>
+                      <p className="text-red-400 text-xs mt-1">{errors.email}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="text-sm block mb-1">Role</label>
+                    <label className="text-sm block mb-1 text-gray-300">Password</label>
+                    <input
+                      type="password"
+                      value={newUser.password}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, password: e.target.value })
+                      }
+                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
+                    />
+                    {errors.password && (
+                      <p className="text-red-400 text-xs mt-1">{errors.password}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="text-sm block mb-1 text-gray-300">Role</label>
                     <select
                       value={newUser.role}
                       onChange={(e) =>
@@ -646,81 +615,68 @@ const Users = () => {
                       }
                       className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
                     >
-                      <option>User</option>
-                      <option>Admin</option>
+                      <option value="SuperAdmin">SuperAdmin</option>
+                      <option value="Staff">Staff</option>
+                      <option value="User">User</option>
                     </select>
-                  </div>
-                  <div>
-                    <label className="text-sm block mb-1">Status</label>
-                    <select
-                      value={newUser.status}
-                      onChange={(e) =>
-                        setNewUser({ ...newUser, status: e.target.value })
-                      }
-                      className="bg-gray-700 border border-gray-600 text-sm px-3 py-2 rounded w-full text-white"
-                    >
-                      <option>Active</option>
-                      <option>Inactive</option>
-                    </select>
-                  </div>
-
-                  {/* 👉 Upload Image */}
-                  <div className="col-span-2">
-                    <label className="text-sm block mb-1">
-                      Profile Picture
-                    </label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setNewUser((prev) => ({
-                              ...prev,
-                              avatar: reader.result as string,
-                            }));
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                      className="text-white text-sm"
-                    />
                   </div>
                 </div>
 
-                <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
                   <button
-                    onClick={() => {
+                    onClick={() => setShowAddModal(false)}
+                    className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded text-white"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={async () => {
                       if (!validateFields()) return;
 
-                      const newId = users.length + 1;
-                      setUsers([
-                        ...users,
-                        {
-                          ...newUser,
-                          id: newId,
-                          avatar:
-                            newUser.avatar ||
-                            `https://randomuser.me/api/portraits/lego/${Math.floor(
+                      try {
+                        const userName = `${newUser.firstName.toLowerCase()}.${newUser.lastName.toLowerCase()}`;
+                        const response = await axios.post(`${baseUrl}/User`, {
+                          firstName: newUser.firstName,
+                          lastName: newUser.lastName,
+                          userName: userName,
+                          email: newUser.email,
+                          password: newUser.password,
+                          role: newUser.role
+                        });
+
+                        if (response.status === 200 || response.status === 201) {
+                          // Refresh the users list
+                          const usersResponse = await axios.get(`${baseUrl}/User`);
+                          const mappedUsers = usersResponse.data.map((user: any) => ({
+                            id: user.id,
+                            name: `${user.firstName} ${user.lastName}`,
+                            email: user.email,
+                            role: user.role,
+                            status: user.active ? "Active" : "Inactive",
+                            avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(
                               Math.random() * 10
                             )}.jpg`,
-                        },
-                      ]);
-                      setShowAddModal(false);
-                      setNewUser({
-                        name: "",
-                        surname: "",
-                        email: "",
-                        role: "User",
-                        status: "Active",
-                        avatar: "",
-                      });
+                          }));
+                          setUsers(mappedUsers);
+                          
+                          setShowAddModal(false);
+                          setNewUser({
+                            firstName: "",
+                            lastName: "",
+                            email: "",
+                            password: "",
+                            role: "User",
+                            status: "Active"
+                          });
+                        }
+                      } catch (error) {
+                        console.error("Error adding user:", error);
+                        alert("Failed to add user. Please try again.");
+                      }
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm rounded"
+                    className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white"
                   >
-                    Add user
+                    Add User
                   </button>
                 </div>
               </div>
