@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Memberships;
 using Application.Interfaces.IUnitOfWork;
 using Domain.Memberships;
+using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -177,6 +178,26 @@ namespace Application.Services.Memberships
                 throw;
             }
         }
+
+
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+        }
+
+        public async Task<bool> AssignMembershipToUserAsync(string userId, string membershipId)
+        {
+            var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+            if (user == null) return false;
+
+            user.MembershipId = membershipId;
+
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
+
 
     }
 }
