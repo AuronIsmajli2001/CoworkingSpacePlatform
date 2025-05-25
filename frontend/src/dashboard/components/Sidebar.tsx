@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Home, Users, Grid, Calendar } from "lucide-react";
+import { Home, Users, Grid, Calendar, CreditCard, UserPlus, Layers } from "lucide-react";
 
 const Sidebar = () => {
   const links = [
@@ -12,7 +12,7 @@ const Sidebar = () => {
       label: "Reservations",
       icon: <Calendar size={18} />,
     },
-    { to: "/memberships", label: "Memberships", icon: <Grid size={18} /> },
+    { to: "/memberships", label: "Memberships", icon: <Layers size={18} /> },
 
   ];
 

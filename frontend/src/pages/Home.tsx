@@ -179,7 +179,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Facilities Section */}
+     {/* Facilities Section */}
       <section className="py-16 bg-white isolate ">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">
@@ -206,47 +206,59 @@ const Home = () => {
           </button>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
-            {[
-              {
-                name: "Conference Room 1",
-                location: "CoSpace 1",
-                image: "/Images/Conference_1.jpg",
-              },
-              {
-                name: "Conference Room 2",
-                location: "CoSpace 2",
-                image: "/Images/Conference_2.jpg",
-              },
-              {
-                name: "Executive Suite",
-                location: "CoSpace 1",
-                image: "/Images/meeting-rooms-2.jpg",
-              },
-            ].map((room, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
-              >
-                {/* Image */}
-                <div className="relative pb-[70%] overflow-hidden">
-                  <img
-                    src={room.image}
-                    alt={`${room.name} ${room.location}`}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                </div>
+              {[
+                {
+                  id: "53af7ad6-1fe7-4df6-bfa7-70511d0119c6", 
+                  name: "Office Green",
+                  location: "CoSpace 2",
+                  image: "/Images/office_pic.jpg",
+                },
+                {
+                  id: "68adaf24-ae0e-4b14-89d7-6ebec6a62a0f", 
+                  name: "Conference Room A",
+                  location: "CoSpace 1",
+                  image: "/Images/2.png",
+                },
+                {
+                  id: "bc88e17e-b855-46be-90fa-c9a3afaf56c9", 
+                  name: "Desk 42B",
+                  location: "CoSpace 2",
+                  image: "/Images/Updated3-2.jpg",
+                },
+              ].map((space) => (
+                <div
+                  key={space.id}
+                  onClick={() => navigate(`/space/${space.id}`)} // Matches your SpaceDetails route
+                  className="cursor-pointer bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
+                >
+                  {/* Image */}
+                  <div className="relative pb-[70%] overflow-hidden">
+                    <img
+                      src={space.image}
+                      alt={`${space.name} ${space.location}`}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  </div>
 
-                {/* Content */}
-                <div className="p-6 text-left">
-                  <h4 className="text-2xl font-semibold text-gray-800 mb-1">
-                    {room.name}
-                  </h4>
-                  <p className="text-gray-600 text-sm mb-3">{room.location}</p>
-                  <div className="flex justify-between items-center"></div>
+                  {/* Content */}
+                  <div className="p-6 text-left">
+                    <h4 className="text-2xl font-semibold text-gray-800 mb-1">
+                      {space.name}
+                    </h4>
+                    <p className="text-gray-600 text-sm mb-3">{space.location}</p>
+                    <button 
+                      className="mt-2 text-blue-600 font-medium hover:underline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/space/${space.id}`);
+                      }}
+                    >
+                      View Details
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </section>
