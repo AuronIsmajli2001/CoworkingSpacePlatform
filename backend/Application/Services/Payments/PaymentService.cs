@@ -178,18 +178,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.Services.Payments
-{
-    public class PaymentService : IPaymentService
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<PaymentService> _logger;
+//namespace Application.Services.Payments
+//{
+//    public class PaymentService : IPaymentService
+//    {
+//        private readonly IUnitOfWork _unitOfWork;
+//        private readonly ILogger<PaymentService> _logger;
 
-        public PaymentService(IUnitOfWork unitOfWork, ILogger<PaymentService> logger)
-        {
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-        }
+//        public PaymentService(IUnitOfWork unitOfWork, ILogger<PaymentService> logger)
+//        {
+//            _unitOfWork = unitOfWork;
+//            _logger = logger;
+//        }
 
         public async Task CreatePaymentAsync(PaymentDTOCreate paymentDTO)
         {
@@ -297,8 +297,8 @@ namespace Application.Services.Payments
                 }
 
 
-                _unitOfWork.Repository<Payment>().Update(payment);
-                await _unitOfWork.CompleteAsync();
+//                _unitOfWork.Repository<Payment>().Update(payment);
+//                await _unitOfWork.CompleteAsync();
 
                 return payment;
             }
@@ -326,5 +326,4 @@ namespace Application.Services.Payments
             }
         }
     
-    }
-}
+    

@@ -19,11 +19,7 @@ namespace Domain.Payments
         [ForeignKey("UserId")]
         public string UserId { get; set; }
         [ForeignKey("ReservationId")]
-
         public string? ReservationId { get; set; }
-
-   
-
 
         [ForeignKey("MembershipId")]
         public string? MembershipId { get; set; }
