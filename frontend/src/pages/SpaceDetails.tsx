@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from 'uuid';
+import { Users, MapPin, Euro, Info } from 'lucide-react';
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -28,6 +29,7 @@ interface DecodedToken {
 interface Equipment {
   id: string;
   name: string;
+  price_per_piece?: number;
 }
 
 interface EquipmentSelection {
@@ -41,6 +43,7 @@ export default function SpaceDetails() {
   const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
   const [selectedEquipment, setSelectedEquipment] = useState<EquipmentSelection[]>([]);
   const [currentReservationId, setCurrentReservationId] = useState<string>("");
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
@@ -64,6 +67,26 @@ export default function SpaceDetails() {
       })
       .catch((err) => console.error("❌ Error fetching space:", err));
   }, [id]);
+
+  useEffect(() => {
+    if (!space) return;
+    // Calculate duration in hours
+    const start = reservationData.startDateTime ? new Date(reservationData.startDateTime) : null;
+    const end = reservationData.endDateTime ? new Date(reservationData.endDateTime) : null;
+    let hours = 0;
+    if (start && end && end > start) {
+      hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    }
+    let spaceTotal = hours * Number(space.price || 0);
+    let equipmentTotal = 0;
+    selectedEquipment.forEach(sel => {
+      const eq = equipmentList.find(e => e.id === sel.equipmentId);
+      if (eq && eq.price_per_piece) {
+        equipmentTotal += sel.quantity * eq.price_per_piece;
+      }
+    });
+    setTotalPrice(spaceTotal + equipmentTotal);
+  }, [reservationData, space, selectedEquipment, equipmentList]);
 
   const handleReservationChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -192,40 +215,35 @@ export default function SpaceDetails() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Space Info */}
-          <div
-            className="bg-white p-8 rounded-xl"
-            style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}
-          >
-            <h1 className="text-4xl font-bold text-gray-800 mb-6">
-              {space.name}
-            </h1>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-lg text-gray-700 mb-6">
+          <div className="bg-white p-12 rounded-xl shadow-lg flex flex-col gap-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">{space.name}</h1>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Users className="text-blue-600" size={28} />
               <div>
-                <p className="text-gray-500 font-semibold uppercase text-sm">
-                  Capacity
-                </p>
-                <p className="text-xl font-medium">{space.capacity}</p>
-              </div>
-              <div>
-                <p className="text-gray-500 font-semibold uppercase text-sm">
-                  Price per hour
-                </p>
-                <p className="text-xl font-medium">{space.price} €</p>
-              </div>
-              <div>
-                <p className="text-gray-500 font-semibold uppercase text-sm">
-                  Location
-                </p>
-                <p className="text-xl font-medium">{space.location}</p>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Capacity</p>
+                <p className="text-lg font-bold text-gray-800">{space.capacity}</p>
               </div>
             </div>
-
-            <div>
-              <p className="text-gray-500 font-semibold uppercase text-sm mb-1">
-                Description
-              </p>
-              <p className="text-base text-gray-800">{space.description}</p>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Euro className="text-green-600" size={28} />
+              <div>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Price per Hour</p>
+                <p className="text-lg font-bold text-gray-800">{space.price} €</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <MapPin className="text-purple-600" size={28} />
+              <div>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Location</p>
+                <p className="text-lg font-bold text-gray-800">{space.location}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Info className="text-orange-500" size={28} />
+              <div>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Description</p>
+                <p className="text-base text-gray-800">{space.description}</p>
+              </div>
             </div>
           </div>
 
@@ -304,6 +322,30 @@ export default function SpaceDetails() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Price per Hour
+                </label>
+                <input
+                  type="text"
+                  value={space.price + ' €'}
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Total Price
+                </label>
+                <input
+                  type="text"
+                  value={totalPrice.toFixed(2) + ' €'}
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 font-bold"
+                />
+              </div>
+
               <div className="pt-4">
                 <button
                   type="submit"
@@ -351,6 +393,7 @@ export default function SpaceDetails() {
                         )}
                       >
                         {equipment.name}
+                        {typeof equipment.price_per_piece === 'number' ? ` (€${equipment.price_per_piece.toFixed(2)})` : ''}
                       </option>
                     ))}
                   </select>
@@ -393,6 +436,18 @@ export default function SpaceDetails() {
                 </svg>
                 Add Equipment
               </button>
+            </div>
+
+            <div className="mt-6 flex flex-col items-end gap-2">
+              <div className="text-lg font-semibold text-gray-700">
+                Equipment Total: {selectedEquipment.reduce((sum, sel) => {
+                  const eq = equipmentList.find(e => e.id === sel.equipmentId);
+                  return sum + (eq && eq.price_per_piece ? sel.quantity * eq.price_per_piece : 0);
+                }, 0).toFixed(2)} €
+              </div>
+              <div className="text-lg font-bold text-blue-700">
+                Grand Total: {totalPrice.toFixed(2)} €
+              </div>
             </div>
 
             <div className="mt-6 flex justify-end gap-4">

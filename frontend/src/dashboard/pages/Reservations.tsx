@@ -5,9 +5,14 @@ import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  //@ts-ignore
+  const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 type User = {
   id: string;
@@ -88,6 +93,25 @@ const Reservations = () => {
     paymentMethod: PaymentMethod.Card,
   });
 
+  const navigate = useNavigate();
+
+  // Auth validation
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -95,16 +119,16 @@ const Reservations = () => {
         setError(null);
 
         // Fetch users
-        const usersResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/User`);
+        const usersResponse = await axios.get(`${baseUrl}/User`);
         setUsers(usersResponse.data);
 
         // Fetch spaces
-        const spacesResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/Space`);
+        const spacesResponse = await axios.get(`${baseUrl}/Space`);
         setSpaces(spacesResponse.data);
 
         // Fetch reservations
         const reservationsResponse = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+          `${baseUrl}/reservation`
         );
 
         const mappedReservations = reservationsResponse.data.map((res: any) => ({
@@ -170,7 +194,7 @@ const Reservations = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/Reservation/${id}`);
+      await axios.delete(`${baseUrl}/Reservation/${id}`);
       setReservations((prev) => prev.filter((res) => res.id !== id));
       setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
     } catch (error) {
@@ -183,7 +207,7 @@ const Reservations = () => {
     try {
       await Promise.all(
         selectedReservations.map((id) =>
-          axios.delete(`${import.meta.env.VITE_API_BASE_URL}/Reservation/${id}`)
+          axios.delete(`${baseUrl}/Reservation/${id}`)
         )
       );
       setReservations((prev) =>
@@ -212,7 +236,7 @@ const Reservations = () => {
       };
 
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/Reservation/${updatedReservation.id}`,
+        `${baseUrl}/Reservation/${updatedReservation.id}`,
         payload
       );
 
@@ -241,7 +265,7 @@ const Reservations = () => {
       };
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/Reservation`,
+        `${baseUrl}/Reservation`,
         payload
       );
 

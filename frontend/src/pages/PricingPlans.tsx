@@ -125,95 +125,97 @@ export default function PricingPlans() {
           </div>
         </section>
 
-        <section className="pt-10 pb-20 bg-white">
-          <div className="container mx-auto px-6 max-w-6xl">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {plans.map((plan) => {
-                const formattedPrice = formatPrice(
-                  plan.price,
-                  plan.billingType
-                );
-                const isPopular = plan.title.includes("Desk");
-                const features = plan.description.split(", ");
+      <section className="pt-10 pb-20 bg-white">
+  <div className="container mx-auto px-6 max-w-6xl">
+    <div className="flex flex-wrap justify-center gap-6">
+      {plans.map((plan) => {
+        const formattedPrice = formatPrice(plan.price, plan.billingType);
+        const isPopular = plan.title.includes("Desk");
+        const features = plan.description.split(", ");
 
-                return (
-                  <div
-                    key={plan.id}
-                    className={`
-                      border rounded-2xl p-6 transition-all flex flex-col h-full
-                      ${
-                        isPopular
-                          ? "border-2 border-blue-500 shadow-lg relative overflow-hidden"
-                          : "border-gray-200 hover:border-blue-300"
-                      }
-                    `}
-                  >
-                    {isPopular && (
-                      <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                        POPULAR CHOICE
-                      </div>
-                    )}
+        return (
+          <div
+            key={plan.id}
+            className={`
+              border rounded-2xl p-6 transition-all flex flex-col
+              w-full md:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]
+              min-h-full /* Ensure minimum height */
+              ${isPopular
+                ? "border-2 border-blue-500 shadow-lg relative overflow-hidden"
+                : "border-gray-200 hover:border-blue-300"
+              }
+            `}
+          >
+            {isPopular && (
+              <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                POPULAR CHOICE
+              </div>
+            )}
 
-                    <div className="flex-grow">
-                      <div className="flex items-center gap-3 mb-4">
-                        {getPlanIcon(plan.title)}
-                        <h3 className="text-xl font-bold text-gray-900">
-                          {plan.title}
-                        </h3>
-                      </div>
+            {/* Content container with flex-grow */}
+            <div className="flex flex-col flex-grow">
+              <div className="flex items-center gap-3 mb-4">
+                {getPlanIcon(plan.title)}
+                <h3 className="text-xl font-bold text-gray-900">
+                  {plan.title}
+                </h3>
+              </div>
 
-                      <div className="mb-6">
-                        <span className="text-3xl font-bold text-gray-900">
-                          {formattedPrice.split("/")[0]}
-                        </span>
-                        <span className="text-gray-500">
-                          /{formattedPrice.split("/")[1]}
-                        </span>
-                        <p className="text-sm text-gray-500 mt-1">
-                          {plan.includesVAT ? "Including VAT" : "Without VAT"}
-                        </p>
-                      </div>
+              <div className="mb-6">
+                <span className="text-3xl font-bold text-gray-900">
+                  {formattedPrice.split("/")[0]}
+                </span>
+                <span className="text-gray-500">
+                  /{formattedPrice.split("/")[1]}
+                </span>
+                <p className="text-sm text-gray-500 mt-1">
+                  {plan.includesVAT ? "Including VAT" : "Without VAT"}
+                </p>
+              </div>
 
-                      {plan.title.includes("Hosting") && (
-                        <h4 className="font-medium text-gray-900 mb-3">
-                          Presentation Equipment:
-                        </h4>
-                      )}
-                      <ul className="space-y-3 mb-6">
-                        {features.map((item, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                            <span className="text-gray-600">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
+              {plan.title.includes("Hosting") && (
+                <h4 className="font-medium text-gray-900 mb-3">
+                  Presentation Equipment:
+                </h4>
+              )}
+              
+              {/* Features list with flex-grow to take available space */}
+              <ul className="space-y-3 mb-6 flex-grow">
+                {features.map((item, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-gray-600">{item}</span>
+                  </li>
+                ))}
+              </ul>
 
-                      {plan.additionalServices && (
-                        <div className="mb-6">
-                          <h4 className="font-medium text-gray-900 mb-2">
-                            {plan.title.includes("Desk")
-                              ? "Get it all with our package:"
-                              : "Additional Services:"}
-                          </h4>
-                          <p className="text-gray-600 text-sm">
-                            {plan.additionalServices}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handlePlanSelect(plan)}
-                      className="w-full py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition mt-auto"
-                    >
-                      {getButtonText(plan.title)}
-                    </button>
-                  </div>
-                );
-              })}
+              {plan.additionalServices && (
+                <div className="mb-6">
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    {plan.title.includes("Desk")
+                      ? "Get it all with our package:"
+                      : "Additional Services:"}
+                  </h4>
+                  <p className="text-gray-600 text-sm">
+                    {plan.additionalServices}
+                  </p>
+                </div>
+              )}
             </div>
+
+            {/* Button will always stick to bottom */}
+            <button
+              onClick={() => handlePlanSelect(plan)}
+              className="w-full py-3 px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+            >
+              {getButtonText(plan.title)}
+            </button>
           </div>
-        </section>
+        );
+      })}
+    </div>
+  </div>
+</section>
       </div>
 
       <section className="py-16 bg-blue-600 text-white text-center">

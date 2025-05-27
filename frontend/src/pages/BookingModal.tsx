@@ -6,6 +6,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 type BookingModalProps = {
   plan: {
     id: string;
@@ -62,7 +65,7 @@ export default function BookingModal({
       });
 
       const response = await axios.post(
-        "http://localhost:5234/Membership/confirm",
+        `${baseUrl}/Membership/confirm`,
         {
           userId: user.userId,
           membershipId: plan.id,

@@ -15,6 +15,11 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 enum ReservationStatus {
   Pending = "Pending",
@@ -92,15 +97,33 @@ const Dashboard = () => {
   const [chartType, setChartType] = useState<"bar" | "line">("bar");
   const [loadingChart, setLoadingChart] = useState(true);
   const [timeRange, setTimeRange] = useState<"6m" | "year">("6m");
+  const navigate = useNavigate();
+
+  // Auth validation
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [usersResponse, reservationsResponse, spacesResponse] =
           await Promise.all([
-            axios.get("http://localhost:5234/User"),
-            axios.get(`${import.meta.env.VITE_API_BASE_URL}/reservation`),
-            axios.get("http://localhost:5234/Space"),
+            axios.get(`${baseUrl}/User`),
+            axios.get(`${baseUrl}/reservation`),
+            axios.get(`${baseUrl}/Space`),
           ]);
 
         // Calculate statistics
