@@ -19,7 +19,7 @@ type MembershipPlan = {
 };
 
 type BookingModalPlan = {
-  id: number;
+  id: string;
   title: string;
   price: string;
   billingType: "Daily" | "Monthly";
@@ -28,7 +28,9 @@ type BookingModalPlan = {
 
 export default function PricingPlans() {
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState<BookingModalPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<BookingModalPlan | null>(
+    null
+  );
   const [plans, setPlans] = useState<MembershipPlan[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,19 +40,19 @@ export default function PricingPlans() {
   };
 
   const formatPrice = (price: number, billingType: string) => {
-  let period = "month"; 
+    let period = "month";
 
-  if (billingType.toLowerCase() === "daily") period = "day";
-  else if (billingType.toLowerCase() === "monthly") period = "month";
-  else if (billingType.toLowerCase() === "yearly") period = "year";
+    if (billingType.toLowerCase() === "daily") period = "day";
+    else if (billingType.toLowerCase() === "monthly") period = "month";
+    else if (billingType.toLowerCase() === "yearly") period = "year";
 
-  return `£${price.toFixed(2)}/${period}`;
-};
-
+    return `£${price.toFixed(2)}/${period}`;
+  };
 
   useEffect(() => {
     setLoading(true);
-    api.get("/Membership")
+    api
+      .get("/Membership")
       .then((res) => {
         if (Array.isArray(res.data)) {
           setPlans(res.data);
@@ -65,17 +67,19 @@ export default function PricingPlans() {
 
   const handlePlanSelect = (plan: MembershipPlan) => {
     setSelectedPlan({
-      id: parseInt(plan.id),
+      id: plan.id,
       title: plan.title,
       price: formatPrice(plan.price, plan.billingType),
       billingType: plan.billingType as "Daily" | "Monthly",
-      description: plan.description
+      description: plan.description,
     });
   };
 
   const getPlanIcon = (title: string) => {
-    if (title.includes("Daily")) return <Calendar className="w-6 h-6 text-blue-600" />;
-    if (title.includes("Private")) return <Lock className="w-6 h-6 text-blue-600" />;
+    if (title.includes("Daily"))
+      return <Calendar className="w-6 h-6 text-blue-600" />;
+    if (title.includes("Private"))
+      return <Lock className="w-6 h-6 text-blue-600" />;
     return <User className="w-6 h-6 text-blue-600" />;
   };
 
@@ -125,7 +129,10 @@ export default function PricingPlans() {
           <div className="container mx-auto px-6 max-w-6xl">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {plans.map((plan) => {
-                const formattedPrice = formatPrice(plan.price, plan.billingType);
+                const formattedPrice = formatPrice(
+                  plan.price,
+                  plan.billingType
+                );
                 const isPopular = plan.title.includes("Desk");
                 const features = plan.description.split(", ");
 
@@ -228,6 +235,10 @@ export default function PricingPlans() {
         <BookingModal
           plan={selectedPlan}
           onClose={() => setSelectedPlan(null)}
+          onSuccess={() => {
+            console.log("✅ Membership confirmed");
+            // optional: refetch or redirect logic here
+          }}
         />
       )}
 

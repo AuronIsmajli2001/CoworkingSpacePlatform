@@ -18,6 +18,8 @@ using Application.Services.Users;
 using Application.Services.Reservations;
 using Application.Services.ReservationEquipments;
 
+
+
 public class Program
 {
     public static void Main(string[] args)
@@ -42,11 +44,18 @@ public class Program
 
 
         // Add services to the container
-   builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-    });
+        //builder.Services.AddControllers()
+        // .AddJsonOptions(options =>
+        // {
+        //     options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+        // });
+        builder.Services.AddControllers()
+         .AddJsonOptions(options =>
+         {
+             options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+         })
+         .AddApplicationPart(typeof(Api.Membership.MembershipController).Assembly); 
+
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -93,14 +102,12 @@ public class Program
         // Configure Swagger with JWT support
         builder.Services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "My API V1",
-                Version = "v1"
-            });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
+            c.CustomOperationIds(e => $"{e.ActionDescriptor.RouteValues["controller"]}_{e.ActionDescriptor.RouteValues["action"]}");
+        
 
-            // Add JWT Authentication to Swagger
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        // Add JWT Authentication to Swagger
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                 Name = "Authorization",

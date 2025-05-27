@@ -54,7 +54,15 @@ namespace Api.Membership
             try
             {
                 var membership = await _membershipService.GetByIdAsync(id);
-                if (membership == null) return NotFound("Membership not found.");
+                if (membership == null)
+                {
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "Selected membership does not exist."
+                    });
+                }
+
 
                 return Ok(membership);
             }
@@ -70,7 +78,7 @@ namespace Api.Membership
         {
             try
             {
-                var result = await _membershipService.UpdateMembershipAsync(id,dto);
+                var result = await _membershipService.UpdateMembershipAsync(id, dto);
                 if (!result) return NotFound("Membership not found.");
 
                 return Ok("Membership updated successfully.");
@@ -96,5 +104,72 @@ namespace Api.Membership
                 return StatusCode(500, "Internal server error");
             }
         }
-    }
+
+
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmMembership([FromBody] ConfirmMembershipDTO dto)
+        {
+            try
+            {
+                var user = await _membershipService.GetUserByIdAsync(dto.UserId); // You'll add this below
+                if (user == null)
+                    return NotFound("User not found.");
+
+                //if (user.MembershipId != null)
+                //    return BadRequest("User already has an active membership.");
+                if (user.MembershipId != null)
+                {
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "User already has an active membership."
+                    });
+                }
+
+
+                var success = await _membershipService.AssignMembershipToUserAsync(dto.UserId, dto.MembershipId);
+
+                if (!success)
+                    return StatusCode(500, "Failed to assign membership.");
+
+                return Ok(new { success = true, message = "Membership confirmed." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error confirming membership.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+        [HttpGet("by-user/{userId}", Name = "GetUserMembership")]
+        public async Task<IActionResult> GetUserMembership(string userId)
+        {
+            try
+            {
+                _logger.LogInformation($"[Controller] Start GetUserMembership for userId: {userId}");
+
+                var membership = await _membershipService.GetUserMembershipAsync(userId);
+
+                if (membership == null)
+                {
+                    _logger.LogWarning($"[Controller] No membership found for userId: {userId}");
+                    return Ok(new
+                    {
+                        success = false,
+                        message = "User has no active membership"
+                    });
+                }
+
+                _logger.LogInformation($"[Controller] Membership found: {membership.Title} for userId: {userId}");
+                return Ok(membership);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"[Controller] Exception in GetUserMembership for userId: {userId}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+    
+}
 }

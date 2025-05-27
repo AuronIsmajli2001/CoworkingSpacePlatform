@@ -1,10 +1,14 @@
-﻿using Application.DTOs.Memberships;
+﻿
+
+using Application.DTOs.Memberships;
 using Application.Interfaces.IUnitOfWork;
 using Domain.Enums;
 using Domain.Memberships;
+using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
+using Application.Services.Users;
+using Application.Services.IUserServices;
 
 namespace Application.Services.Memberships
 {
@@ -12,11 +16,16 @@ namespace Application.Services.Memberships
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<MembershipService> _logger;
+        private readonly IUserService _userService;
 
-        public MembershipService(IUnitOfWork unitOfWork, ILogger<MembershipService> logger)
+        public MembershipService(
+            IUnitOfWork unitOfWork,
+            ILogger<MembershipService> logger,
+            IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _userService = userService;
         }
 
         public async Task<bool> CreateAsync(MembershipDTOCreate membershipDTO)
@@ -33,7 +42,7 @@ namespace Application.Services.Memberships
                     Description = membershipDTO.Description,
                     AdditionalServices = membershipDTO.AdditionalServices,
                     Created_At = DateTime.UtcNow,
-                    isActive = true 
+                    isActive = true
                 };
                 _unitOfWork.Repository<Membership>().Create(membership);
                 await _unitOfWork.CompleteAsync();
@@ -63,12 +72,10 @@ namespace Application.Services.Memberships
                 AdditionalServices = s.AdditionalServices,
                 Created_At = s.Created_At,
                 isActive = s.isActive,
-                Users = s.Users
-
+               
             }).ToList();
 
             _logger.LogInformation("Successfully fetched {Count} memberships from the database.", membershipDTOs.Count);
-
             return membershipDTOs;
         }
 
@@ -92,7 +99,6 @@ namespace Application.Services.Memberships
                     AdditionalServices = s.AdditionalServices,
                     Created_At = s.Created_At,
                     isActive = s.isActive,
-                    Users = s.Users
                 };
             }
             catch (DbUpdateException dbEx)
@@ -107,7 +113,7 @@ namespace Application.Services.Memberships
             }
         }
 
-        public async Task<bool> UpdateMembershipAsync(string id,MembershipDTOUpdate membershipDTO)
+        public async Task<bool> UpdateMembershipAsync(string id, MembershipDTOUpdate membershipDTO)
         {
             try
             {
@@ -152,15 +158,13 @@ namespace Application.Services.Memberships
                 await _unitOfWork.CompleteAsync();
 
                 _logger.LogInformation("Successfully updated membership with ID: {Id}", id);
-
                 return true;
             }
             catch (DbUpdateException dbEx)
             {
-                _logger.LogError(dbEx, "Database error while updating membership with ID: {Id} !", id);
+                _logger.LogError(dbEx, "Database error while updating membership with ID: {Id}!", id);
                 throw new Exception(dbEx.Message);
             }
-
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error while updating membership with ID: {Id}", id);
@@ -184,7 +188,7 @@ namespace Application.Services.Memberships
             }
             catch (DbUpdateException dbEx)
             {
-                _logger.LogError(dbEx, "Database error while deleting membership with ID: {Id} !", id);
+                _logger.LogError(dbEx, "Database error while deleting membership with ID: {Id}!", id);
                 throw new Exception(dbEx.Message);
             }
             catch (Exception ex)
@@ -194,5 +198,49 @@ namespace Application.Services.Memberships
             }
         }
 
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+        }
+
+        public async Task<bool> AssignMembershipToUserAsync(string userId, string membershipId)
+        {
+            var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+            if (user == null) return false;
+
+            user.MembershipId = membershipId;
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
+
+        public async Task<MembershipDTORead> GetUserMembershipAsync(string userId)
+        {
+            _logger.LogInformation($"Fetching membership for user {userId}");
+
+            _logger.LogInformation("Start GetUserMembershipAsync");
+            _logger.LogInformation($"User ID received: {userId}");
+
+            var user = await GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"No user found with ID: {userId}");
+                return null;
+            }
+
+            _logger.LogInformation($"User found: {user.FirstName} {user.LastName}, MembershipId: {user.MembershipId}");
+
+            if (string.IsNullOrEmpty(user.MembershipId))
+            {
+                _logger.LogInformation($"User {userId} has no membership assigned.");
+                return null;
+            }
+
+            _logger.LogInformation($"Fetching membership with ID: {user.MembershipId} for user {userId}");
+
+            return await GetByIdAsync(user.MembershipId);
+
+        }
     }
 }
