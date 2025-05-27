@@ -15,29 +15,32 @@ import React from "react";
 import Auth from "./pages/Auth";
 import EditProfile from "./pages/EditProfile";
 import MyMembership from "./pages/UserProfile/MyMembership";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/pricingplans" element={<PricingPlans />} />
-        <Route path="/space" element={<Space />} />
-        <Route path="/space/:id" element={<SpaceDetails />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/myreservations" element={<MyReservations />} />
-        <Route path="/memberships" element={<Memberships />} />
-        <Route path="/profile" element={<EditProfile />} />
-        <Route path="/userprofile/mymembership" element={<MyMembership />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pricingplans" element={<PricingPlans />} />
+          <Route path="/space" element={<Space />} />
+          <Route path="/space/:id" element={<SpaceDetails />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/myreservations" element={<MyReservations />} />
+          <Route path="/memberships" element={<Memberships />} />
+          <Route path="/profile" element={<EditProfile />} />
+          <Route path="/userprofile/mymembership" element={<MyMembership />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/reservations" element={<Reservations />} />
-        <Route path="/spaces" element={<Spaces />} />
-      </Routes>
-    </Router>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/reservations" element={<Reservations />} />
+          <Route path="/spaces" element={<Spaces />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

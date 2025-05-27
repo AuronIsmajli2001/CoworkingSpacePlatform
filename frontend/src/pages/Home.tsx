@@ -10,12 +10,58 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isAuthenticated } from "../utils/auth";
-import { useState } from "react";
+
+interface Space {
+  id: string;
+  name: string;
+  location: string;
+  image: string;
+}
 
 const Home = () => {
   const navigate = useNavigate();
+  const [spaces, setSpaces] = useState<Space[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  //@ts-ignore
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  //@ts-ignore
+  const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
+  useEffect(() => {
+    const fetchSpaces = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/space`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch spaces');
+        }
+        const data = await response.json();
+        // Take first 3 spaces or all if less than 3
+        const displayedSpaces = data.slice(0, 3).map((space: any) => ({
+          id: space.id,
+          name: space.name,
+          location: space.location,
+          image: space.image_URL, 
+        }));
+        setSpaces(displayedSpaces);
+
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+        // Fallback to empty array or default spaces if needed
+        setSpaces([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSpaces();
+    window.scrollTo(0, 0);
+  }, [baseUrl]);
+
+  
 
   // Function to scroll to the Address & Directions section
   const scrollToBookTour = () => {
@@ -179,8 +225,8 @@ const Home = () => {
         </div>
       </section>
 
-     {/* Facilities Section */}
-      <section className="py-16 bg-white isolate ">
+   {/* Facilities Section */}
+      <section className="py-16 bg-white isolate">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">
             Space Facilities & Amenities
@@ -205,36 +251,24 @@ const Home = () => {
             Explore more
           </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
-              {[
-                {
-                  id: "53af7ad6-1fe7-4df6-bfa7-70511d0119c6", 
-                  name: "Office Green",
-                  location: "CoSpace 2",
-                  image: "/Images/office_pic.jpg",
-                },
-                {
-                  id: "68adaf24-ae0e-4b14-89d7-6ebec6a62a0f", 
-                  name: "Conference Room A",
-                  location: "CoSpace 1",
-                  image: "/Images/2.png",
-                },
-                {
-                  id: "bc88e17e-b855-46be-90fa-c9a3afaf56c9", 
-                  name: "Desk 42B",
-                  location: "CoSpace 2",
-                  image: "/Images/Updated3-2.jpg",
-                },
-              ].map((space) => (
+          {loading ? (
+            <div className="mt-16 flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : error ? (
+            <div className="mt-16 text-red-500">{error}</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
+              {spaces.map((space) => (
                 <div
                   key={space.id}
-                  onClick={() => navigate(`/space/${space.id}`)} // Matches your SpaceDetails route
+                  onClick={() => navigate(`/space/${space.id}`)}
                   className="cursor-pointer bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
                 >
                   {/* Image */}
                   <div className="relative pb-[70%] overflow-hidden">
                     <img
-                      src={space.image}
+                      src={space.image || "/Images/default-space.jpg"} // Fallback image
                       alt={`${space.name} ${space.location}`}
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -259,7 +293,8 @@ const Home = () => {
                   </div>
                 </div>
               ))}
-          </div>
+            </div>
+          )}
         </div>
       </section>
 
