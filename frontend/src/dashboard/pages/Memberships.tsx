@@ -84,131 +84,125 @@ useEffect(() => {
     }
   };
 
- // DELETE single membership API call
- const handleDelete = async (id: string) => {
-  const confirmed = window.confirm("Are you sure you wanna delete this membership?");
-  if (!confirmed) return;
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  try {
-    await axios.delete(`http://localhost:5234/Membership/${id}`);
-    setMemberships((prev) => prev.filter((m) => m.id !== id));
-    setSelectedMemberships((prev) => prev.filter((sid) => sid !== id));
-    setNotification({ message: "Membership successfully deleted.", type: "error" });
-  } catch (error) {
-    console.error("Delete failed", error);
-    setNotification({ message: "Failed to delete membership.", type: "error" });
-  }
-};
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:5234/Membership/${id}`);
+      setMemberships((prev) => prev.filter((m) => m.id !== id));
+      setSelectedMemberships((prev) => prev.filter((sid) => sid !== id));
+      setNotification({ message: "Membership successfully deleted.", type: "error" });
+    } catch (error) {
+      console.error("Delete failed", error);
+      setNotification({ message: "Failed to delete membership.", type: "error" });
+    }
+  };
 
-
-   // BULK delete calling DELETE API for each
   const handleBulkDelete = async () => {
-  try {
-    await Promise.all(
-      selectedMemberships.map((id) =>
-        axios.delete(`http://localhost:5234/Membership/${id}`)
-      )
-    );
-    setMemberships((prev) =>
-      prev.filter((m) => !selectedMemberships.includes(m.id))
-    );
-    setSelectedMemberships([]);
-    setNotification({ message: "Selected memberships deleted.", type: "success" });
-  } catch (error) {
-    console.error("Bulk delete failed", error);
-    setNotification({ message: "Failed to delete selected memberships.", type: "error" });
-  }
-};
+    try {
+      await Promise.all(
+        selectedMemberships.map((id) =>
+          axios.delete(`http://localhost:5234/Membership/${id}`)
+        )
+      );
+      setMemberships((prev) =>
+        prev.filter((m) => !selectedMemberships.includes(m.id))
+      );
+      setSelectedMemberships([]);
+      setNotification({ message: "Selected memberships deleted.", type: "success" });
+    } catch (error) {
+      console.error("Bulk delete failed", error);
+      setNotification({ message: "Failed to delete selected memberships.", type: "error" });
+    }
+  };
 
   const openEditModal = (membership: Membership) => {
-  setEditingMembership({
-    id: membership.id,
-    title: membership.title,
-    price: membership.price,
-    includesVAT: membership.includesVAT.toString(),
-    description: membership.description,
-    additionalServices: membership.additionalServices,
-    isActive: membership.isActive.toString(),
-    billingType: membership.billingType,
-  });
-};
-
+    setEditingMembership({
+      id: membership.id,
+      title: membership.title,
+      price: membership.price,
+      includesVAT: membership.includesVAT.toString(),
+      description: membership.description,
+      additionalServices: membership.additionalServices,
+      isActive: membership.isActive.toString(),
+      billingType: membership.billingType,
+    });
+  };
 
   const handleEditMembership = async () => {
-  if (!editingMembership) return;
-  try {
-    const body = {
-      title: editingMembership.title.trim() === "" ? null : editingMembership.title,
-      price: editingMembership.price === null ? null : editingMembership.price,
-      includesVAT: editingMembership.includesVAT.trim() === "" ? null : editingMembership.includesVAT === "true",
-      description: editingMembership.description.trim() === "" ? null : editingMembership.description,
-      additionalServices: editingMembership.additionalServices.trim() === "" ? null : editingMembership.additionalServices,
-      isActive: editingMembership.isActive.trim() === "" ? null : editingMembership.isActive === "true",
-      billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
-    };
-    await axios.put(
-      `http://localhost:5234/Membership/${editingMembership.id}`,
-      body
-    );
-    const res = await axios.get("http://localhost:5234/Membership");
-    setMemberships(res.data);
-    setNotification({ message: "Membership successfully updated.", type: "success" });
-    setEditingMembership(null);
-  } catch (error) {
-    console.error("Edit membership failed", error);
-    setNotification({ message: "Failed to update membership.", type: "error" });
-  }
-};
+    if (!editingMembership) return;
+    try {
+      const body = {
+        title: editingMembership.title.trim() === "" ? null : editingMembership.title,
+        price: editingMembership.price === null ? null : editingMembership.price,
+        includesVAT: editingMembership.includesVAT.trim() === "" ? null : editingMembership.includesVAT === "true",
+        description: editingMembership.description.trim() === "" ? null : editingMembership.description,
+        additionalServices: editingMembership.additionalServices.trim() === "" ? null : editingMembership.additionalServices,
+        isActive: editingMembership.isActive.trim() === "" ? null : editingMembership.isActive === "true",
+        billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
+      };
+      await axios.put(
+        `http://localhost:5234/Membership/${editingMembership.id}`,
+        body
+      );
+      const res = await axios.get("http://localhost:5234/Membership");
+      setMemberships(res.data);
+      setNotification({ message: "Membership successfully updated.", type: "success" });
+      setEditingMembership(null);
+    } catch (error) {
+      console.error("Edit membership failed", error);
+      setNotification({ message: "Failed to update membership.", type: "error" });
+    }
+  };
 
   const handleAddMembership = async () => {
-  if (
-    !newMembership.title.trim() ||
-    !newMembership.price ||
-    !newMembership.includesVAT.trim() ||
-    !newMembership.description.trim() ||
-    !newMembership.additionalServices.trim() ||
-    !newMembership.billingType.trim()
-  ) {
-    alert("All fields are required.");
-    return;
-  }
-  try {
-    const body = {
-      title: newMembership.title,
-      price: newMembership.price,
-      includesVAT: newMembership.includesVAT === "true",
-      description: newMembership.description,
-      additionalServices: newMembership.additionalServices,
-      billingType: newMembership.billingType,
-    };
-    await axios.post("http://localhost:5234/Membership", body);
-    const res = await axios.get("http://localhost:5234/Membership");
-    setMemberships(res.data);
-    setNotification({ message: "Membership successfully added.", type: "success" });
-    setShowAddModal(false);
-    setNewMembership({
-      title: "",
-      price: null,
-      includesVAT: "",
-      description: "",
-      additionalServices: "",
-      billingType: "",
-    });
-  } catch (error) {
-    console.error("Add membership failed", error);
-    setNotification({ message: "Failed to add membership.", type: "error" });
-  }
-};
+    if (
+      !newMembership.title.trim() ||
+      !newMembership.price ||
+      !newMembership.includesVAT.trim() ||
+      !newMembership.description.trim() ||
+      !newMembership.additionalServices.trim() ||
+      !newMembership.billingType.trim()
+    ) {
+      alert("All fields are required.");
+      return;
+    }
+    try {
+      const body = {
+        title: newMembership.title,
+        price: newMembership.price,
+        includesVAT: newMembership.includesVAT === "true",
+        description: newMembership.description,
+        additionalServices: newMembership.additionalServices,
+        billingType: newMembership.billingType,
+      };
+      await axios.post("http://localhost:5234/Membership", body);
+      const res = await axios.get("http://localhost:5234/Membership");
+      setMemberships(res.data);
+      setNotification({ message: "Membership successfully added.", type: "success" });
+      setShowAddModal(false);
+      setNewMembership({
+        title: "",
+        price: null,
+        includesVAT: "",
+        description: "",
+        additionalServices: "",
+        billingType: "",
+      });
+    } catch (error) {
+      console.error("Add membership failed", error);
+      setNotification({ message: "Failed to add membership.", type: "error" });
+    }
+  };
 
   const filteredMemberships = memberships.filter((m) =>
-  (m.title ?? "").toLowerCase().includes(searchTerm.toLowerCase())
-);
+    (m.title ?? "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const indexOfLastMembership = currentPage * membershipsPerPage;
   const indexOfFirstMembership = indexOfLastMembership - membershipsPerPage;
   const currentMemberships = filteredMemberships.slice(indexOfFirstMembership, indexOfLastMembership);
 
-  // Controlled inputs for edit modal
   const updateEditingField = (field: keyof Membership, value: any) => {
     if (!editingMembership) return;
     setEditingMembership({ ...editingMembership, [field]: value });
@@ -239,7 +233,10 @@ useEffect(() => {
           <div className="flex gap-2">
             {selectedMemberships.length > 0 && (
               <button
-                onClick={handleBulkDelete}
+                onClick={() => {
+                  setSelectedMemberships([selectedMemberships[0]]);
+                  setShowConfirmModal(true);
+                }}
                 className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-sm"
               >
                 Delete selected ({selectedMemberships.length})
@@ -312,8 +309,11 @@ useEffect(() => {
                       <Pencil size={14} /> Edit
                     </button>
                     <button
+                      onClick={() => {
+                        setSelectedMemberships([m.id]);
+                        setShowConfirmModal(true);
+                      }}
                       className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-sm flex items-center gap-1"
-                      onClick={() => handleDelete(m.id)}
                     >
                       <Trash2 size={14} /> Delete
                     </button>
@@ -522,6 +522,39 @@ useEffect(() => {
                   className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700"
                 >
                   Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showConfirmModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 p-6 rounded shadow-lg w-96">
+              <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
+              <p className="text-sm text-gray-300 mb-6">
+                Are you sure you want to delete {selectedMemberships.length} selected membership{selectedMemberships.length > 1 ? 's' : ''}?
+              </p>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    if (selectedMemberships.length === 1) {
+                      handleDelete(selectedMemberships[0]);
+                    } else {
+                      handleBulkDelete();
+                    }
+                    setShowConfirmModal(false);
+                  }}
+                  className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 rounded"
+                >
+                  Delete
                 </button>
               </div>
             </div>

@@ -15,6 +15,7 @@ import React from "react";
 import Auth from "./pages/Auth";
 import EditProfile from "./pages/EditProfile";
 import MyMembership from "./pages/UserProfile/MyMembership";
+import Equipment from "./dashboard/pages/Equipment";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/reservations" element={<Reservations />} />
         <Route path="/spaces" element={<Spaces />} />
+        <Route path="/equipment" element={<Equipment />} />
       </Routes>
     </Router>
   );

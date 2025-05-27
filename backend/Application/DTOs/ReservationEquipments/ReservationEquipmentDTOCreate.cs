@@ -9,9 +9,8 @@ namespace Application.DTOs.ReservationEquipments
    public  class ReservationEquipmentDTOCreate
     {
 
-        public string ReservationId { get; set; }
-
-        public string EquipmentId { get; set; }
-        public int Quantity { get; set; }
+        public string? ReservationId { get; set; }
+        public List<string>? EquipmentIds { get; set; }
+        public List<int>? Quantity { get; set; }
     }
 }

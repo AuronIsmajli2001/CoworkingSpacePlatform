@@ -41,7 +41,7 @@ namespace Application.Services.Reservations
 
             foreach (var r in reservations)
             {
-                var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
+                var equipments = await _reservationEquipmentService.GetEquipmentsByReservationIdAsync(r.Id);
 
                 result.Add(new ReservationDTORead
                 {
@@ -90,7 +90,7 @@ namespace Application.Services.Reservations
             {
                 var reservation = new Reservation
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = dto.Id,
                     UserId = dto.UserId,
                     SpaceId = dto.SpaceId,
                     PaymentMethod = dto.PaymentMethod,

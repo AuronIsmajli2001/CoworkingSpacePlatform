@@ -8,11 +8,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Api.Reservation
 {
-    
-    
-        [ApiController]
+    [ApiController]
     [Route("[controller]")]
-    //[Route("[controller]")]
     public class ReservationController : ControllerBase
         {
             private readonly IReservationsService _reservationService;
