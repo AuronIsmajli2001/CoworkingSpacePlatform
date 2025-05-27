@@ -63,11 +63,13 @@ export default function SpaceDetails() {
     return null;
   }
 
-  const handleReservationChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+  const handleReservationChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
-    setReservationData(prev => ({
+    setReservationData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -84,7 +86,7 @@ export default function SpaceDetails() {
       }
 
       const decodedToken = jwtDecode<DecodedToken>(token);
-      
+
       const response = await axios.post(
         `${baseUrl}/Reservation`,
         {
@@ -93,13 +95,13 @@ export default function SpaceDetails() {
           paymentMethod: reservationData.paymentMethod,
           isPaid: reservationData.paymentMethod === "Card",
           startDateTime: reservationData.startDateTime,
-          endDateTime: reservationData.endDateTime
+          endDateTime: reservationData.endDateTime,
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
+import Swal from "sweetalert2";
 
 const MyMembership = () => {
   const { user } = useAuth();
@@ -9,63 +10,50 @@ const MyMembership = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchMembership = async () => {
-      if (!user?.userId) {
-        setLoading(false);
-        setError("User not authenticated");
-        return;
-      }
+  const fetchMembership = async () => {
+    if (!user?.userId) {
+      setLoading(false);
+      setError("User not authenticated");
+      return;
+    }
 
-      try {
-        console.log("Fetching membership for user ID:", user.userId);
+    try {
+      const response = await axios.get(
+        `http://localhost:5234/Membership/by-user/${user.userId}`
+      );
 
-        // Use the dedicated endpoint that handles both user and membership lookup
-        const response = await axios.get(
-          `http://localhost:5234/Membership/by-user/${user.userId}`
-        );
-
-        // Check the response structure
-        if (response.data.success === false) {
-          // Handle case where user has no membership
-          setError(response.data.message || "No active membership found");
-          setMembership(null);
-        } else {
-          // Success case - we got membership data
-          setMembership(response.data);
-          setError(null);
-        }
-      } catch (err: any) {
-        console.error("API Error:", err);
-
-        // Handle different error cases
-        if (err.response) {
-          // Server responded with error status
-          if (err.response.status === 404) {
-            setError("User or membership not found");
-          } else if (err.response.status === 500) {
-            setError("Server error. Please try again later");
-          } else {
-            setError(err.response.data?.message || "Failed to load membership");
-          }
-        } else if (err.request) {
-          // Request was made but no response
-          setError("Network error. Please check your connection");
-        } else {
-          // Other errors
-          setError(err.message || "An unexpected error occurred");
-        }
-
+      if (response.data.success === false) {
+        setError(response.data.message || "No active membership found");
         setMembership(null);
-      } finally {
-        setLoading(false);
+      } else {
+        setMembership(response.data);
+        setError(null);
       }
-    };
+    } catch (err: any) {
+      console.error("API Error:", err);
+      if (err.response) {
+        if (err.response.status === 404) {
+          setError("User or membership not found");
+        } else if (err.response.status === 500) {
+          setError("Server error. Please try again later");
+        } else {
+          setError(err.response.data?.message || "Failed to load membership");
+        }
+      } else if (err.request) {
+        setError("Network error. Please check your connection");
+      } else {
+        setError(err.message || "An unexpected error occurred");
+      }
+      setMembership(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchMembership();
   }, [user?.userId]);
 
-  // Format price display
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-GB", {
       style: "currency",
@@ -73,16 +61,55 @@ const MyMembership = () => {
     }).format(price);
   };
 
+  const handleCancelMembership = () => {
+    Swal.fire({
+      title: "Cancel Membership",
+      text: "Are you sure you want to cancel your membership?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, cancel it!",
+    }).then(async (result) => {
+      if (result.isConfirmed && user?.userId) {
+        try {
+          await axios.post(
+            "http://localhost:5234/Membership/cancel",
+            user.userId,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          Swal.fire(
+            "Cancelled!",
+            "Your membership has been cancelled.",
+            "success"
+          );
+
+          // Refresh state
+          setMembership(null);
+          setError("You have no active membership.");
+        } catch (error) {
+          console.error("Failed to cancel membership", error);
+          Swal.fire(
+            "Error",
+            "Failed to cancel membership. Please try again later.",
+            "error"
+          );
+        }
+      }
+    });
+  };
+
   return (
     <>
       <Header />
       <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-extrabold text-gray-900">
-              My Membership
-            </h1>
-          </div>
+          <div className="text-center"></div>
 
           {loading ? (
             <div className="flex justify-center">
@@ -198,6 +225,18 @@ const MyMembership = () => {
               </div>
             </div>
           )}
+
+          {membership && (
+            <div className="mt-6 flex justify-center">
+              <button
+                type="button"
+                onClick={handleCancelMembership}
+                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Cancel Membership
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -205,183 +244,3 @@ const MyMembership = () => {
 };
 
 export default MyMembership;
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import Header from "../../components/Header";
-// import { useAuth } from "../../context/AuthContext";
-
-// const MyMembership = () => {
-//   const { user } = useAuth();
-//   const [membership, setMembership] = useState<any>(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     const fetchMembership = async () => {
-//       if (!user?.userId) {
-//         setLoading(false);
-//         return;
-//       }
-
-//       try {
-//         // 1. First get the numeric user ID from your backend
-//         // Assuming your backend has a way to map GUIDs to numeric IDs
-//         const userMappingResponse = await axios.get(
-//           `http://localhost:5234/UserMapping/${user.userId}`
-//         );
-
-//         const numericUserId = userMappingResponse.data.numericId;
-//         if (!numericUserId) {
-//           throw new Error("Could not resolve user ID");
-//         }
-
-//         // 2. Get user data with numeric ID
-//         const userResponse = await axios.get(
-//           `http://localhost:5234/Users/${numericUserId}`
-//         );
-
-//         const userData = userResponse.data;
-//         console.log("User data:", userData);
-
-//         // 3. Check if user has a membership
-//         if (!userData.membershipId) {
-//           setError("No active membership found");
-//           return;
-//         }
-
-//         // 4. Get membership details (using numeric ID)
-//         const membershipResponse = await axios.get(
-//           `http://localhost:5234/Membership/${userData.membershipId}`
-//         );
-
-//         setMembership(membershipResponse.data);
-//       } catch (err: any) {
-//         console.error("Fetch error:", err);
-//         setError(
-//           err?.response?.data?.message ||
-//             err?.message ||
-//             "Failed to load membership"
-//         );
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchMembership();
-//   }, [user?.userId]);
-
-//   return (
-//     <>
-//       <Header />
-//       <div className="flex flex-col items-center justify-center h-screen">
-//         {loading ? (
-//           <p className="text-lg text-gray-500">Loading membership...</p>
-//         ) : error ? (
-//           <p className="text-lg text-red-500">{error}</p>
-//         ) : membership ? (
-//           <div className="text-center space-y-4">
-//             <h1 className="text-3xl font-bold text-green-600">
-//               🎉 You have an active membership!
-//             </h1>
-//             <p className="text-lg font-medium">Plan: {membership.title}</p>
-//             <p>Billing: {membership.billingType}</p>
-//             <p>Price: £{membership.price}</p>
-//             {membership.includesVAT && <p>VAT: Included</p>}
-//             <p className="text-sm text-gray-500 mt-4">
-//               {membership.description}
-//             </p>
-//           </div>
-//         ) : (
-//           <h1 className="text-3xl font-bold text-red-500">
-//             You haven't purchased any memberships yet.
-//           </h1>
-//         )}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default MyMembership;
-
-// import React, { useEffect, useState } from "react";
-// import Header from "../../components/Header";
-// import axios from "axios";
-// import { useAuth } from "../../context/AuthContext";
-
-// const MyMembership = () => {
-//   const { user } = useAuth();
-//   const [membership, setMembership] = useState<any>(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     const fetchMembership = async () => {
-//       if (!user?.userId) {
-//         setLoading(false);
-//         return;
-//       }
-
-//       try {
-//         // First fetch user data
-//         const userResponse = await axios.get(
-//           `http://localhost:5234/Users/${user.userId}`
-//         );
-//         const userData = userResponse.data;
-
-//         console.log("Full user from backend:", userData);
-
-//         if (!userData.membershipId) {
-//           console.warn("User has no membershipId");
-//           setLoading(false);
-//           return;
-//         }
-
-//         // Then fetch membership
-//         const membershipResponse = await axios.get(
-//           `http://localhost:5234/Membership/${userData.membershipId}`
-//         );
-//         setMembership(membershipResponse.data);
-//       } catch (err) {
-//         console.error("Error fetching data:", err);
-//         setError("Failed to load membership information");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchMembership();
-//   }, [user?.userId]);
-
-//   return (
-//     <>
-//       <Header />
-//       <div className="flex flex-col items-center justify-center h-screen">
-//         {loading ? (
-//           <p className="text-lg text-gray-500">Loading membership...</p>
-//         ) : error ? (
-//           <p className="text-lg text-red-500">{error}</p>
-//         ) : membership ? (
-//           <div className="text-center space-y-4">
-//             <h1 className="text-3xl font-bold text-green-600">
-//               🎉 You have an active membership!
-//             </h1>
-//             <p className="text-lg font-medium">Plan: {membership.title}</p>
-//             <p>Billing: {membership.billingType}</p>
-//             <p>Price: £{membership.price}</p>
-//             {membership.includesVAT && <p>VAT: Included</p>}
-//             <p className="text-sm text-gray-500 mt-4">
-//               {membership.description}
-//             </p>
-//           </div>
-//         ) : (
-//           <h1 className="text-3xl font-bold text-red-500">
-//             You haven't purchased any memberships yet.
-//           </h1>
-//         )}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default MyMembership;

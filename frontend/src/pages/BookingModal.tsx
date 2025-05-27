@@ -76,7 +76,7 @@ export default function BookingModal({
         onClose();
 
         MySwal.fire({
-          title: "🎉 Membership Confirmed!",
+          title: "Membership Confirmed!",
           text: `You are now subscribed to the ${plan.title} plan.`,
           icon: "success",
           confirmButtonText: "Awesome!",
