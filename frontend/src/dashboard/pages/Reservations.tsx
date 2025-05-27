@@ -5,6 +5,14 @@ import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+
+//@ts-ignore
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  //@ts-ignore
+  const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 type User = {
   id: string;
@@ -28,6 +36,11 @@ enum ReservationStatus {
   Confirmed = "Confirmed",
 }
 
+enum PaymentMethod {
+  Card = "Card",
+  Cash = "Cash",
+}
+
 type Reservation = {
   id: string;
   userId: string;
@@ -39,6 +52,17 @@ type Reservation = {
   user: User;
   space: Space;
   reservationEquipment: ReservationEquipment[];
+  paymentMethod?: PaymentMethod;
+  isPaid?: boolean;
+};
+
+type NewReservation = {
+  user: { id: string; name: string; email: string };
+  space: { id: string; name: string };
+  startDateTime: Date;
+  endDateTime: Date;
+  status: ReservationStatus;
+  paymentMethod: PaymentMethod;
 };
 
 const Reservations = () => {
@@ -50,6 +74,8 @@ const Reservations = () => {
   const [editingReservation, setEditingReservation] =
     useState<Reservation | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [spaces, setSpaces] = useState<Space[]>([]);
 
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,24 +84,54 @@ const Reservations = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Update your useEffect:
-  // Update your fetchReservations useEffect to properly map the data
+  const [newReservation, setNewReservation] = useState<NewReservation>({
+    user: { id: "", name: "", email: "" },
+    space: { id: "", name: "" },
+    startDateTime: new Date(),
+    endDateTime: new Date(Date.now() + 3600000),
+    status: ReservationStatus.Pending,
+    paymentMethod: PaymentMethod.Card,
+  });
+
+  const navigate = useNavigate();
+
+  // Auth validation
   useEffect(() => {
-    const fetchReservations = async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
         setError(null);
-        // Add this debug log to verify the URL being used
-        console.log(
-          "API URL:",
-          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+
+        // Fetch users
+        const usersResponse = await axios.get(`${baseUrl}/User`);
+        setUsers(usersResponse.data);
+
+        // Fetch spaces
+        const spacesResponse = await axios.get(`${baseUrl}/Space`);
+        setSpaces(spacesResponse.data);
+
+        // Fetch reservations
+        const reservationsResponse = await axios.get(
+          `${baseUrl}/reservation`
         );
 
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/reservation`
-        );
-
-        const mappedReservations = response.data.map((res: any) => ({
+        const mappedReservations = reservationsResponse.data.map((res: any) => ({
           id: res.id,
           userId: res.userId,
           spaceId: res.spaceId,
@@ -84,35 +140,34 @@ const Reservations = () => {
           createdAt: new Date(res.createdAt),
           status: res.status as ReservationStatus,
           user: {
-            id: res.user?.id || res.userId || "", // Fallback to userId if user is null
-            userName: res.user?.userName || `User ${res.userId}`, // Show ID if name is missing
+            id: res.user?.id || res.userId || "",
+            userName: res.user?.userName || `User ${res.userId}`,
             email: res.user?.email || "",
           },
           space: {
-            id: res.space?.id || res.spaceId || "", // Fallback to spaceId if space is null
-            name: res.space?.name || ` ${res.spaceId}`, // Show ID if name is missing
+            id: res.space?.id || res.spaceId || "",
+            name: res.space?.name || `Space ${res.spaceId}`,
           },
-          reservationEquipment:
-            res.reservationEquipment?.map((eq: any) => ({
-              id: eq.id,
-              name: eq.name,
-              quantity: eq.quantity,
-            })) || [],
+          reservationEquipment: res.reservationEquipment?.map((eq: any) => ({
+            id: eq.id,
+            name: eq.name,
+            quantity: eq.quantity,
+          })) || [],
+          paymentMethod: res.paymentMethod,
+          isPaid: res.isPaid,
         }));
 
         setReservations(mappedReservations);
       } catch (error) {
-        console.error("Failed to fetch reservations:", error);
-        setError("Failed to load reservations. Please try again later.");
+        console.error("Failed to fetch data:", error);
+        setError("Failed to load data. Please try again later.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchReservations();
+    fetchData();
   }, []);
-
-  // Update your filter to include null checks
 
   const indexOfLastReservation = currentPage * reservationsPerPage;
   const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage;
@@ -122,14 +177,6 @@ const Reservations = () => {
   );
 
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newReservation, setNewReservation] = useState({
-    user: { name: "", email: "" },
-    space: { name: "" },
-    startDateTime: new Date(),
-    endDateTime: new Date(Date.now() + 3600000), // 1 hour later
-    status: ReservationStatus.Pending,
-    equipment: [{ name: "", quantity: 1 }],
-  });
 
   const toggleSelect = (id: string) => {
     setSelectedReservations((prev) =>
@@ -145,96 +192,123 @@ const Reservations = () => {
     }
   };
 
-  const handleDelete = (id: string) => {
-    setReservations((prev) => prev.filter((res) => res.id !== id));
-    setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`${baseUrl}/Reservation/${id}`);
+      setReservations((prev) => prev.filter((res) => res.id !== id));
+      setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
+    } catch (error) {
+      console.error("Failed to delete reservation:", error);
+      setError("Failed to delete reservation. Please try again later.");
+    }
   };
 
-  const handleBulkDelete = () => {
-    setReservations((prev) =>
-      prev.filter((res) => !selectedReservations.includes(res.id))
-    );
-    setSelectedReservations([]);
-    setShowConfirmModal(false);
+  const handleBulkDelete = async () => {
+    try {
+      await Promise.all(
+        selectedReservations.map((id) =>
+          axios.delete(`${baseUrl}/Reservation/${id}`)
+        )
+      );
+      setReservations((prev) =>
+        prev.filter((res) => !selectedReservations.includes(res.id))
+      );
+      setSelectedReservations([]);
+      setShowConfirmModal(false);
+    } catch (error) {
+      console.error("Failed to delete reservations:", error);
+      setError("Failed to delete reservations. Please try again later.");
+    }
   };
 
   const handleEdit = (reservation: Reservation) => {
     setEditingReservation(reservation);
   };
 
-  const handleSaveEdit = (updatedReservation: Reservation) => {
-    setReservations((prev) =>
-      prev.map((res) =>
-        res.id === updatedReservation.id ? updatedReservation : res
-      )
-    );
-    setEditingReservation(null);
+  const handleSaveEdit = async (updatedReservation: Reservation) => {
+    try {
+      const payload = {
+        userId: null,
+        spaceId: null,
+        startDateTime: updatedReservation.startDateTime.toISOString(),
+        endDateTime: updatedReservation.endDateTime.toISOString(),
+        status: updatedReservation.status,
+      };
+
+      await axios.put(
+        `${baseUrl}/Reservation/${updatedReservation.id}`,
+        payload
+      );
+
+      setReservations((prev) =>
+        prev.map((res) =>
+          res.id === updatedReservation.id ? updatedReservation : res
+        )
+      );
+      setEditingReservation(null);
+    } catch (error) {
+      console.error("Failed to update reservation:", error);
+      setError("Failed to update reservation. Please try again later.");
+    }
   };
 
-  const handleAddReservation = () => {
-    const reservation: Reservation = {
-      ...newReservation,
-      id: `res-${Date.now()}`,
-      userId: `user-${Date.now()}`,
-      spaceId: `space-${Date.now()}`,
-      createdAt: new Date(),
-      user: {
-        id: `user-${Date.now()}`,
-        userName: newReservation.user.name,
-        email: newReservation.user.email,
-      },
-      space: {
-        id: `space-${Date.now()}`,
-        name: newReservation.space.name,
-      },
-      reservationEquipment: newReservation.equipment.map((eq, idx) => ({
-        id: `eq-${Date.now()}-${idx}`,
-        name: eq.name,
-        quantity: eq.quantity,
-      })),
-    };
+  const handleAddReservation = async () => {
+    try {
+      const payload = {
+        userId: newReservation.user.id,
+        spaceId: newReservation.space.id,
+        paymentMethod: newReservation.paymentMethod,
+        isPaid: newReservation.paymentMethod === PaymentMethod.Card,
+        startDateTime: newReservation.startDateTime.toISOString(),
+        endDateTime: newReservation.endDateTime.toISOString(),
+        status: ReservationStatus.Confirmed,
+      };
 
-    setReservations([...reservations, reservation]);
-    setShowAddModal(false);
-    resetNewReservationForm();
+      const response = await axios.post(
+        `${baseUrl}/Reservation`,
+        payload
+      );
+
+      const newReservationWithId: Reservation = {
+        id: response.data.id,
+        userId: newReservation.user.id,
+        spaceId: newReservation.space.id,
+        startDateTime: newReservation.startDateTime,
+        endDateTime: newReservation.endDateTime,
+        createdAt: new Date(),
+        status: ReservationStatus.Confirmed,
+        user: {
+          id: newReservation.user.id,
+          userName: newReservation.user.name,
+          email: newReservation.user.email,
+        },
+        space: {
+          id: newReservation.space.id,
+          name: newReservation.space.name,
+        },
+        reservationEquipment: [],
+        paymentMethod: newReservation.paymentMethod,
+        isPaid: newReservation.paymentMethod === PaymentMethod.Card,
+      };
+
+      setReservations([...reservations, newReservationWithId]);
+      setShowAddModal(false);
+      resetNewReservationForm();
+    } catch (error) {
+      console.error("Failed to add reservation:", error);
+      setError("Failed to add reservation. Please try again later.");
+    }
   };
 
   const resetNewReservationForm = () => {
     setNewReservation({
-      user: { name: "", email: "" },
-      space: { name: "" },
+      user: { id: "", name: "", email: "" },
+      space: { id: "", name: "" },
       startDateTime: new Date(),
       endDateTime: new Date(Date.now() + 3600000),
       status: ReservationStatus.Pending,
-      equipment: [{ name: "", quantity: 1 }],
+      paymentMethod: PaymentMethod.Card,
     });
-  };
-
-  const addEquipmentField = () => {
-    setNewReservation((prev) => ({
-      ...prev,
-      equipment: [...prev.equipment, { name: "", quantity: 1 }],
-    }));
-  };
-
-  const removeEquipmentField = (index: number) => {
-    setNewReservation((prev) => ({
-      ...prev,
-      equipment: prev.equipment.filter((_, i) => i !== index),
-    }));
-  };
-
-  const handleEquipmentChange = (
-    index: number,
-    field: "name" | "quantity",
-    value: string | number
-  ) => {
-    const newEquipment = [...newReservation.equipment];
-    newEquipment[index] = {
-      ...newEquipment[index],
-      [field]: field === "quantity" ? Number(value) : value,
-    };
-    setNewReservation((prev) => ({ ...prev, equipment: newEquipment }));
   };
 
   const exportToCSV = () => {
@@ -298,7 +372,7 @@ const Reservations = () => {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-1 pb-0 pt-0">
+      <div className="flex-1 pb-0 pt-0">
         <div className="p-6 bg-gray-900 text-white min-h-screen">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">All Reservations</h2>
@@ -563,46 +637,6 @@ const Reservations = () => {
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      User
-                    </label>
-                    <input
-                      type="text"
-                      value={editingReservation.user.userName}
-                      onChange={(e) =>
-                        setEditingReservation({
-                          ...editingReservation,
-                          user: {
-                            ...editingReservation.user,
-                            userName: e.target.value,
-                          },
-                        })
-                      }
-                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 mb-1">
-                      Space
-                    </label>
-                    <input
-                      type="text"
-                      value={editingReservation.space.name}
-                      onChange={(e) =>
-                        setEditingReservation({
-                          ...editingReservation,
-                          space: {
-                            ...editingReservation.space,
-                            name: e.target.value,
-                          },
-                        })
-                      }
-                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 mb-1">
                       Start Date
                     </label>
                     <input
@@ -654,9 +688,7 @@ const Reservations = () => {
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
                       <option value={ReservationStatus.Pending}>Pending</option>
-                      <option value={ReservationStatus.Confirmed}>
-                        Confirmed
-                      </option>
+                      <option value={ReservationStatus.Confirmed}>Confirmed</option>
                     </select>
                   </div>
                 </div>
@@ -683,90 +715,80 @@ const Reservations = () => {
           {showAddModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
               <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-h-[80vh] overflow-y-auto">
-                <h3 className="text-lg font-semibold mb-4">
-                  Add New Reservation
-                </h3>
+                <h3 className="text-lg font-semibold mb-4">Add New Reservation</h3>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      User Name
+                      User
                     </label>
-                    <input
-                      type="text"
-                      value={newReservation.user.name}
-                      onChange={(e) =>
+                    <select
+                      value={newReservation.user.id}
+                      onChange={(e) => {
+                        const selectedUser = users.find(u => u.id === e.target.value);
                         setNewReservation({
                           ...newReservation,
                           user: {
-                            ...newReservation.user,
-                            name: e.target.value,
+                            id: e.target.value,
+                            name: selectedUser?.userName || "",
+                            email: selectedUser?.email || "",
                           },
-                        })
-                      }
+                        });
+                      }}
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
-                    />
+                    >
+                      <option value="">Select a user</option>
+                      {users.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.userName}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      User Email
+                      Space
                     </label>
-                    <input
-                      type="email"
-                      value={newReservation.user.email}
-                      onChange={(e) =>
-                        setNewReservation({
-                          ...newReservation,
-                          user: {
-                            ...newReservation.user,
-                            email: e.target.value,
-                          },
-                        })
-                      }
-                      className="bg-gray-700 text-white rounded px-3 py-2 w-full"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm text-gray-300 mb-1">
-                      Space Name
-                    </label>
-                    <input
-                      type="text"
-                      value={newReservation.space.name}
-                      onChange={(e) =>
+                    <select
+                      value={newReservation.space.id}
+                      onChange={(e) => {
+                        const selectedSpace = spaces.find(s => s.id === e.target.value);
                         setNewReservation({
                           ...newReservation,
                           space: {
-                            ...newReservation.space,
-                            name: e.target.value,
+                            id: e.target.value,
+                            name: selectedSpace?.name || "",
                           },
-                        })
-                      }
+                        });
+                      }}
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
-                    />
+                    >
+                      <option value="">Select a space</option>
+                      {spaces.map((space) => (
+                        <option key={space.id} value={space.id}>
+                          {space.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      Status
+                      Payment Method
                     </label>
                     <select
-                      value={newReservation.status}
+                      value={newReservation.paymentMethod}
                       onChange={(e) =>
                         setNewReservation({
                           ...newReservation,
-                          status: e.target.value as ReservationStatus,
+                          paymentMethod: e.target.value as PaymentMethod,
                         })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
-                      {Object.values(ReservationStatus).map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
+                      <option value={PaymentMethod.Card}>Card</option>
+                      <option value={PaymentMethod.Cash}>Cash</option>
                     </select>
                   </div>
 
@@ -807,55 +829,6 @@ const Reservations = () => {
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
-                </div>
-
-                <div className="mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="block text-sm text-gray-300">
-                      Equipment
-                    </label>
-                    <button
-                      onClick={addEquipmentField}
-                      className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1"
-                    >
-                      <Plus size={14} /> Add Equipment
-                    </button>
-                  </div>
-                  {newReservation.equipment.map((eq, index) => (
-                    <div key={index} className="grid grid-cols-2 gap-2 mb-2">
-                      <input
-                        type="text"
-                        placeholder="Equipment name"
-                        value={eq.name}
-                        onChange={(e) =>
-                          handleEquipmentChange(index, "name", e.target.value)
-                        }
-                        className="bg-gray-700 text-white rounded px-3 py-2"
-                      />
-                      <div className="flex gap-2">
-                        <input
-                          type="number"
-                          placeholder="Quantity"
-                          min="1"
-                          value={eq.quantity}
-                          onChange={(e) =>
-                            handleEquipmentChange(
-                              index,
-                              "quantity",
-                              e.target.value
-                            )
-                          }
-                          className="bg-gray-700 text-white rounded px-3 py-2 w-full"
-                        />
-                        <button
-                          onClick={() => removeEquipmentField(index)}
-                          className="bg-red-600 hover:bg-red-700 px-3 py-2 rounded"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </div>
-                  ))}
                 </div>
 
                 <div className="flex justify-end gap-2">

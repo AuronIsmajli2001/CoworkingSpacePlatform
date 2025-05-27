@@ -5,6 +5,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,10 +35,29 @@ const Users = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  const navigate = useNavigate();
+
+  // Auth validation
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5234/User");
+        const response = await axios.get(`${baseUrl}/User`);
 
         const mappedUsers = response.data.map((user: any) => ({
           id: user.id,
@@ -162,7 +183,7 @@ const Users = () => {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-1 pb-0 pt-0">
+      <div className="flex-1 pb-0 pt-0">
         <div className="p-6 bg-gray-900 text-white min-h-screen">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
             <div className="bg-gray-800 p-4 rounded-lg shadow text-white">

@@ -254,6 +254,9 @@ import { useAuth } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const MyMembership = () => {
   const { user } = useAuth();
   const [membership, setMembership] = useState<any>(null);

@@ -1,6 +1,4 @@
-﻿
-
-using Application.DTOs.Memberships;
+﻿using Application.DTOs.Memberships;
 using Application.Services.Memberships;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -75,7 +73,7 @@ namespace Api.Membership
             }
         }
 
-        [HttpPut(Name = "UpdateMembership")]
+        [HttpPut("{id}",Name = "UpdateMembership")]
         public async Task<IActionResult> UpdateMembership(string id, [FromBody] MembershipDTOUpdate dto)
         {
             try
@@ -98,8 +96,6 @@ namespace Api.Membership
             try
             {
                 var result = await _membershipService.DeleteAsync(id);
-                if (!result) return NotFound("Membership not found.");
-
                 return Ok("Membership deleted successfully.");
             }
             catch (Exception ex)

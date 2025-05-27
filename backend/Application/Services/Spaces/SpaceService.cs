@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Internal;
 using Application.Services.ImgurUploaderService;
 using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Application.Services.Spaces
 {
@@ -61,9 +63,6 @@ namespace Application.Services.Spaces
                         System.IO.File.Delete(tempFilePath);
                     }
                 }
-
-                
-
                 _unitOfWork.Repository<Space>().Create(space);
                 await _unitOfWork.CompleteAsync();
                 _logger.LogInformation("Space created successfully with ID: {Id}", space.Id);
@@ -158,22 +157,46 @@ namespace Application.Services.Spaces
 
         }
 
-        public async Task<bool> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate,IFormFile image)
+        public async Task<bool> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate)
         {
             try 
             {
                 _logger.LogInformation("Updating space with ID: {Id}", id);
 
+                var image = spaceDTOUpdate.image;
+
                 var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
+
+                var spaces = spaceDTOUpdate;
 
                 if (space != null) 
                 {
-                    space.Name = spaceDTOUpdate.Name;
-                    space.Capacity = spaceDTOUpdate.Capacity;
-                    space.Price = spaceDTOUpdate.Price;
-                    space.Location = spaceDTOUpdate.Location;
-                    space.Description = spaceDTOUpdate.Description;
-                    space.Type = spaceDTOUpdate.Type;
+                    if(spaceDTOUpdate.Name != "null")
+                    {
+                        space.Name = spaceDTOUpdate.Name;
+                    }
+                    if(spaceDTOUpdate.Location != "null")
+                    {
+                        space.Location = spaceDTOUpdate.Location;
+                    }
+                    if (spaceDTOUpdate.Description != "null")
+                    {
+                        space.Description = spaceDTOUpdate.Description;
+                    }
+                    if (spaceDTOUpdate.Capacity != null)
+                    {
+                        space.Capacity = (int)spaceDTOUpdate.Capacity;
+                    }
+                    if (spaceDTOUpdate.Price != null)
+                    {
+                        space.Price = (double)spaceDTOUpdate.Price;
+                    }
+                    if(spaceDTOUpdate.Type  != "null")
+                    {
+                        space.Type = spaceDTOUpdate.Type;
+                    }
+                    
+                  
                     space.Image_URL = space.Image_URL;
 
                     if (image != null)
@@ -186,9 +209,6 @@ namespace Application.Services.Spaces
                                 await image.CopyToAsync(stream);
                             }
                             var imageUrl = await ImageUploaderService.UploadToImgur(tempFilePath, "YOUR_API_KEY");
-
-
-
                             space.Image_URL = imageUrl;
                             System.IO.File.Delete(tempFilePath);
                         }

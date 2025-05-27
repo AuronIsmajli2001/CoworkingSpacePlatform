@@ -60,7 +60,7 @@ namespace Api.Equipment
         }
 
         [HttpPost(Name = "CreateEquipment")]
-        public async Task<IActionResult> CreateEquipment([FromForm] EquipmentDTOCreate equipmentDTO)
+        public async Task<IActionResult> CreateEquipment([FromBody] EquipmentDTOCreate equipmentDTO)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace Api.Equipment
         }
 
         [HttpPut("{id}", Name = "UpdateEquipment")]
-        public async Task<IActionResult> UpdateEquipment(string id, [FromForm] EquipmentDTOUpdate equipmentDto)
+        public async Task<IActionResult> UpdateEquipment(string id, [FromBody] EquipmentDTOUpdate equipmentDto)
         {
             try
             {
@@ -90,8 +90,6 @@ namespace Api.Equipment
             }
 
         }
-
-
 
         [HttpDelete("{id}", Name = "DeleteEquipment")]
         public async Task<IActionResult> DeleteEquipment(string id)

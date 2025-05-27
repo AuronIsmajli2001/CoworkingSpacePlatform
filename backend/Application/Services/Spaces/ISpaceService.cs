@@ -16,7 +16,7 @@ namespace Application.Services.ISpaceServices
         Task<IEnumerable<SpaceDTORead>> GetAllSpacesAsync();
         Task<bool> CreateSpaceAsync(SpaceDTOCreate spaceDTO,IFormFile image);
         Task<bool> DeleteSpaceAsync(string id);
-        Task<bool> UpdateSpaceAsync(string id,SpaceDTOUpdate spaceDTO,IFormFile image);
+        Task<bool> UpdateSpaceAsync(string id,SpaceDTOUpdate spaceDTO);
 
     }
 }

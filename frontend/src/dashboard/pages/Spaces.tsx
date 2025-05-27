@@ -4,14 +4,19 @@ import Sidebar from "../components/Sidebar";
 import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type Space = {
   id: string;
   name: string;
   type: string;
   description: string;
-  capacity: number;
-  price: number;
+  capacity: number | string;
+  price: number | string;
   location: string;
   imageUrl: string;
 };
@@ -24,15 +29,15 @@ const Spaces = () => {
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const [newSpace, setNewSpace] = useState<Omit<Space, "id">>({
+  const [newSpace, setNewSpace] = useState({
     name: "",
     type: "",
     description: "",
-    capacity: 0,
-    price: 0,
+    capacity: "",
+    price: "",
     location: "",
-    imageUrl: "",
   });
+  const [newSpaceImage, setNewSpaceImage] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const spacesPerPage = 6;
 
@@ -40,9 +45,30 @@ const Spaces = () => {
   const indexOfFirstSpace = indexOfLastSpace - spacesPerPage;
   const currentSpaces = spaces.slice(indexOfFirstSpace, indexOfLastSpace);
 
+  const [editingImage, setEditingImage] = useState<File | null>(null);
+
+  const navigate = useNavigate();
+
+  // Auth validation
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
+
   useEffect(() => {
     axios
-      .get("http://localhost:5234/Space") // or use `baseUrl`
+      .get(`${baseUrl}/Space`)
       .then((res) => {
         if (Array.isArray(res.data)) {
           const mappedSpaces = res.data.map((space: any) => ({
@@ -82,63 +108,120 @@ const Spaces = () => {
     }
   };
 
-  const handleDelete = (id: string) => {
-    setSpaces((prev) => prev.filter((space) => space.id !== id));
-  };
-
-  const handleBulkDelete = () => {
-    setSpaces((prev) =>
-      prev.filter((space) => !selectedSpaces.includes(space.id))
-    );
-    setSelectedSpaces([]);
-    setShowConfirmModal(false);
-  };
-
-  const handleSaveEdit = () => {
-    if (editingSpace) {
-      setSpaces((prev) =>
-        prev.map((space) =>
-          space.id === editingSpace.id ? editingSpace : space
-        )
-      );
-      setEditingSpace(null);
+  const handleDelete = async (id: string) => {
+    try {
+      await axios.delete(`${baseUrl}/Space/${id}`);
+      setSpaces((prev) => prev.filter((space) => space.id !== id));
+    } catch (err) {
+      alert("Failed to delete space. Please try again.");
+      console.error(err);
     }
   };
 
-  const handleAddSpace = () => {
-    setSpaces((prev) => [
-      ...prev,
-      {
-        ...newSpace,
-        id: (prev.length + 1).toString(),
-      },
-    ]);
-    setShowAddModal(false);
-    setNewSpace({
-      name: "",
-      type: "",
-      description: "",
-      capacity: 0,
-      price: 0,
-      location: "",
-      imageUrl: "",
-    });
+  const handleBulkDelete = async () => {
+    try {
+      await Promise.all(selectedSpaces.map(id => axios.delete(`${baseUrl}/Space/${id}`)));
+      setSpaces((prev) => prev.filter((space) => !selectedSpaces.includes(space.id)));
+      setSelectedSpaces([]);
+      setShowConfirmModal(false);
+    } catch (err) {
+      alert("Failed to delete selected spaces. Please try again.");
+      console.error(err);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (editingSpace) {
+      try {
+        const formData = new FormData();
+        formData.append("name", editingSpace.name ? editingSpace.name : "null");
+        formData.append("type", editingSpace.type ? editingSpace.type : "null");
+        formData.append("description", editingSpace.description ? editingSpace.description : "null");
+        if (editingSpace.capacity !== undefined && editingSpace.capacity !== null && editingSpace.capacity !== "") {
+          formData.append("capacity", editingSpace.capacity.toString());
+        }
+        if (editingSpace.price !== undefined && editingSpace.price !== null && editingSpace.price !== "") {
+          formData.append("price", editingSpace.price.toString());
+        }
+        formData.append("location", editingSpace.location ? editingSpace.location : "null");
+        if (editingImage) {
+          formData.append("image", editingImage);
+        }
+        await axios.put(`${baseUrl}/Space/${editingSpace.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        // Fetch all spaces after update
+        const res = await axios.get(`${baseUrl}/Space`);
+        if (Array.isArray(res.data)) {
+          const mappedSpaces = res.data.map((space: any) => ({
+            id: space.id,
+            name: space.name,
+            type: space.type,
+            description: space.description,
+            capacity: space.capacity,
+            price: space.price,
+            location: space.location,
+            imageUrl: space.image_URL,
+          }));
+          setSpaces(mappedSpaces);
+        }
+        setEditingSpace(null);
+        setEditingImage(null);
+      } catch (err) {
+        alert("Failed to update space. Please try again.");
+        console.error(err);
+      }
+    }
+  };
+
+  const handleAddSpace = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("name", newSpace.name);
+      formData.append("type", newSpace.type);
+      formData.append("description", newSpace.description);
+      formData.append("capacity", Number(newSpace.capacity).toString());
+      formData.append("price", Number(newSpace.price).toString());
+      formData.append("location", newSpace.location);
+      if (newSpaceImage) {
+        formData.append("image", newSpaceImage);
+      }
+
+      await axios.post(`${baseUrl}/Space`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      // Optionally, refresh the list of spaces here
+      setShowAddModal(false);
+      setNewSpace({
+        name: "",
+        type: "",
+        description: "",
+        capacity: "",
+        price: "",
+        location: "",
+      });
+      setNewSpaceImage(null);
+    } catch (err) {
+      alert("Failed to add space. Please try again.");
+      console.error(err);
+    }
   };
 
   // Stats Calculations
   const totalSpaces = spaces.length;
-  const totalCapacity = spaces.reduce((sum, space) => sum + space.capacity, 0);
+  const totalCapacity = spaces.reduce((sum, space) => sum + Number(space.capacity), 0);
   const averagePrice =
     spaces.length > 0
       ? (
-          spaces.reduce((sum, space) => sum + space.price, 0) / spaces.length
+          spaces.reduce((sum, space) => sum + Number(space.price), 0) / spaces.length
         ).toFixed(2)
       : 0;
 
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex-1 p-1 pb-0 pt-0">
+      <div className="flex-1 pb-0 pt-0">
         <div className="p-6 bg-gray-900 text-white min-h-screen">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -259,7 +342,7 @@ const Spaces = () => {
                         </span>
                       </td>
                       <td className="p-3">{space.capacity}</td>
-                      <td className="p-3">${space.price.toFixed(2)}</td>
+                      <td className="p-3">${Number(space.price).toFixed(2)}</td>
                       <td className="p-3 text-gray-300 text-sm">
                         {space.location}
                       </td>
@@ -405,36 +488,31 @@ const Spaces = () => {
 
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      Capacity
+                      Capacity*
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       value={editingSpace.capacity}
                       onChange={(e) =>
-                        setEditingSpace({
-                          ...editingSpace,
-                          capacity: parseInt(e.target.value) || 0,
-                        })
+                        setEditingSpace({ ...editingSpace, capacity: e.target.value })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                      required
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      Price ($)
+                      Price ($)*
                     </label>
                     <input
-                      type="number"
-                      step="0.01"
+                      type="text"
                       value={editingSpace.price}
                       onChange={(e) =>
-                        setEditingSpace({
-                          ...editingSpace,
-                          price: parseFloat(e.target.value) || 0,
-                        })
+                        setEditingSpace({ ...editingSpace, price: e.target.value })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                      required
                     />
                   </div>
 
@@ -473,17 +551,12 @@ const Spaces = () => {
 
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
-                      Image URL
+                      Image
                     </label>
                     <input
-                      type="text"
-                      value={editingSpace.imageUrl}
-                      onChange={(e) =>
-                        setEditingSpace({
-                          ...editingSpace,
-                          imageUrl: e.target.value,
-                        })
-                      }
+                      type="file"
+                      accept="image/*"
+                      onChange={e => setEditingImage(e.target.files?.[0] || null)}
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
@@ -563,12 +636,9 @@ const Spaces = () => {
                     </label>
                     <input
                       type="number"
-                      value={newSpace.capacity || ""}
+                      value={newSpace.capacity}
                       onChange={(e) =>
-                        setNewSpace({
-                          ...newSpace,
-                          capacity: parseInt(e.target.value) || 0,
-                        })
+                        setNewSpace({ ...newSpace, capacity: e.target.value })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
@@ -582,12 +652,9 @@ const Spaces = () => {
                     <input
                       type="number"
                       step="0.01"
-                      value={newSpace.price || ""}
+                      value={newSpace.price}
                       onChange={(e) =>
-                        setNewSpace({
-                          ...newSpace,
-                          price: parseFloat(e.target.value) || 0,
-                        })
+                        setNewSpace({ ...newSpace, price: e.target.value })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
@@ -626,16 +693,13 @@ const Spaces = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">
-                      Image URL
-                    </label>
+                    <label className="block text-sm text-gray-300 mb-1">Image*</label>
                     <input
-                      type="text"
-                      value={newSpace.imageUrl}
-                      onChange={(e) =>
-                        setNewSpace({ ...newSpace, imageUrl: e.target.value })
-                      }
+                      type="file"
+                      accept="image/*"
+                      onChange={e => setNewSpaceImage(e.target.files?.[0] || null)}
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
+                      required
                     />
                   </div>
                 </div>

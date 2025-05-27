@@ -10,12 +10,58 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isAuthenticated } from "../utils/auth";
-import { useState } from "react";
+
+interface Space {
+  id: string;
+  name: string;
+  location: string;
+  image: string;
+}
 
 const Home = () => {
   const navigate = useNavigate();
+  const [spaces, setSpaces] = useState<Space[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  //@ts-ignore
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  //@ts-ignore
+  const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+
+  useEffect(() => {
+    const fetchSpaces = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/space`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch spaces');
+        }
+        const data = await response.json();
+        // Take first 3 spaces or all if less than 3
+        const displayedSpaces = data.slice(0, 3).map((space: any) => ({
+          id: space.id,
+          name: space.name,
+          location: space.location,
+          image: space.image_URL, 
+        }));
+        setSpaces(displayedSpaces);
+
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+        // Fallback to empty array or default spaces if needed
+        setSpaces([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSpaces();
+    window.scrollTo(0, 0);
+  }, [baseUrl]);
+
+  
 
   // Function to scroll to the Address & Directions section
   const scrollToBookTour = () => {
@@ -179,8 +225,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Facilities Section */}
-      <section className="py-16 bg-white isolate ">
+   {/* Facilities Section */}
+      <section className="py-16 bg-white isolate">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-[20px] font-bold mt-2 mb-3 text-blue-600">
             Space Facilities & Amenities
@@ -205,49 +251,50 @@ const Home = () => {
             Explore more
           </button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
-            {[
-              {
-                name: "Conference Room 1",
-                location: "CoSpace 1",
-                image: "/Images/Conference_1.jpg",
-              },
-              {
-                name: "Conference Room 2",
-                location: "CoSpace 2",
-                image: "/Images/Conference_2.jpg",
-              },
-              {
-                name: "Executive Suite",
-                location: "CoSpace 1",
-                image: "/Images/meeting-rooms-2.jpg",
-              },
-            ].map((room, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
-              >
-                {/* Image */}
-                <div className="relative pb-[70%] overflow-hidden">
-                  <img
-                    src={room.image}
-                    alt={`${room.name} ${room.location}`}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                </div>
+          {loading ? (
+            <div className="mt-16 flex justify-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : error ? (
+            <div className="mt-16 text-red-500">{error}</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mt-16 max-w-7xl mx-auto">
+              {spaces.map((space) => (
+                <div
+                  key={space.id}
+                  onClick={() => navigate(`/space/${space.id}`)}
+                  className="cursor-pointer bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group relative"
+                >
+                  {/* Image */}
+                  <div className="relative pb-[70%] overflow-hidden">
+                    <img
+                      src={space.image || "/Images/default-space.jpg"} // Fallback image
+                      alt={`${space.name} ${space.location}`}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  </div>
 
-                {/* Content */}
-                <div className="p-6 text-left">
-                  <h4 className="text-2xl font-semibold text-gray-800 mb-1">
-                    {room.name}
-                  </h4>
-                  <p className="text-gray-600 text-sm mb-3">{room.location}</p>
-                  <div className="flex justify-between items-center"></div>
+                  {/* Content */}
+                  <div className="p-6 text-left">
+                    <h4 className="text-2xl font-semibold text-gray-800 mb-1">
+                      {space.name}
+                    </h4>
+                    <p className="text-gray-600 text-sm mb-3">{space.location}</p>
+                    <button 
+                      className="mt-2 text-blue-600 font-medium hover:underline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/space/${space.id}`);
+                      }}
+                    >
+                      View Details
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
