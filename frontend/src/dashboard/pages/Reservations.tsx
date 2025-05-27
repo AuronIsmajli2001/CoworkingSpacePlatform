@@ -5,6 +5,8 @@ import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -87,6 +89,25 @@ const Reservations = () => {
     status: ReservationStatus.Pending,
     paymentMethod: PaymentMethod.Card,
   });
+
+  const navigate = useNavigate();
+
+  // Auth validation
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {

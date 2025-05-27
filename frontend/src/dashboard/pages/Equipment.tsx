@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 type Equipment = {
   id: string;
@@ -37,6 +39,24 @@ const Equipment = () => {
   });
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/auth");
+      return;
+    }
+    try {
+      const decoded: any = jwtDecode(token);
+      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+        navigate("/auth");
+      }
+    } catch (err) {
+      navigate("/auth");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     if (notification) {
