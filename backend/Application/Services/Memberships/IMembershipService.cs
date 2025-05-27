@@ -14,5 +14,6 @@ namespace Application.Services.Memberships
         Task<User> GetUserByIdAsync(string userId);
         Task<bool> AssignMembershipToUserAsync(string userId, string membershipId);
 
+        Task<MembershipDTORead> GetUserMembershipAsync(string userId);
     }
 }

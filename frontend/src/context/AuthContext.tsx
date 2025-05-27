@@ -9,6 +9,7 @@ import { jwtDecode } from "jwt-decode";
 interface User {
   userId: string;
   role: string;
+  membershipId?: string;
 }
 
 interface AuthContextType {
@@ -28,7 +29,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (token) {
       try {
         const decoded: any = jwtDecode(token);
-        setUser({ userId: decoded.userId, role: decoded.role });
+        setUser({
+          userId: decoded.userId,
+          role: decoded.role,
+          membershipId: decoded.membershipId,
+        });
       } catch (err) {
         console.error("Failed to decode token", err);
       }
