@@ -19,19 +19,20 @@ import Equipment from "./dashboard/pages/Equipment";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/pricingplans" element={<PricingPlans />} />
-        <Route path="/space" element={<Space />} />
-        <Route path="/space/:id" element={<SpaceDetails />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/myreservations" element={<MyReservations />} />
-        <Route path="/memberships" element={<Memberships />} />
-        <Route path="/profile" element={<EditProfile />} />
-        <Route path="/userprofile/mymembership" element={<MyMembership />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/pricingplans" element={<PricingPlans />} />
+          <Route path="/space" element={<Space />} />
+          <Route path="/space/:id" element={<SpaceDetails />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/myreservations" element={<MyReservations />} />
+          <Route path="/memberships" element={<Memberships />} />
+          <Route path="/profile" element={<EditProfile />} />
+          <Route path="/userprofile/mymembership" element={<MyMembership />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/users" element={<Users />} />

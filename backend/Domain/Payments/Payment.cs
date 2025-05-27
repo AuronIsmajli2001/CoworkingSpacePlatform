@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Memberships;
 using Domain.Reservations;
 using Domain.Users;
 using System;
@@ -19,11 +20,14 @@ namespace Domain.Payments
         public string UserId { get; set; }
         [ForeignKey("ReservationId")]
         public string? ReservationId { get; set; }
+
         [ForeignKey("MembershipId")]
         public string? MembershipId { get; set; }
         public Status Status { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public User User { get; set; }
         public Reservation Reservation { get; set; }
+        public Membership Membership { get; set; }
+
     }
 }

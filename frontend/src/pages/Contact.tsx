@@ -87,19 +87,22 @@ const Contact = () => {
     <>
       <Header />
 
-      <section className="relative py-32 bg-blue-50">
-        <div className="container mx-auto px-6 text-center">
-          <span className="inline-block px-3 py-1 text-sm font-medium bg-white text-blue-600 rounded-full mb-4">
-            GET IN TOUCH
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-            Let's <span className="text-blue-600">connect</span>
-          </h1>
-          <p className="text-xl text-blue-800 max-w-2xl mx-auto">
-            Have questions? Reach out—we're here to help you find your perfect workspace.
-          </p>
-        </div>
-      </section>
+     <section className="relative py-12 bg-blue-50">
+      <div className="container mx-auto px-6 text-center pt-12">
+        <span className="inline-block px-3 py-1 text-sm font-medium bg-white text-blue-600 rounded-full mb-4">
+          GET IN TOUCH
+        </span>
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+          Let's <span className="text-blue-600">connect</span>
+        </h1>
+        <p className="text-xl text-blue-800 max-w-2xl mx-auto">
+          Have questions? Reach out—we're here to help you find your perfect workspace.
+        </p>
+      </div>
+    </section>
+
+
+
 
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6 max-w-7xl flex flex-col md:flex-row items-center gap-16 relative">
@@ -167,7 +170,7 @@ const Contact = () => {
         </div>
       </section>
 
-      <section id="map-section" className="py-32 bg-blue-50">
+      <section id="map-section" className="py-16 bg-blue-50">
         <div className="container mx-auto px-6 max-w-6xl text-center">
           <h2 className="text-4xl font-bold mb-6 text-blue-900">You're welcome anytime</h2>
           <p className="text-lg text-blue-800 mb-12 max-w-2xl mx-auto">

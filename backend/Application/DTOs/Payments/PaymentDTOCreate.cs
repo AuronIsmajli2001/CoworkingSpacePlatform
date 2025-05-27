@@ -8,13 +8,12 @@ using Domain.Enums;
 
 namespace Application.DTOs.Payments
 {
-    internal class PaymentDTOCreate
+    public class PaymentDTOCreate
     {
-        [Required]
         public string UserId { get; set; }
-        public string ReservationId { get; set; }
+        public string? ReservationId { get; set; }
+        public string? MembershipId { get; set; }
 
         public PaymentMethod PaymentMethod { get; set; }
-        public Status Status { get; internal set; }
     }
 }

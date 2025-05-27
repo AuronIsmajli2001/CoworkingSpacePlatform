@@ -15,6 +15,8 @@ namespace Application.DTOs.Memberships
         public DateTime Created_At { get; set; }
         public bool isActive { get; set; }
         public BillingType BillingType { get; set; }
-        public ICollection<User> Users { get; set; } = new List<User>();
+        //public ICollection<User> Users { get; set; } = new List<User>();
+       
+
     }
 }
