@@ -5,6 +5,9 @@ import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 type Space = {
   id: string;
   name: string;
@@ -44,7 +47,7 @@ const Spaces = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5234/Space") // or use `baseUrl`
+      .get(`${baseUrl}/Space`)
       .then((res) => {
         if (Array.isArray(res.data)) {
           const mappedSpaces = res.data.map((space: any) => ({
@@ -86,7 +89,7 @@ const Spaces = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5234/Space/${id}`);
+      await axios.delete(`${baseUrl}/Space/${id}`);
       setSpaces((prev) => prev.filter((space) => space.id !== id));
     } catch (err) {
       alert("Failed to delete space. Please try again.");
@@ -96,7 +99,7 @@ const Spaces = () => {
 
   const handleBulkDelete = async () => {
     try {
-      await Promise.all(selectedSpaces.map(id => axios.delete(`http://localhost:5234/Space/${id}`)));
+      await Promise.all(selectedSpaces.map(id => axios.delete(`${baseUrl}/Space/${id}`)));
       setSpaces((prev) => prev.filter((space) => !selectedSpaces.includes(space.id)));
       setSelectedSpaces([]);
       setShowConfirmModal(false);
@@ -123,11 +126,11 @@ const Spaces = () => {
         if (editingImage) {
           formData.append("image", editingImage);
         }
-        await axios.put(`http://localhost:5234/Space/${editingSpace.id}`, formData, {
+        await axios.put(`${baseUrl}/Space/${editingSpace.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         // Fetch all spaces after update
-        const res = await axios.get("http://localhost:5234/Space");
+        const res = await axios.get(`${baseUrl}/Space`);
         if (Array.isArray(res.data)) {
           const mappedSpaces = res.data.map((space: any) => ({
             id: space.id,
@@ -163,7 +166,7 @@ const Spaces = () => {
         formData.append("image", newSpaceImage);
       }
 
-      await axios.post("http://localhost:5234/Space", formData, {
+      await axios.post(`${baseUrl}/Space`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

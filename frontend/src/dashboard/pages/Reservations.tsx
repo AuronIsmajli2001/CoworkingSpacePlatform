@@ -6,7 +6,7 @@ import React from "react";
 import { useEffect } from "react";
 import axios from "axios";
 
-
+//@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type User = {
@@ -95,16 +95,16 @@ const Reservations = () => {
         setError(null);
 
         // Fetch users
-        const usersResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/User`);
+        const usersResponse = await axios.get(`${baseUrl}/User`);
         setUsers(usersResponse.data);
 
         // Fetch spaces
-        const spacesResponse = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/Space`);
+        const spacesResponse = await axios.get(`${baseUrl}/Space`);
         setSpaces(spacesResponse.data);
 
         // Fetch reservations
         const reservationsResponse = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/reservation`
+          `${baseUrl}/reservation`
         );
 
         const mappedReservations = reservationsResponse.data.map((res: any) => ({
@@ -170,7 +170,7 @@ const Reservations = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/Reservation/${id}`);
+      await axios.delete(`${baseUrl}/Reservation/${id}`);
       setReservations((prev) => prev.filter((res) => res.id !== id));
       setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
     } catch (error) {
@@ -183,7 +183,7 @@ const Reservations = () => {
     try {
       await Promise.all(
         selectedReservations.map((id) =>
-          axios.delete(`${import.meta.env.VITE_API_BASE_URL}/Reservation/${id}`)
+          axios.delete(`${baseUrl}/Reservation/${id}`)
         )
       );
       setReservations((prev) =>
@@ -212,7 +212,7 @@ const Reservations = () => {
       };
 
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/Reservation/${updatedReservation.id}`,
+        `${baseUrl}/Reservation/${updatedReservation.id}`,
         payload
       );
 
@@ -241,7 +241,7 @@ const Reservations = () => {
       };
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/Reservation`,
+        `${baseUrl}/Reservation`,
         payload
       );
 

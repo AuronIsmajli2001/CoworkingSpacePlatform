@@ -66,7 +66,7 @@ namespace Api.Reservation
                     _logger.LogError($"Error in GetReservationById: {ex.Message}");
                     return StatusCode(500, "Internal server error");
                 }
-            }
+            .}
 
             [HttpPut("{id}", Name = "UpdateReservation")]
             public async Task<IActionResult> UpdateReservation(string id, [FromBody] ReservationDTOUpdate dto)

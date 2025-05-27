@@ -3,6 +3,9 @@ import axios from "axios";
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const MyMembership = () => {
   const { user } = useAuth();
   const [membership, setMembership] = useState<any>(null);
@@ -22,7 +25,7 @@ const MyMembership = () => {
 
         // Use the dedicated endpoint that handles both user and membership lookup
         const response = await axios.get(
-          `http://localhost:5234/Membership/by-user/${user.userId}`
+          `${baseUrl}/Membership/by-user/${user.userId}`
         );
 
         // Check the response structure

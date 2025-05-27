@@ -16,6 +16,9 @@ import {
   Line,
 } from "recharts";
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 enum ReservationStatus {
   Pending = "Pending",
   Confirmed = "Confirmed",
@@ -98,9 +101,9 @@ const Dashboard = () => {
       try {
         const [usersResponse, reservationsResponse, spacesResponse] =
           await Promise.all([
-            axios.get("http://localhost:5234/User"),
-            axios.get(`${import.meta.env.VITE_API_BASE_URL}/reservation`),
-            axios.get("http://localhost:5234/Space"),
+            axios.get(`${baseUrl}/User`),
+            axios.get(`${baseUrl}/reservation`),
+            axios.get(`${baseUrl}/Space`),
           ]);
 
         // Calculate statistics

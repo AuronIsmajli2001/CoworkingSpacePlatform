@@ -4,6 +4,9 @@ import { Pencil, Trash2, X, Check } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
 
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 type Membership = {
   id: string;
   title: string;
@@ -61,7 +64,7 @@ useEffect(() => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5234/Membership")
+      .get(`${baseUrl}/Membership`)
       .then((res) => {
         setMemberships(res.data);
       })
@@ -88,7 +91,7 @@ useEffect(() => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5234/Membership/${id}`);
+      await axios.delete(`${baseUrl}/Membership/${id}`);
       setMemberships((prev) => prev.filter((m) => m.id !== id));
       setSelectedMemberships((prev) => prev.filter((sid) => sid !== id));
       setNotification({ message: "Membership successfully deleted.", type: "error" });
@@ -102,7 +105,7 @@ useEffect(() => {
     try {
       await Promise.all(
         selectedMemberships.map((id) =>
-          axios.delete(`http://localhost:5234/Membership/${id}`)
+          axios.delete(`${baseUrl}/Membership/${id}`)
         )
       );
       setMemberships((prev) =>
@@ -142,10 +145,10 @@ useEffect(() => {
         billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
       };
       await axios.put(
-        `http://localhost:5234/Membership/${editingMembership.id}`,
+        `${baseUrl}/Membership/${editingMembership.id}`,
         body
       );
-      const res = await axios.get("http://localhost:5234/Membership");
+      const res = await axios.get(`${baseUrl}/Membership`);
       setMemberships(res.data);
       setNotification({ message: "Membership successfully updated.", type: "success" });
       setEditingMembership(null);
@@ -176,8 +179,8 @@ useEffect(() => {
         additionalServices: newMembership.additionalServices,
         billingType: newMembership.billingType,
       };
-      await axios.post("http://localhost:5234/Membership", body);
-      const res = await axios.get("http://localhost:5234/Membership");
+      await axios.post(`${baseUrl}/Membership`, body);
+      const res = await axios.get(`${baseUrl}/Membership`);
       setMemberships(res.data);
       setNotification({ message: "Membership successfully added.", type: "success" });
       setShowAddModal(false);
