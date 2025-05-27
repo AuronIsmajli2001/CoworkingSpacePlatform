@@ -7,7 +7,10 @@ import { useEffect } from "react";
 import axios from "axios";
 
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  //@ts-ignore
+  const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 type User = {
   id: string;
