@@ -36,7 +36,7 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5234/User");
+        const response = await axios.get(`${baseUrl}/User`);
 
         const mappedUsers = response.data.map((user: any) => ({
           id: user.id,

@@ -6,14 +6,9 @@ const Sidebar = () => {
     { to: "/dashboard", label: "Dashboard", icon: <Home size={18} /> },
     { to: "/users", label: "Users", icon: <Users size={18} /> },
     { to: "/spaces", label: "Spaces", icon: <Grid size={18} /> },
-    
-    {
-      to: "/reservations",
-      label: "Reservations",
-      icon: <Calendar size={18} />,
-    },
+    { to: "/reservations", label: "Reservations", icon: <Calendar size={18} /> },
     { to: "/memberships", label: "Memberships", icon: <Layers size={18} /> },
-
+    { to: "/equipment", label: "Equipment", icon: <Layers size={18} /> },
   ];
 
   return (

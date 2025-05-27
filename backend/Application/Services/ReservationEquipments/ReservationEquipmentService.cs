@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.DTOs.ReservationEquipments;
 using Application.Interfaces.IUnitOfWork;
+using Domain.Equipments;
 using Domain.ReservationEquipments;
+using Domain.Reservations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +24,7 @@ namespace Application.Services.ReservationEquipments
             _logger = logger;
         }
 
-        public async Task<List<ReservationEquipmentDTORead>> GetAllAsync()
+        public async Task<List<ReservationEquipmentDTORead>> GetAllReservationEquipmentsAsync()
         {
             var items = await _unitOfWork.Repository<ReservationEquipment>().GetAllAsync();
 
@@ -35,7 +37,7 @@ namespace Application.Services.ReservationEquipments
             }).ToList();
         }
 
-        public async Task<ReservationEquipmentDTORead> GetByIdAsync(string reservationId, string equipmentId)
+        /*public async Task<ReservationEquipmentDTORead> GetByIdAsync(string reservationId, string equipmentId)
         {
             var entity = await _unitOfWork.Repository<ReservationEquipment>()
                 .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
@@ -49,23 +51,38 @@ namespace Application.Services.ReservationEquipments
                 EquipmentId = entity.EquipmentId,
                 Quantity = entity.Quantity,
             };
-        }
+        }*/
 
-        public async Task<bool> CreateAsync(ReservationEquipmentDTOCreate dto)
+        public async Task<bool> CreateReservationEquipmentAsync(ReservationEquipmentDTOCreate dto)
         {
-            var entity = new ReservationEquipment
+            if(dto.EquipmentIds != null && dto.Quantity != null)
             {
-                ReservationId = dto.ReservationId,
-                EquipmentId = dto.EquipmentId,
-                Quantity = dto.Quantity
-            };
+                if (dto.EquipmentIds.Count != dto.Quantity.Count)
+                {
+                    throw new ArgumentException("EquipmentIds and Quantity have the same count.");
+                }
 
-            _unitOfWork.Repository<ReservationEquipment>().Create(entity);
-            await _unitOfWork.CompleteAsync();
-            return true;
+                for (int i = 0; i < dto.EquipmentIds.Count(); i++)
+                {
+                    var entity = new ReservationEquipment
+                    {
+                        ReservationId = dto.ReservationId,
+                        EquipmentId = dto.EquipmentIds[i],
+                        Quantity = dto.Quantity[i]
+                    };
+                    if(dto.Quantity[i] <= 0)
+                    {
+                        throw new ArgumentException("Quantity cant be negative or zero!");
+                    }
+                    _unitOfWork.Repository<ReservationEquipment>().Create(entity);
+                }
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            return false;
         }
 
-        public async Task<bool> UpdateAsync(string reservationId, string equipmentId, ReservationEquipmentDTOUpdate dto)
+        public async Task<bool> UpdateReservationEquipmentAsync(string reservationId, string equipmentId, ReservationEquipmentDTOUpdate dto)
         {
             var entity = await _unitOfWork.Repository<ReservationEquipment>()
             .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
@@ -82,7 +99,7 @@ namespace Application.Services.ReservationEquipments
             return false;
         }
 
-        public async Task<bool> DeleteAsync(string reservationId, string equipmentId)
+        public async Task<bool> DeleteReservationEquipmentAsync(string reservationId, string equipmentId)
         {
             var entity = await _unitOfWork.Repository<ReservationEquipment>()
             .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
@@ -99,7 +116,7 @@ namespace Application.Services.ReservationEquipments
 
             
         }
-        public async Task<List<ReservationEquipmentDTORead>> GetByReservationIdAsync(string reservationId)
+        public async Task<List<ReservationEquipmentDTORead>> GetEquipmentsByReservationIdAsync(string reservationId)
         {
             var items = await _unitOfWork.Repository<ReservationEquipment>()
                 .GetByCondition(x => x.ReservationId == reservationId)

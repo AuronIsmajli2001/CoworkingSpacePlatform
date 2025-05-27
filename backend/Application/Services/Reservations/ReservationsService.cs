@@ -41,7 +41,7 @@ namespace Application.Services.Reservations
 
             foreach (var r in reservations)
             {
-                var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
+                var equipments = await _reservationEquipmentService.GetEquipmentsByReservationIdAsync(r.Id);
 
                 result.Add(new ReservationDTORead
                 {
@@ -74,23 +74,42 @@ namespace Application.Services.Reservations
             var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
             if (reservation == null) return null;
 
+            var equipments = await _reservationEquipmentService.GetEquipmentsByReservationIdAsync(id);
+
             return new ReservationDTORead
             {
                 UserId = reservation.UserId,
                 SpaceId = reservation.SpaceId,
                 StartDateTime = reservation.StartDateTime,
                 EndDateTime = reservation.EndDateTime,
-                Status = reservation.Status
+                Status = reservation.Status,
+                ReservationEquipment = equipments
             };
         }
 
         public async Task<bool> CreateReservationAsync(ReservationDTOCreate dto)
         {
+            var reservations = _unitOfWork.Repository<Reservation>()
+            .GetByCondition(r => r.SpaceId == dto.SpaceId &&
+                        r.EndDateTime > dto.StartDateTime &&
+                        r.StartDateTime < dto.EndDateTime);
+
+            if (reservations.Any())
+            {
+                _logger.LogWarning($"[CreateReservationAsync] Conflict: Space {dto.SpaceId} is already reserved during the selected time.");
+                throw new Exception($"Space {dto.SpaceId} is already reserved during the selected time.");
+            }
+
+            if (dto.StartDateTime < DateTime.UtcNow)
+            {
+                throw new Exception("You cant reservate in the past!");
+            }
+
             try
             {
                 var reservation = new Reservation
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = dto.Id,
                     UserId = dto.UserId,
                     SpaceId = dto.SpaceId,
                     PaymentMethod = dto.PaymentMethod,

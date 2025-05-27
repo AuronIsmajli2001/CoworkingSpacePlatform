@@ -7,6 +7,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
+import { v4 as uuidv4 } from 'uuid';
+import { Users, MapPin, Euro, Info } from 'lucide-react';
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -24,17 +26,24 @@ interface DecodedToken {
   // Add other token fields if needed
 }
 
+interface Equipment {
+  id: string;
+  name: string;
+  price_per_piece?: number;
+}
+
+interface EquipmentSelection {
+  equipmentId: string;
+  quantity: number;
+}
+
 export default function SpaceDetails() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/auth");
-    } else {
-      setIsLoading(false);
-    }
-  }, [navigate]);
+  const [showEquipmentModal, setShowEquipmentModal] = useState(false);
+  const [equipmentList, setEquipmentList] = useState<Equipment[]>([]);
+  const [selectedEquipment, setSelectedEquipment] = useState<EquipmentSelection[]>([]);
+  const [currentReservationId, setCurrentReservationId] = useState<string>("");
+  const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
@@ -59,9 +68,25 @@ export default function SpaceDetails() {
       .catch((err) => console.error("❌ Error fetching space:", err));
   }, [id]);
 
-  if (isLoading) {
-    return null;
-  }
+  useEffect(() => {
+    if (!space) return;
+    // Calculate duration in hours
+    const start = reservationData.startDateTime ? new Date(reservationData.startDateTime) : null;
+    const end = reservationData.endDateTime ? new Date(reservationData.endDateTime) : null;
+    let hours = 0;
+    if (start && end && end > start) {
+      hours = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    }
+    let spaceTotal = hours * Number(space.price || 0);
+    let equipmentTotal = 0;
+    selectedEquipment.forEach(sel => {
+      const eq = equipmentList.find(e => e.id === sel.equipmentId);
+      if (eq && eq.price_per_piece) {
+        equipmentTotal += sel.quantity * eq.price_per_piece;
+      }
+    });
+    setTotalPrice(spaceTotal + equipmentTotal);
+  }, [reservationData, space, selectedEquipment, equipmentList]);
 
   const handleReservationChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -84,10 +109,12 @@ export default function SpaceDetails() {
       }
 
       const decodedToken = jwtDecode<DecodedToken>(token);
+      const reservationId = uuidv4();
       
       const response = await axios.post(
         `${baseUrl}/Reservation`,
         {
+          id: reservationId,
           userId: decodedToken.userId,
           spaceId: id,
           paymentMethod: reservationData.paymentMethod,
@@ -97,25 +124,78 @@ export default function SpaceDetails() {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json'
           }
         }
       );
 
       if (response.status === 200 || response.status === 201) {
-        setSuccess("Reservation created successfully!");
-        // Clear form
-        setReservationData({
-          paymentMethod: "Cash",
-          startDateTime: "",
-          endDateTime: "",
-        });
+        setCurrentReservationId(reservationId);
+        // Fetch equipment list
+        const equipmentResponse = await axios.get(`${baseUrl}/Equipment`);
+        setEquipmentList(equipmentResponse.data);
+        setShowEquipmentModal(true);
       }
     } catch (err: any) {
       console.error("Error creating reservation:", err);
       setError(err.response?.data?.message || "Failed to create reservation");
     }
+  };
+
+  const handleEquipmentSubmit = async () => {
+    if (selectedEquipment.length === 0) {
+      setShowEquipmentModal(false);
+      setSuccess("Reservation created successfully!");
+      setReservationData({
+        paymentMethod: "Cash",
+        startDateTime: "",
+        endDateTime: "",
+      });
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${baseUrl}/ReservationEquipment`,
+        {
+          reservationId: currentReservationId,
+          equipmentIds: selectedEquipment.map(eq => eq.equipmentId),
+          quantity: selectedEquipment.map(eq => eq.quantity)
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      setShowEquipmentModal(false);
+      setSuccess("Reservation created successfully with equipment!");
+      setReservationData({
+        paymentMethod: "Cash",
+        startDateTime: "",
+        endDateTime: "",
+      });
+      setSelectedEquipment([]);
+    } catch (err: any) {
+      console.error("Error adding equipment:", err);
+      setError(err.response?.data?.message || "Failed to add equipment");
+    }
+  };
+
+  const handleEquipmentChange = (equipmentId: string, quantity: number) => {
+    setSelectedEquipment(prev => {
+      const existing = prev.find(eq => eq.equipmentId === equipmentId);
+      if (existing) {
+        if (quantity === 0) {
+          return prev.filter(eq => eq.equipmentId !== equipmentId);
+        }
+        return prev.map(eq => 
+          eq.equipmentId === equipmentId ? { ...eq, quantity } : eq
+        );
+      }
+      return [...prev, { equipmentId, quantity }];
+    });
   };
 
   if (!space) return <p className="text-center mt-10">Loading...</p>;
@@ -135,40 +215,35 @@ export default function SpaceDetails() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Space Info */}
-          <div
-            className="bg-white p-8 rounded-xl"
-            style={{ boxShadow: "0 0 20px rgba(0,0,0,0.2)" }}
-          >
-            <h1 className="text-4xl font-bold text-gray-800 mb-6">
-              {space.name}
-            </h1>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-lg text-gray-700 mb-6">
+          <div className="bg-white p-12 rounded-xl shadow-lg flex flex-col gap-8">
+            <h1 className="text-2xl font-bold text-gray-800 mb-6">{space.name}</h1>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Users className="text-blue-600" size={28} />
               <div>
-                <p className="text-gray-500 font-semibold uppercase text-sm">
-                  Capacity
-                </p>
-                <p className="text-xl font-medium">{space.capacity}</p>
-              </div>
-              <div>
-                <p className="text-gray-500 font-semibold uppercase text-sm">
-                  Price per hour
-                </p>
-                <p className="text-xl font-medium">{space.price} €</p>
-              </div>
-              <div>
-                <p className="text-gray-500 font-semibold uppercase text-sm">
-                  Location
-                </p>
-                <p className="text-xl font-medium">{space.location}</p>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Capacity</p>
+                <p className="text-lg font-bold text-gray-800">{space.capacity}</p>
               </div>
             </div>
-
-            <div>
-              <p className="text-gray-500 font-semibold uppercase text-sm mb-1">
-                Description
-              </p>
-              <p className="text-base text-gray-800">{space.description}</p>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Euro className="text-green-600" size={28} />
+              <div>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Price per Hour</p>
+                <p className="text-lg font-bold text-gray-800">{space.price} €</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <MapPin className="text-purple-600" size={28} />
+              <div>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Location</p>
+                <p className="text-lg font-bold text-gray-800">{space.location}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+              <Info className="text-orange-500" size={28} />
+              <div>
+                <p className="text-gray-500 font-semibold uppercase text-xs mb-1">Description</p>
+                <p className="text-base text-gray-800">{space.description}</p>
+              </div>
             </div>
           </div>
 
@@ -247,6 +322,30 @@ export default function SpaceDetails() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Price per Hour
+                </label>
+                <input
+                  type="text"
+                  value={space.price + ' €'}
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Total Price
+                </label>
+                <input
+                  type="text"
+                  value={totalPrice.toFixed(2) + ' €'}
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 font-bold"
+                />
+              </div>
+
               <div className="pt-4">
                 <button
                   type="submit"
@@ -260,6 +359,123 @@ export default function SpaceDetails() {
         </div>
       </div>
       <Footer />
+
+      {/* Equipment Modal */}
+      {showEquipmentModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-2xl w-full mx-4">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Add Equipment to Your Reservation
+            </h2>
+            
+            <div className="space-y-4">
+              {selectedEquipment.map((selection, index) => (
+                <div key={index} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <select
+                    value={selection.equipmentId}
+                    onChange={(e) => {
+                      const newSelection = [...selectedEquipment];
+                      newSelection[index] = {
+                        equipmentId: e.target.value,
+                        quantity: selection.quantity
+                      };
+                      setSelectedEquipment(newSelection);
+                    }}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Select Equipment</option>
+                    {equipmentList.map((equipment) => (
+                      <option 
+                        key={equipment.id} 
+                        value={equipment.id}
+                        disabled={selectedEquipment.some(
+                          (sel, i) => i !== index && sel.equipmentId === equipment.id
+                        )}
+                      >
+                        {equipment.name}
+                        {typeof equipment.price_per_piece === 'number' ? ` (€${equipment.price_per_piece.toFixed(2)})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    min="1"
+                    value={selection.quantity}
+                    onChange={(e) => {
+                      const newSelection = [...selectedEquipment];
+                      newSelection[index] = {
+                        ...selection,
+                        quantity: parseInt(e.target.value) || 1
+                      };
+                      setSelectedEquipment(newSelection);
+                    }}
+                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Qty"
+                  />
+                  <button
+                    onClick={() => {
+                      setSelectedEquipment(prev => prev.filter((_, i) => i !== index));
+                    }}
+                    className="p-2 text-red-600 hover:text-red-800"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+
+              <button
+                onClick={() => {
+                  setSelectedEquipment(prev => [...prev, { equipmentId: "", quantity: 1 }]);
+                }}
+                className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                </svg>
+                Add Equipment
+              </button>
+            </div>
+
+            <div className="mt-6 flex flex-col items-end gap-2">
+              <div className="text-lg font-semibold text-gray-700">
+                Equipment Total: {selectedEquipment.reduce((sum, sel) => {
+                  const eq = equipmentList.find(e => e.id === sel.equipmentId);
+                  return sum + (eq && eq.price_per_piece ? sel.quantity * eq.price_per_piece : 0);
+                }, 0).toFixed(2)} €
+              </div>
+              <div className="text-lg font-bold text-blue-700">
+                Grand Total: {totalPrice.toFixed(2)} €
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-4">
+              <button
+                onClick={() => {
+                  setShowEquipmentModal(false);
+                  setSuccess("Reservation created successfully!");
+                  setReservationData({
+                    paymentMethod: "Cash",
+                    startDateTime: "",
+                    endDateTime: "",
+                  });
+                }}
+                className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+              >
+                Skip Equipment
+              </button>
+              <button
+                onClick={handleEquipmentSubmit}
+                disabled={selectedEquipment.some(eq => !eq.equipmentId)}
+                className="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Confirm Equipment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

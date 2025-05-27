@@ -8,11 +8,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Api.Reservation
 {
-    
-    
-        [ApiController]
+    [ApiController]
     [Route("[controller]")]
-    //[Route("[controller]")]
     public class ReservationController : ControllerBase
         {
             private readonly IReservationsService _reservationService;
@@ -69,7 +66,7 @@ namespace Api.Reservation
                     _logger.LogError($"Error in GetReservationById: {ex.Message}");
                     return StatusCode(500, "Internal server error");
                 }
-            }
+            .}
 
             [HttpPut("{id}", Name = "UpdateReservation")]
             public async Task<IActionResult> UpdateReservation(string id, [FromBody] ReservationDTOUpdate dto)

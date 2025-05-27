@@ -13,6 +13,7 @@ namespace Application.DTOs.Reservations
 {
     public class ReservationDTOCreate
     {
+        public string Id { get; set; }
         public string UserId { get; set; }
         public string SpaceId { get; set; }
         public string PaymentMethod { get; set; }
