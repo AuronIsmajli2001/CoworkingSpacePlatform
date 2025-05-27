@@ -190,5 +190,48 @@ namespace Application.Services.Reservations
 
 
         }
+
+        public async Task<List<ReservationDTORead>> GetReservationsByUserIdAsync(string userId)
+        {
+            _logger.LogInformation($"Fetching reservations for user ID: {userId}");
+
+            var reservations = await _unitOfWork.Repository<Reservation>().GetAll()
+                .Where(r => r.UserId == userId)
+                .Include(r => r.User)
+                .Include(r => r.Space)
+                .ToListAsync();
+
+            var result = new List<ReservationDTORead>();
+
+            foreach (var r in reservations)
+            {
+                var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
+
+                result.Add(new ReservationDTORead
+                {
+                    Id = r.Id,
+                    UserId = r.UserId,
+                    SpaceId = r.SpaceId,
+                    StartDateTime = r.StartDateTime,
+                    EndDateTime = r.EndDateTime,
+                    Status = r.Status,
+                    CreatedAt = r.Created_at,
+                    ReservationEquipment = equipments,
+                    User = r.User != null ? new UserDTORead
+                    {
+                        Id = r.User.Id,
+                        UserName = r.User.UserName
+                    } : null,
+                    Space = r.Space != null ? new SpaceDTORead
+                    {
+                        Id = r.Space.Id,
+                        Name = r.Space.Name
+                    } : null
+                });
+            }
+
+            return result;
+        }
+
     }
 }
