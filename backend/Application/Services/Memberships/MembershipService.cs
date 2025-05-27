@@ -1,5 +1,3 @@
-﻿
-
 using Application.DTOs.Memberships;
 using Application.Interfaces.IUnitOfWork;
 using Domain.Enums;
@@ -242,5 +240,20 @@ namespace Application.Services.Memberships
             return await GetByIdAsync(user.MembershipId);
 
         }
+
+        public async Task<bool> CancelMembershipAsync(string userId)
+        {
+            var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+            if (user == null || user.MembershipId == null)
+                return false;
+
+            user.MembershipId = null;
+            _unitOfWork.Repository<User>().Update(user);
+            await _unitOfWork.CompleteAsync();
+            return true;
+        }
+
+
+
     }
 }

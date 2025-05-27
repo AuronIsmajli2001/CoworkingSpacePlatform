@@ -79,7 +79,7 @@ export default function BookingModal({
         onClose();
 
         MySwal.fire({
-          title: "🎉 Membership Confirmed!",
+          title: "Membership Confirmed!",
           text: `You are now subscribed to the ${plan.title} plan.`,
           icon: "success",
           confirmButtonText: "Awesome!",
@@ -253,10 +253,16 @@ export default function BookingModal({
                   placeholder="Card Number"
                   className="w-full p-2 border rounded-lg"
                   value={cardDetails.number}
-                  onChange={(e) =>
-                    setCardDetails({ ...cardDetails, number: e.target.value })
-                  }
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                    if (value.length > 16) value = value.slice(0, 16); // Limit to 16 digits
+                    const formatted = value.replace(/(.{4})/g, "$1 ").trim(); // Add space every 4 digits
+                    setCardDetails({ ...cardDetails, number: formatted });
+                  }}
+                  inputMode="numeric"
+                  pattern="[0-9\s]*"
                 />
+
                 <div className="grid grid-cols-2 gap-3">
                   <input
                     type="text"
