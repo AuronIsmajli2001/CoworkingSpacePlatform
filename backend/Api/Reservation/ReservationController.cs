@@ -106,13 +106,13 @@ namespace Api.Reservation
                 [HttpGet("by-user/{userId}")]
                 public async Task<IActionResult> GetReservationsByUser(string userId)
                 {
-                    var reservations = await _reservationService.GetReservationsByUserIdAsync(userId);
+            var reservations = await _reservationService.GetReservationsByUserIdAsync(userId);
 
                     if (reservations == null || !reservations.Any())
                         return NotFound(new { success = false, message = "No reservations found for this user." });
 
-                    return Ok(new { success = true, reservations });
-                }
+            return Ok(new { success = true, reservations });
+        }
 
     }
 }

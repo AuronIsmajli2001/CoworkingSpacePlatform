@@ -26,7 +26,10 @@ const MyReservations = () => {
         );
 
         if (response.data.success === false) {
-          setError(response.data.message || "No reservations found");
+          // Only set error if it's a real error, not just empty results
+          if (response.data.message !== "No reservations found for this user.") {
+            setError(response.data.message);
+          }
           setReservations([]);
         } else {
           setReservations(response.data.reservations || []);
@@ -44,6 +47,7 @@ const MyReservations = () => {
     fetchReservations();
   }, [user?.userId]);
 
+
   return (
     <>
       <Header />
@@ -52,7 +56,6 @@ const MyReservations = () => {
         <div className="w-full max-w-4xl space-y-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-8 tracking-tight">
-              My Reservations
             </h1>
           </div>
 
@@ -156,17 +159,35 @@ const MyReservations = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center space-y-4 mt-16">
-              <div className="text-7xl select-none">😕</div>
-              <h2 className="text-3xl font-semibold text-gray-800">
-                You don’t have any reservations yet.
-              </h2>
-              <button
-                onClick={() => navigate("/space")}
-                className="mt-4 px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-md font-semibold transition-colors duration-300 shadow-md"
+            <div className="text-center">
+              <svg
+                className="mx-auto h-12 w-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Explore Spaces
-              </button>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h2 className="mt-2 text-lg font-medium text-gray-900">
+                No reservations found
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">
+                You don't have any reservations yet.
+              </p>
+              <div className="mt-6">
+                <button
+                  onClick={() => navigate("/space")}
+                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                >
+                  Explore Spaces
+                </button>
+              </div>
             </div>
           )}
         </div>
