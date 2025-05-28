@@ -39,6 +39,15 @@ export default function Auth() {
     password: "",
   });
 
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const validate = () => {
     let valid = true;
     const newErrors = {

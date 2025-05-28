@@ -205,7 +205,7 @@ namespace Application.Services.Reservations
 
             foreach (var r in reservations)
             {
-                var equipments = await _reservationEquipmentService.GetByReservationIdAsync(r.Id);
+                var equipments = await _reservationEquipmentService.GetEquipmentsByReservationIdAsync(r.Id);
 
                 result.Add(new ReservationDTORead
                 {
