@@ -108,8 +108,14 @@ namespace Api.Reservation
                 {
             var reservations = await _reservationService.GetReservationsByUserIdAsync(userId);
 
-                    if (reservations == null || !reservations.Any())
-                        return NotFound(new { success = false, message = "No reservations found for this user." });
+            if (reservations == null || !reservations.Any())
+            {
+                return Ok(new
+                {
+                    success = false,
+                    message = "No reservations found for this user.",
+                });
+            }
 
             return Ok(new { success = true, reservations });
         }
