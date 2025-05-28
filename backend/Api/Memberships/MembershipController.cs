@@ -111,18 +111,16 @@ namespace Api.Membership
         {
             try
             {
-                var user = await _membershipService.GetUserByIdAsync(dto.UserId); // You'll add this below
+                var user = await _membershipService.GetUserByIdAsync(dto.UserId); 
                 if (user == null)
                     return NotFound("User not found.");
 
-                //if (user.MembershipId != null)
-                //    return BadRequest("User already has an active membership.");
                 if (user.MembershipId != null)
                 {
                     return Ok(new
                     {
                         success = false,
-                        message = "User already has an active membership."
+                        message = "You already have an active membership. Cancel it before purchasing a new one\""
                     });
                 }
 
@@ -156,7 +154,7 @@ namespace Api.Membership
                     return Ok(new
                     {
                         success = false,
-                        message = "User has no active membership"
+                        message = "You have no active membership"
                     });
                 }
 
@@ -170,6 +168,27 @@ namespace Api.Membership
             }
         }
 
-    
-}
+
+        [HttpPost("cancel")]
+        public async Task<IActionResult> CancelMembership([FromBody] string userId)
+        {
+            try
+            {
+                var success = await _membershipService.CancelMembershipAsync(userId);
+
+                if (!success)
+                    return NotFound(new { success = false, message = "User not found or no active membership." });
+
+                return Ok(new { success = true, message = "Membership cancelled successfully." });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error cancelling membership.");
+                return StatusCode(500, "Internal server error.");
+            }
+        }
+
+
+
+    }
 }
