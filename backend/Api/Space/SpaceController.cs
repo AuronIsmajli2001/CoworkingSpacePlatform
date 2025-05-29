@@ -2,6 +2,7 @@
 using Application.Services.ISpaceServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Space
 {
@@ -59,8 +60,9 @@ namespace Api.Space
             }
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost(Name = "CreateSpace")]
-        public async Task<IActionResult> CreateSpace([FromForm] SpaceDTOCreate spaceDto,IFormFile image)
+        public async Task<IActionResult> CreateSpace([FromForm] SpaceDTOCreate spaceDto, IFormFile image)
         {
             try
             {
@@ -75,6 +77,7 @@ namespace Api.Space
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff")]
         [HttpPut("{id}",Name = "UpdateSpace")]
         public async Task<IActionResult> UpdateSpace(string id, [FromForm] SpaceDTOUpdate spaceDto)
         {
@@ -91,6 +94,7 @@ namespace Api.Space
             
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}",Name = "DeleteSpace")]
         public async Task<IActionResult> DeleteSpace(string id)
         {

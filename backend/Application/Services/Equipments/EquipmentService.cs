@@ -1,11 +1,13 @@
 ﻿using Application.DTOs.Equipments;
 using Application.DTOs.Spaces;
 using Application.Interfaces.IUnitOfWork;
+using Application.Services.Auth;
 using Application.Services.ImgurUploaderService;
 using Domain.Equipments;
 using Domain.Spaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace Application.Services.Equipments
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<EquipmentService> _logger;
-        public EquipmentService(IUnitOfWork unitOfWork,ILogger<EquipmentService> logger) 
+        public EquipmentService(IUnitOfWork unitOfWork,ILogger<EquipmentService> logger,IAuthService authService) 
         {
             _unitOfWork = unitOfWork;
             _logger = logger;

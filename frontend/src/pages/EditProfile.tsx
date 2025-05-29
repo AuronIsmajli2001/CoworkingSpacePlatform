@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import { User } from "lucide-react";
 
 //@ts-ignore
@@ -52,7 +52,7 @@ const EditProfile = () => {
         if (!userId) return;
         setUserId(userId);
         // Fetch user profile from backend for sidebar only
-        axios.get(`${baseUrl}/User/${userId}`).then(res => {
+        api.get(`${baseUrl}/User/${userId}`).then(res => {
           setSidebarProfile({
             firstName: res.data.firstName || "",
             lastName: res.data.lastName || "",
@@ -62,9 +62,17 @@ const EditProfile = () => {
           });
         }).catch(err => {
           console.error("Failed to fetch user profile:", err);
+          if (err.response) {
+            setError(err.response.data?.message || "Failed to fetch profile");
+          } else if (err.request) {
+            setError("Network error. Please check your connection");
+          } else {
+            setError("An unexpected error occurred");
+          }
         });
       } catch (error) {
         console.error("Error decoding token:", error);
+        setError("Invalid authentication token");
       }
     }
   }, []);
@@ -91,7 +99,7 @@ const EditProfile = () => {
     };
 
     try {
-      const response = await axios.put(
+      const response = await api.put(
         `${baseUrl}/User/${userId}`,
         updateData,
         {
@@ -106,10 +114,21 @@ const EditProfile = () => {
         setProfileData(prev => ({ ...prev, password: "" }));
       }
     } catch (err: any) {
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      if (err.response) {
+        if (err.response.status === 400) {
+          setError("Invalid input data. Please check your information.");
+        } else if (err.response.status === 401) {
+          setError("Unauthorized. Please log in again.");
+          navigate("/auth");
+        } else if (err.response.status === 500) {
+          setError("Server error. Please try again later.");
+        } else {
+          setError(err.response.data?.message || "Failed to update profile");
+        }
+      } else if (err.request) {
+        setError("Network error. Please check your connection");
       } else {
-        setError("Failed to update profile. Please try again.");
+        setError("An unexpected error occurred");
       }
     }
   };

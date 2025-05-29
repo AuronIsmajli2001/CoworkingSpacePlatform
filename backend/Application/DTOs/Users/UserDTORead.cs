@@ -15,5 +15,6 @@ namespace Application.DTOs.Users
         public bool Active { get; set; }
         public string MembershipId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int TokenVersion { get; set; }
     }
 }

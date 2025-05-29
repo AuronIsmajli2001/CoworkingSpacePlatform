@@ -4,15 +4,14 @@ import { useState } from "react";
 import { Pencil, Trash2, Plus, Download } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-
 //@ts-ignore
-  const baseUrl = import.meta.env.VITE_API_BASE_URL;
-  //@ts-ignore
-  const frontUrl = import.meta.env.VITE_FRONTEND_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+//@ts-ignore
+const frontUrl = import.meta.env.VITE_FRONTEND_URL;
 
 type User = {
   id: string;
@@ -119,17 +118,15 @@ const Reservations = () => {
         setError(null);
 
         // Fetch users
-        const usersResponse = await axios.get(`${baseUrl}/User`);
+        const usersResponse = await api.get(`${baseUrl}/User`);
         setUsers(usersResponse.data);
 
         // Fetch spaces
-        const spacesResponse = await axios.get(`${baseUrl}/Space`);
+        const spacesResponse = await api.get(`${baseUrl}/Space`);
         setSpaces(spacesResponse.data);
 
         // Fetch reservations
-        const reservationsResponse = await axios.get(
-          `${baseUrl}/reservation`
-        );
+        const reservationsResponse = await api.get(`${baseUrl}/reservation`);
 
         const mappedReservations = reservationsResponse.data.map((res: any) => ({
           id: res.id,
@@ -158,16 +155,26 @@ const Reservations = () => {
         }));
 
         setReservations(mappedReservations);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch data:", error);
-        setError("Failed to load data. Please try again later.");
+        if (error.response) {
+          if (error.response.status === 401) {
+            navigate("/auth");
+          } else {
+            setError(error.response.data?.message || "Failed to load data. Please try again later.");
+          }
+        } else if (error.request) {
+          setError("Network error. Please check your connection.");
+        } else {
+          setError("An unexpected error occurred.");
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const indexOfLastReservation = currentPage * reservationsPerPage;
   const indexOfFirstReservation = indexOfLastReservation - reservationsPerPage;
@@ -194,12 +201,22 @@ const Reservations = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${baseUrl}/Reservation/${id}`);
+      await api.delete(`${baseUrl}/Reservation/${id}`);
       setReservations((prev) => prev.filter((res) => res.id !== id));
       setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to delete reservation:", error);
-      setError("Failed to delete reservation. Please try again later.");
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          setError(error.response.data?.message || "Failed to delete reservation. Please try again later.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -207,7 +224,7 @@ const Reservations = () => {
     try {
       await Promise.all(
         selectedReservations.map((id) =>
-          axios.delete(`${baseUrl}/Reservation/${id}`)
+          api.delete(`${baseUrl}/Reservation/${id}`)
         )
       );
       setReservations((prev) =>
@@ -215,9 +232,19 @@ const Reservations = () => {
       );
       setSelectedReservations([]);
       setShowConfirmModal(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to delete reservations:", error);
-      setError("Failed to delete reservations. Please try again later.");
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          setError(error.response.data?.message || "Failed to delete reservations. Please try again later.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -235,7 +262,7 @@ const Reservations = () => {
         status: updatedReservation.status,
       };
 
-      await axios.put(
+      await api.put(
         `${baseUrl}/Reservation/${updatedReservation.id}`,
         payload
       );
@@ -246,9 +273,19 @@ const Reservations = () => {
         )
       );
       setEditingReservation(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to update reservation:", error);
-      setError("Failed to update reservation. Please try again later.");
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          setError(error.response.data?.message || "Failed to update reservation. Please try again later.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 
@@ -264,7 +301,7 @@ const Reservations = () => {
         status: ReservationStatus.Confirmed,
       };
 
-      const response = await axios.post(
+      const response = await api.post(
         `${baseUrl}/Reservation`,
         payload
       );
@@ -294,9 +331,19 @@ const Reservations = () => {
       setReservations([...reservations, newReservationWithId]);
       setShowAddModal(false);
       resetNewReservationForm();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to add reservation:", error);
-      setError("Failed to add reservation. Please try again later.");
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          setError(error.response.data?.message || "Failed to add reservation. Please try again later.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else {
+        setError("An unexpected error occurred.");
+      }
     }
   };
 

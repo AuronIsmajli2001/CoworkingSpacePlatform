@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -66,8 +66,8 @@ const Equipment = () => {
   }, [notification]);
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/Equipment`)
+    api
+      .get(`/Equipment`)
       .then((res) => {
         if (Array.isArray(res.data)) {
           setEquipment(res.data);
@@ -99,7 +99,7 @@ const Equipment = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/Equipment/${id}`);
+      await api.delete(`/Equipment/${id}`);
       setEquipment((prev) => prev.filter((eq) => eq.id !== id));
       setSelectedEquipment((prev) => prev.filter((eqId) => eqId !== id));
       setNotification({ message: "Equipment successfully deleted.", type: "success" });
@@ -113,7 +113,7 @@ const Equipment = () => {
     try {
       await Promise.all(
         selectedEquipment.map((id) =>
-          axios.delete(`${import.meta.env.VITE_API_BASE_URL}/Equipment/${id}`)
+          api.delete(`/Equipment/${id}`)
         )
       );
       setEquipment((prev) => prev.filter((eq) => !selectedEquipment.includes(eq.id)));
@@ -128,8 +128,8 @@ const Equipment = () => {
   const handleSaveEdit = async () => {
     if (editingEquipment) {
       try {
-        await axios.put(
-          `${import.meta.env.VITE_API_BASE_URL}/Equipment/${editingEquipment.id}`,
+        await api.put(
+          `/Equipment/${editingEquipment.id}`,
           {
             type: editingEquipment.type,
             name: editingEquipment.name,
@@ -137,7 +137,7 @@ const Equipment = () => {
             price_per_piece: editingEquipment.price_per_piece
           }
         );
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/Equipment`);
+        const res = await api.get(`/Equipment`);
         setEquipment(res.data);
         setEditingEquipment(null);
         setNotification({ message: "Equipment successfully updated.", type: "success" });
@@ -155,8 +155,8 @@ const Equipment = () => {
     }
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/Equipment`, newEquipment);
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/Equipment`);
+      await api.post(`/Equipment`, newEquipment);
+      const res = await api.get(`/Equipment`);
       setEquipment(res.data);
       setShowAddModal(false);
       setNewEquipment({

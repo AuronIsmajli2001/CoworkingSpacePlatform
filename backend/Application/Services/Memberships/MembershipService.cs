@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Application.Services.Users;
 using Application.Services.IUserServices;
+using Application.Services.Auth;
+using Newtonsoft.Json.Linq;
 
 namespace Application.Services.Memberships
 {
@@ -16,17 +18,14 @@ namespace Application.Services.Memberships
         private readonly ILogger<MembershipService> _logger;
         private readonly IUserService _userService;
 
-        public MembershipService(
-            IUnitOfWork unitOfWork,
-            ILogger<MembershipService> logger,
-            IUserService userService)
+        public MembershipService(IUnitOfWork unitOfWork, ILogger<MembershipService> logger, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
             _userService = userService;
         }
 
-        public async Task<bool> CreateAsync(MembershipDTOCreate membershipDTO)
+        public async Task<bool> CreateMembershipAsync(MembershipDTOCreate membershipDTO)
         {
             try
             {
@@ -53,7 +52,7 @@ namespace Application.Services.Memberships
             }
         }
 
-        public async Task<List<MembershipDTORead>> GetAllAsync()
+        public async Task<List<MembershipDTORead>> GetAllMembershipsAsync()
         {
             _logger.LogInformation("Fetching all memberships from the database.");
 
@@ -77,7 +76,7 @@ namespace Application.Services.Memberships
             return membershipDTOs;
         }
 
-        public async Task<MembershipDTORead> GetByIdAsync(string id)
+        public async Task<MembershipDTORead> GetMembershipByIdAsync(string id)
         {
             try
             {
@@ -170,7 +169,7 @@ namespace Application.Services.Memberships
             }
         }
 
-        public async Task<bool> DeleteAsync(string id)
+        public async Task<bool> DeleteMembershipAsync(string id)
         {
             try
             {
@@ -196,31 +195,26 @@ namespace Application.Services.Memberships
             }
         }
 
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            return await _unitOfWork.Repository<User>().GetByIdAsync(userId);
-        }
-
         public async Task<bool> AssignMembershipToUserAsync(string userId, string membershipId)
         {
-            var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
-            if (user == null) return false;
-
-            user.MembershipId = membershipId;
-            _unitOfWork.Repository<User>().Update(user);
-            await _unitOfWork.CompleteAsync();
-            return true;
+            var person = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
+            if(person.MembershipId != null)
+            {
+                person.MembershipId = membershipId;
+                _unitOfWork.Repository<User>().Update(person);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            _logger.LogInformation("User has already a membership");
+            return false;
         }
 
         public async Task<MembershipDTORead> GetUserMembershipAsync(string userId)
         {
             _logger.LogInformation($"Fetching membership for user {userId}");
 
-            _logger.LogInformation("Start GetUserMembershipAsync");
-            _logger.LogInformation($"User ID received: {userId}");
-
-            var user = await GetUserByIdAsync(userId);
-
+            var user = await _userService.GetUserByIdAsync(userId);
+            
             if (user == null)
             {
                 _logger.LogWarning($"No user found with ID: {userId}");
@@ -234,11 +228,21 @@ namespace Application.Services.Memberships
                 _logger.LogInformation($"User {userId} has no membership assigned.");
                 return null;
             }
-
+            var s = await GetMembershipByIdAsync(user.MembershipId);
             _logger.LogInformation($"Fetching membership with ID: {user.MembershipId} for user {userId}");
 
-            return await GetByIdAsync(user.MembershipId);
-
+            return new MembershipDTORead
+            {
+                Id = s.Id,
+                Title = s.Title,
+                Price = s.Price,
+                IncludesVAT = s.IncludesVAT,
+                BillingType = s.BillingType,
+                Description = s.Description,
+                AdditionalServices = s.AdditionalServices,
+                Created_At = s.Created_At,
+                isActive = s.isActive,
+            };
         }
 
         public async Task<bool> CancelMembershipAsync(string userId)

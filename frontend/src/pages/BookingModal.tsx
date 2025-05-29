@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, Calendar, CreditCard, Building, Check } from "lucide-react";
-import axios from "axios";
+import api from "../api/axiosConfig";
+import { AxiosError } from "axios";
 import { useAuth } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -64,7 +65,7 @@ export default function BookingModal({
         amount: Number(plan.price.replace(/[^0-9.-]+/g, "")),
       });
 
-      const response = await axios.post(
+      const response = await api.post(
         `${baseUrl}/Membership/confirm`,
         {
           userId: user.userId,
@@ -91,7 +92,7 @@ export default function BookingModal({
         setError(response.data.message); // 👈 Shows message like "User already has membership"
       }
     } catch (err) {
-      if (axios.isAxiosError(err)) {
+      if (err instanceof AxiosError) {
         setError(err.response?.data?.message || "Failed to confirm membership");
       } else {
         setError("An unexpected error occurred");

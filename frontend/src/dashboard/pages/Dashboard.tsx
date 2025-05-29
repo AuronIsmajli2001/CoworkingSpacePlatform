@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import Sidebar from "../components/Sidebar";
 import { IconType } from "react-icons";
 import { FiUsers, FiCalendar, FiMapPin, FiDollarSign } from "react-icons/fi";
@@ -121,9 +121,9 @@ const Dashboard = () => {
       try {
         const [usersResponse, reservationsResponse, spacesResponse] =
           await Promise.all([
-            axios.get(`${baseUrl}/User`),
-            axios.get(`${baseUrl}/reservation`),
-            axios.get(`${baseUrl}/Space`),
+            api.get(`/User`),
+            api.get(`/reservation`),
+            api.get(`/Space`),
           ]);
 
         // Calculate statistics

@@ -1,19 +1,13 @@
 ﻿using Application.DTOs.Spaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Application.Services.ISpaceServices;
 using Domain.Spaces;
 using Application.Interfaces.IUnitOfWork;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http.Internal;
 using Application.Services.ImgurUploaderService;
 using Microsoft.AspNetCore.Http;
-using System.Diagnostics;
-using System.Xml.Linq;
+using Application.Services.Auth;
+using Application.Services.Base;
 
 namespace Application.Services.Spaces
 {
@@ -22,14 +16,16 @@ namespace Application.Services.Spaces
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<SpaceService> _logger;
 
-        public SpaceService(IUnitOfWork unitOfWork, ILogger<SpaceService> logger)
+        public SpaceService(
+            IUnitOfWork unitOfWork, 
+            ILogger<SpaceService> logger) 
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
-        public async Task<bool> CreateSpaceAsync(SpaceDTOCreate spaceDTO,IFormFile imageFile)
-        {
+        public async Task<bool> CreateSpaceAsync(SpaceDTOCreate spaceDTO, IFormFile imageFile)
+        {    
             try
             {
                 _logger.LogInformation("Creating a new space with Name: {Name}", spaceDTO.Name);
@@ -46,7 +42,7 @@ namespace Application.Services.Spaces
                     Image_URL = null
                 };
 
-            if (imageFile != null)
+                if (imageFile != null)
                 {
                     if (imageFile.Length > 0)
                     {
@@ -56,9 +52,6 @@ namespace Application.Services.Spaces
                             await imageFile.CopyToAsync(stream);
                         }
                         var imageUrl = await ImageUploaderService.UploadToImgur(tempFilePath, "YOUR_API_KEY");
-                    
-                        
-
                         space.Image_URL = imageUrl;
                         System.IO.File.Delete(tempFilePath);
                     }
@@ -154,7 +147,6 @@ namespace Application.Services.Spaces
                 _logger.LogError(ex, "Error while fetching space with ID: {Id}", id);
                 throw;
             }
-
         }
 
         public async Task<bool> UpdateSpaceAsync(string id, SpaceDTOUpdate spaceDTOUpdate)
@@ -164,10 +156,7 @@ namespace Application.Services.Spaces
                 _logger.LogInformation("Updating space with ID: {Id}", id);
 
                 var image = spaceDTOUpdate.image;
-
                 var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
-
-                var spaces = spaceDTOUpdate;
 
                 if (space != null) 
                 {
@@ -196,7 +185,6 @@ namespace Application.Services.Spaces
                         space.Type = spaceDTOUpdate.Type;
                     }
                     
-                  
                     space.Image_URL = space.Image_URL;
 
                     if (image != null)
@@ -222,50 +210,48 @@ namespace Application.Services.Spaces
                     return true;
                 }
                 return false;
-                
             }
             catch(DbUpdateException dbEx)
             {
                 _logger.LogError(dbEx, "Database error while updating space with ID: {Id} !", id);
                 throw new Exception(dbEx.Message);
             }
-
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while updating space with ID: {Id}", id);
+                _logger.LogError(ex, "Unexpected error while updating space with ID: {Id}", id);
                 throw;
             }
-            
         }
 
         public async Task<bool> DeleteSpaceAsync(string id)
         {
             try
             {
-                var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
+                _logger.LogInformation("Deleting space with ID: {Id}", id);
 
+                var space = await _unitOfWork.Repository<Space>().GetByIdAsync(id);
                 if (space == null)
                 {
-
-                    throw new Exception("Space does not exist");
+                    _logger.LogWarning("Space with ID {Id} not found for deletion.", id);
+                    return false;
                 }
 
                 _unitOfWork.Repository<Space>().Delete(space);
                 await _unitOfWork.CompleteAsync();
+
+                _logger.LogInformation("Successfully deleted space with ID: {Id}", id);
                 return true;
             }
-            catch(DbUpdateException dbEx)
+            catch (DbUpdateException dbEx)
             {
                 _logger.LogError(dbEx, "Database error while deleting space with ID: {Id} !", id);
                 throw new Exception(dbEx.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error while deleting space with ID: {Id}", id);
+                _logger.LogError(ex, "Unexpected error while deleting space with ID: {Id}", id);
                 throw;
             }
-
-            
         }
     }
 }

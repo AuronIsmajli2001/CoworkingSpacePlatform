@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
+//@ts-ignore
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const MyReservations = () => {
   const { user } = useAuth();
@@ -21,8 +24,8 @@ const MyReservations = () => {
       }
 
       try {
-        const response = await axios.get(
-          `http://localhost:5234/Reservation/by-user/${user.userId}`
+        const response = await api.get(
+          `${baseUrl}/Reservation/by-user/${user.userId}`
         );
 
         if (response.data.success === false) {
@@ -37,7 +40,19 @@ const MyReservations = () => {
         }
       } catch (err: any) {
         console.error("API Error:", err);
-        setError(err.response?.data?.message || "Failed to load reservations");
+        if (err.response) {
+          if (err.response.status === 404) {
+            setError("No reservations found");
+          } else if (err.response.status === 500) {
+            setError("Server error. Please try again later");
+          } else {
+            setError(err.response.data?.message || "Failed to load reservations");
+          }
+        } else if (err.request) {
+          setError("Network error. Please check your connection");
+        } else {
+          setError(err.message || "An unexpected error occurred");
+        }
         setReservations([]);
       } finally {
         setLoading(false);

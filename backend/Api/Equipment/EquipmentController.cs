@@ -2,6 +2,7 @@
 using Application.DTOs.Spaces;
 using Application.Services.Equipments;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Equipment
 {
@@ -59,6 +60,7 @@ namespace Api.Equipment
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff")]
         [HttpPost(Name = "CreateEquipment")]
         public async Task<IActionResult> CreateEquipment([FromBody] EquipmentDTOCreate equipmentDTO)
         {
@@ -75,6 +77,7 @@ namespace Api.Equipment
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff")]
         [HttpPut("{id}", Name = "UpdateEquipment")]
         public async Task<IActionResult> UpdateEquipment(string id, [FromBody] EquipmentDTOUpdate equipmentDto)
         {
@@ -88,9 +91,9 @@ namespace Api.Equipment
                 _logger.LogError($"Error in UpdateEquipmentAsync method : {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
-
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff")]
         [HttpDelete("{id}", Name = "DeleteEquipment")]
         public async Task<IActionResult> DeleteEquipment(string id)
         {

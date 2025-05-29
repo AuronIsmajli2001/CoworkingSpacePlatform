@@ -51,7 +51,8 @@ public class AuthService : IAuthService
             new Claim("name", user.UserName),
             new Claim("email", user.Email),
             new Claim("role", user.Role.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim("tokenVersion", user.TokenVersion.ToString()),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())     
         };
 
         var token = new JwtSecurityToken(
@@ -165,8 +166,10 @@ public class AuthService : IAuthService
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,           
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidateAudience = true,             
+                ValidAudience = _configuration["Jwt:Audience"],
                 ValidateLifetime = !ignoreExpiration,
                 ClockSkew = TimeSpan.Zero
             };

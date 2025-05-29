@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.DTOs.ReservationEquipments;
+﻿using Application.DTOs.ReservationEquipments;
 using Application.Interfaces.IUnitOfWork;
-using Domain.Equipments;
+using Application.Services.Auth;
 using Domain.ReservationEquipments;
-using Domain.Reservations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +12,7 @@ namespace Application.Services.ReservationEquipments
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ReservationEquipmentService> _logger;
 
-        public ReservationEquipmentService(IUnitOfWork unitOfWork, ILogger<ReservationEquipmentService> logger)
+        public ReservationEquipmentService(IUnitOfWork unitOfWork, ILogger<ReservationEquipmentService> logger, IAuthService authService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -37,25 +31,9 @@ namespace Application.Services.ReservationEquipments
             }).ToList();
         }
 
-        /*public async Task<ReservationEquipmentDTORead> GetByIdAsync(string reservationId, string equipmentId)
-        {
-            var entity = await _unitOfWork.Repository<ReservationEquipment>()
-                .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
-                .FirstOrDefaultAsync();
-
-            if (entity == null) return null;
-
-            return new ReservationEquipmentDTORead
-            {
-                ReservationId = entity.ReservationId,
-                EquipmentId = entity.EquipmentId,
-                Quantity = entity.Quantity,
-            };
-        }*/
-
         public async Task<bool> CreateReservationEquipmentAsync(ReservationEquipmentDTOCreate dto)
         {
-            if(dto.EquipmentIds != null && dto.Quantity != null)
+            if (dto.EquipmentIds != null && dto.Quantity != null)
             {
                 if (dto.EquipmentIds.Count != dto.Quantity.Count)
                 {
@@ -112,10 +90,9 @@ namespace Application.Services.ReservationEquipments
 
                 return true;
             }
-            return false;
-
-            
+            return false;  
         }
+
         public async Task<List<ReservationEquipmentDTORead>> GetEquipmentsByReservationIdAsync(string reservationId)
         {
             var items = await _unitOfWork.Repository<ReservationEquipment>()
@@ -129,6 +106,5 @@ namespace Application.Services.ReservationEquipments
                 Quantity = x.Quantity
             }).ToList();
         }
-
     }
 }

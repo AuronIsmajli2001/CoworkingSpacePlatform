@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.ReservationEquipments;
 using Application.Services.ReservationEquipments;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.ReservationEquipments
@@ -17,6 +18,7 @@ namespace Api.ReservationEquipments
             _logger = logger;
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff,User")]
         [HttpPost(Name = "CreateReservationEquipment")]
         public async Task<IActionResult> CreateReservationEquipment([FromBody] ReservationEquipmentDTOCreate dto)
         {

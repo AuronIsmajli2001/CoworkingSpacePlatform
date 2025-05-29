@@ -3,7 +3,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import Sidebar from "../components/Sidebar";
 import React from "react";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -67,7 +67,7 @@ const Spaces = () => {
   }, [navigate]);
 
   useEffect(() => {
-    axios
+    api
       .get(`${baseUrl}/Space`)
       .then((res) => {
         if (Array.isArray(res.data)) {
@@ -88,8 +88,19 @@ const Spaces = () => {
       })
       .catch((err) => {
         console.error("Error fetching spaces:", err);
+        if (err.response) {
+          if (err.response.status === 401) {
+            navigate("/auth");
+          } else {
+            alert("Failed to load spaces. Please try again later.");
+          }
+        } else if (err.request) {
+          alert("Network error. Please check your connection.");
+        } else {
+          alert("An unexpected error occurred.");
+        }
       });
-  }, []);
+  }, [navigate]);
 
   // CRUD Operations
   const toggleSelect = (id: string) => {
@@ -110,23 +121,43 @@ const Spaces = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${baseUrl}/Space/${id}`);
+      await api.delete(`${baseUrl}/Space/${id}`);
       setSpaces((prev) => prev.filter((space) => space.id !== id));
-    } catch (err) {
-      alert("Failed to delete space. Please try again.");
-      console.error(err);
+    } catch (err: any) {
+      console.error("Failed to delete space:", err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          navigate("/auth");
+        } else {
+          alert(err.response.data?.message || "Failed to delete space. Please try again.");
+        }
+      } else if (err.request) {
+        alert("Network error. Please check your connection.");
+      } else {
+        alert("An unexpected error occurred.");
+      }
     }
   };
 
   const handleBulkDelete = async () => {
     try {
-      await Promise.all(selectedSpaces.map(id => axios.delete(`${baseUrl}/Space/${id}`)));
+      await Promise.all(selectedSpaces.map(id => api.delete(`${baseUrl}/Space/${id}`)));
       setSpaces((prev) => prev.filter((space) => !selectedSpaces.includes(space.id)));
       setSelectedSpaces([]);
       setShowConfirmModal(false);
-    } catch (err) {
-      alert("Failed to delete selected spaces. Please try again.");
-      console.error(err);
+    } catch (err: any) {
+      console.error("Failed to delete spaces:", err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          navigate("/auth");
+        } else {
+          alert(err.response.data?.message || "Failed to delete selected spaces. Please try again.");
+        }
+      } else if (err.request) {
+        alert("Network error. Please check your connection.");
+      } else {
+        alert("An unexpected error occurred.");
+      }
     }
   };
 
@@ -147,11 +178,11 @@ const Spaces = () => {
         if (editingImage) {
           formData.append("image", editingImage);
         }
-        await axios.put(`${baseUrl}/Space/${editingSpace.id}`, formData, {
+        await api.put(`${baseUrl}/Space/${editingSpace.id}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         // Fetch all spaces after update
-        const res = await axios.get(`${baseUrl}/Space`);
+        const res = await api.get(`${baseUrl}/Space`);
         if (Array.isArray(res.data)) {
           const mappedSpaces = res.data.map((space: any) => ({
             id: space.id,
@@ -167,9 +198,19 @@ const Spaces = () => {
         }
         setEditingSpace(null);
         setEditingImage(null);
-      } catch (err) {
-        alert("Failed to update space. Please try again.");
-        console.error(err);
+      } catch (err: any) {
+        console.error("Failed to update space:", err);
+        if (err.response) {
+          if (err.response.status === 401) {
+            navigate("/auth");
+          } else {
+            alert(err.response.data?.message || "Failed to update space. Please try again.");
+          }
+        } else if (err.request) {
+          alert("Network error. Please check your connection.");
+        } else {
+          alert("An unexpected error occurred.");
+        }
       }
     }
   };
@@ -187,11 +228,26 @@ const Spaces = () => {
         formData.append("image", newSpaceImage);
       }
 
-      await axios.post(`${baseUrl}/Space`, formData, {
+      await api.post(`${baseUrl}/Space`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      // Optionally, refresh the list of spaces here
+      // Refresh the list of spaces
+      const res = await api.get(`${baseUrl}/Space`);
+      if (Array.isArray(res.data)) {
+        const mappedSpaces = res.data.map((space: any) => ({
+          id: space.id,
+          name: space.name,
+          type: space.type,
+          description: space.description,
+          capacity: space.capacity,
+          price: space.price,
+          location: space.location,
+          imageUrl: space.image_URL,
+        }));
+        setSpaces(mappedSpaces);
+      }
+
       setShowAddModal(false);
       setNewSpace({
         name: "",
@@ -202,9 +258,19 @@ const Spaces = () => {
         location: "",
       });
       setNewSpaceImage(null);
-    } catch (err) {
-      alert("Failed to add space. Please try again.");
-      console.error(err);
+    } catch (err: any) {
+      console.error("Failed to add space:", err);
+      if (err.response) {
+        if (err.response.status === 401) {
+          navigate("/auth");
+        } else {
+          alert(err.response.data?.message || "Failed to add space. Please try again.");
+        }
+      } else if (err.request) {
+        alert("Network error. Please check your connection.");
+      } else {
+        alert("An unexpected error occurred.");
+      }
     }
   };
 

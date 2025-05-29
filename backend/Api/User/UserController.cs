@@ -3,6 +3,8 @@ using Application.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Application.Services.IUserServices;
 using Application.DTOs.Spaces;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Api.Users
 {
     [ApiController]
@@ -18,6 +20,7 @@ namespace Api.Users
             _logger = logger;
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff")]
         [HttpPost(Name = "CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTOCreate userDto)
         {
@@ -33,12 +36,13 @@ namespace Api.Users
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff,User")]
         [HttpGet("{id}", Name = "GetUserById")]
-        public async Task<IActionResult> GetUserById(Guid id)
+        public async Task<IActionResult> GetUserById(string id)
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id.ToString());
+                var user = await _userService.GetUserByIdAsync(id);
                 if (user == null)
                     return NotFound("User not found.");
 
@@ -51,6 +55,7 @@ namespace Api.Users
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff")]
         [HttpGet(Name = "GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -66,6 +71,7 @@ namespace Api.Users
             }
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPut("{id}/role", Name = "DeactivateOrUpdateUserRole")]
         public async Task<IActionResult> UpdateRoleUser(string id, [FromBody] UserRoleDtoUpdate userDto)
         {
@@ -81,6 +87,7 @@ namespace Api.Users
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff,User")]
         [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserDTOUpdate userDto)
         {
@@ -94,9 +101,9 @@ namespace Api.Users
                 _logger.LogError($"Error in UpdateUserAsync method : {ex.Message}");
                 return StatusCode(500, "Internal server error");
             }
-
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
@@ -111,7 +118,5 @@ namespace Api.Users
                 return StatusCode(500, "Internal server error");
             }
         }
-
-        
     }
 }

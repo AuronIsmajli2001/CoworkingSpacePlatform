@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.Memberships;
+using Application.Services.IUserServices;
 using Application.Services.Memberships;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,19 +13,22 @@ namespace Api.Membership
     {
         private readonly IMembershipService _membershipService;
         private readonly ILogger<MembershipController> _logger;
+        private readonly IUserService _userService;
 
-        public MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger)
+        public MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger, IUserService userService)
         {
             _membershipService = membershipService;
             _logger = logger;
+            _userService = userService; 
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost(Name = "CreateMembership")]
         public async Task<IActionResult> CreateMembership([FromBody] MembershipDTOCreate dto)
         {
             try
             {
-                await _membershipService.CreateAsync(dto);
+                await _membershipService.CreateMembershipAsync(dto);
                 return Ok("Membership created successfully.");
             }
             catch (Exception ex)
@@ -38,7 +43,7 @@ namespace Api.Membership
         {
             try
             {
-                var memberships = await _membershipService.GetAllAsync();
+                var memberships = await _membershipService.GetAllMembershipsAsync();
                 return Ok(memberships);
             }
             catch (Exception ex)
@@ -53,7 +58,7 @@ namespace Api.Membership
         {
             try
             {
-                var membership = await _membershipService.GetByIdAsync(id);
+                var membership = await _membershipService.GetMembershipByIdAsync(id);
                 if (membership == null)
                 {
                     return Ok(new
@@ -73,6 +78,7 @@ namespace Api.Membership
             }
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPut("{id}",Name = "UpdateMembership")]
         public async Task<IActionResult> UpdateMembership(string id, [FromBody] MembershipDTOUpdate dto)
         {
@@ -89,13 +95,13 @@ namespace Api.Membership
                 return StatusCode(500, "Internal server error");
             }
         }
-
+        [Authorize(Roles = "SuperAdmin")]
         [HttpDelete("{id}", Name = "DeleteMembership")]
         public async Task<IActionResult> DeleteMembership(string id)
         {
             try
             {
-                var result = await _membershipService.DeleteAsync(id);
+                var result = await _membershipService.DeleteMembershipAsync(id);
                 return Ok("Membership deleted successfully.");
             }
             catch (Exception ex)
@@ -105,26 +111,12 @@ namespace Api.Membership
             }
         }
 
-
+        [Authorize(Roles = "SuperAdmin,Staff,User")]
         [HttpPost("confirm")]
         public async Task<IActionResult> ConfirmMembership([FromBody] ConfirmMembershipDTO dto)
         {
             try
             {
-                var user = await _membershipService.GetUserByIdAsync(dto.UserId); 
-                if (user == null)
-                    return NotFound("User not found.");
-
-                if (user.MembershipId != null)
-                {
-                    return Ok(new
-                    {
-                        success = false,
-                        message = "You already have an active membership. Cancel it before purchasing a new one\""
-                    });
-                }
-
-
                 var success = await _membershipService.AssignMembershipToUserAsync(dto.UserId, dto.MembershipId);
 
                 if (!success)
@@ -139,6 +131,7 @@ namespace Api.Membership
             }
         }
 
+        [Authorize(Roles = "SuperAdmin,Staff,User")]
         [HttpGet("by-user/{userId}", Name = "GetUserMembership")]
         public async Task<IActionResult> GetUserMembership(string userId)
         {
@@ -168,7 +161,7 @@ namespace Api.Membership
             }
         }
 
-
+        [Authorize(Roles = "SuperAdmin,Staff,User")]
         [HttpPost("cancel")]
         public async Task<IActionResult> CancelMembership([FromBody] string userId)
         {
@@ -187,8 +180,5 @@ namespace Api.Membership
                 return StatusCode(500, "Internal server error.");
             }
         }
-
-
-
     }
 }

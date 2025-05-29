@@ -5,10 +5,12 @@ using Application.DTOs.Reservations;
 using Application.DTOs.Spaces;
 using Application.DTOs.Users;
 using Application.Interfaces.IUnitOfWork;
+using Application.Services.Auth;
 using Application.Services.ReservationEquipments;
 using Domain.Reservations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace Application.Services.Reservations
 {
@@ -18,10 +20,7 @@ namespace Application.Services.Reservations
         private readonly ILogger<ReservationService> _logger;
         private readonly IReservationEquipmentService _reservationEquipmentService;
 
-        public ReservationService(
-            IUnitOfWork unitOfWork,
-            ILogger<ReservationService> logger,
-            IReservationEquipmentService reservationEquipmentService)
+        public ReservationService(IUnitOfWork unitOfWork,ILogger<ReservationService> logger,IReservationEquipmentService reservationEquipmentService,IAuthService authService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
@@ -186,9 +185,6 @@ namespace Application.Services.Reservations
                 _logger.LogError(ex, "Error while deleting reservation with ID: {Id}", id);
                 throw;
             }
-
-
-
         }
 
         public async Task<List<ReservationDTORead>> GetReservationsByUserIdAsync(string userId)
@@ -229,7 +225,6 @@ namespace Application.Services.Reservations
                     } : null
                 });
             }
-
             return result;
         }
 

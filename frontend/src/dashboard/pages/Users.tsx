@@ -3,7 +3,7 @@ import { saveAs } from "file-saver";
 import Sidebar from "../components/Sidebar";
 import { Pencil, Trash2 } from "lucide-react";
 import React from "react";
-import axios from "axios";
+import api from "../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -57,7 +57,7 @@ const Users = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/User`);
+        const response = await api.get(`${baseUrl}/User`);
 
         const mappedUsers = response.data.map((user: any) => ({
           id: user.id,
@@ -70,13 +70,24 @@ const Users = () => {
           )}.jpg`,
         }));
         setUsers(mappedUsers);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching users:", error);
+        if (error.response) {
+          if (error.response.status === 401) {
+            navigate("/auth");
+          } else {
+            alert(error.response.data?.message || "Failed to load users");
+          }
+        } else if (error.request) {
+          alert("Network error. Please check your connection");
+        } else {
+          alert("An unexpected error occurred");
+        }
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [navigate]);
 
   type User = {
     id: number;
@@ -107,7 +118,7 @@ const Users = () => {
     try {
       if (userToDelete !== null) {
         // Single user deletion
-        const response = await axios.delete(`${baseUrl}/User/${userToDelete}`);
+        const response = await api.delete(`${baseUrl}/User/${userToDelete}`);
         if (response.status === 200) {
           setUsers((prev) => prev.filter((user) => user.id !== userToDelete));
           setUserToDelete(null);
@@ -115,7 +126,7 @@ const Users = () => {
       } else {
         // Bulk deletion
         const deletePromises = selectedUsers.map(userId => 
-          axios.delete(`${baseUrl}/User/${userId}`)
+          api.delete(`${baseUrl}/User/${userId}`)
         );
         await Promise.all(deletePromises);
         setUsers((prev) =>
@@ -124,9 +135,19 @@ const Users = () => {
         setSelectedUsers([]);
       }
       setShowConfirmModal(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting user(s):", error);
-      alert("Failed to delete user(s). Please try again.");
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          alert(error.response.data?.message || "Failed to delete user(s)");
+        }
+      } else if (error.request) {
+        alert("Network error. Please check your connection");
+      } else {
+        alert("An unexpected error occurred");
+      }
     }
   };
 
@@ -179,6 +200,97 @@ const Users = () => {
   const [showRoleFilter, setShowRoleFilter] = useState(false);
   const [filterRole, setFilterRole] = useState("All");
   const [filterStatus, setFilterStatus] = useState("All");
+
+  const handleAddUser = async () => {
+    if (!validateFields()) return;
+
+    try {
+      const userName = `${newUser.firstName.toLowerCase()}.${newUser.lastName.toLowerCase()}`;
+      const response = await api.post(`${baseUrl}/User`, {
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        userName: userName,
+        email: newUser.email,
+        password: newUser.password,
+        role: newUser.role
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        // Refresh the users list
+        const usersResponse = await api.get(`${baseUrl}/User`);
+        const mappedUsers = usersResponse.data.map((user: any) => ({
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          role: user.role,
+          status: user.active ? "Active" : "Inactive",
+          avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(
+            Math.random() * 10
+          )}.jpg`,
+        }));
+        setUsers(mappedUsers);
+        
+        setShowAddModal(false);
+        setNewUser({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          role: "User",
+          status: "Active"
+        });
+      }
+    } catch (error: any) {
+      console.error("Error adding user:", error);
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          alert(error.response.data?.message || "Failed to add user");
+        }
+      } else if (error.request) {
+        alert("Network error. Please check your connection");
+      } else {
+        alert("An unexpected error occurred");
+      }
+    }
+  };
+
+  const handleEditUser = async () => {
+    try {
+      const response = await api.put(
+        `${baseUrl}/User/${editUserEditable?.id}/role`,
+        {
+          role: editUserEditable?.role,
+          isActive: editUserEditable?.status === "Active"
+        }
+      );
+
+      if (response.status === 200) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === editUserEditable?.id ? editUserEditable : u
+          )
+        );
+        setShowEditModal(false);
+        setEditUser(null);
+        setEditUserEditable(null);
+      }
+    } catch (error: any) {
+      console.error("Error updating user:", error);
+      if (error.response) {
+        if (error.response.status === 401) {
+          navigate("/auth");
+        } else {
+          alert(error.response.data?.message || "Failed to update user");
+        }
+      } else if (error.request) {
+        alert("Network error. Please check your connection");
+      } else {
+        alert("An unexpected error occurred");
+      }
+    }
+  };
 
   return (
     <div className="flex h-screen">
@@ -521,31 +633,7 @@ const Users = () => {
                     Cancel
                   </button>
                   <button
-                    onClick={async () => {
-                      try {
-                        const response = await axios.put(
-                          `${baseUrl}/User/${editUserEditable.id}/role`,
-                          {
-                            role: editUserEditable.role,
-                            isActive: editUserEditable.status === "Active"
-                          }
-                        );
-
-                        if (response.status === 200) {
-                          setUsers((prev) =>
-                            prev.map((u) =>
-                              u.id === editUserEditable.id ? editUserEditable : u
-                            )
-                          );
-                          setShowEditModal(false);
-                          setEditUser(null);
-                          setEditUserEditable(null);
-                        }
-                      } catch (error) {
-                        console.error("Error updating user:", error);
-                        alert("Failed to update user. Please try again.");
-                      }
-                    }}
+                    onClick={handleEditUser}
                     className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white"
                   >
                     Save Changes
@@ -651,50 +739,7 @@ const Users = () => {
                     Cancel
                   </button>
                   <button
-                    onClick={async () => {
-                      if (!validateFields()) return;
-
-                      try {
-                        const userName = `${newUser.firstName.toLowerCase()}.${newUser.lastName.toLowerCase()}`;
-                        const response = await axios.post(`${baseUrl}/User`, {
-                          firstName: newUser.firstName,
-                          lastName: newUser.lastName,
-                          userName: userName,
-                          email: newUser.email,
-                          password: newUser.password,
-                          role: newUser.role
-                        });
-
-                        if (response.status === 200 || response.status === 201) {
-                          // Refresh the users list
-                          const usersResponse = await axios.get(`${baseUrl}/User`);
-                          const mappedUsers = usersResponse.data.map((user: any) => ({
-                            id: user.id,
-                            name: `${user.firstName} ${user.lastName}`,
-                            email: user.email,
-                            role: user.role,
-                            status: user.active ? "Active" : "Inactive",
-                            avatar: `https://randomuser.me/api/portraits/lego/${Math.floor(
-                              Math.random() * 10
-                            )}.jpg`,
-                          }));
-                          setUsers(mappedUsers);
-                          
-                          setShowAddModal(false);
-                          setNewUser({
-                            firstName: "",
-                            lastName: "",
-                            email: "",
-                            password: "",
-                            role: "User",
-                            status: "Active"
-                          });
-                        }
-                      } catch (error) {
-                        console.error("Error adding user:", error);
-                        alert("Failed to add user. Please try again.");
-                      }
-                    }}
+                    onClick={handleAddUser}
                     className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 rounded text-white"
                   >
                     Add User

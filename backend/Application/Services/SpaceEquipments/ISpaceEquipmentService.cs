@@ -10,6 +10,7 @@ namespace Application.Services.SpaceEquipments
 {
     public interface ISpaceEquipmentService
     {
+        Task CreateSpaceEquipmentAsync(SpaceEquipmentDTOCreate spaceEquipmentDTO);
 
     }
 }

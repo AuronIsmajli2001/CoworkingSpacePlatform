@@ -28,8 +28,8 @@ namespace Domain.Users
         public Role Role { get; set; }
         public DateTime Created_at { get; set; }
         public bool Active { get; set; }
+        public int TokenVersion { get; set; } = 0;
         public ICollection<RefreshToken> RefreshTokens { get; set; }
         public Membership Membership { get; set; }
-
     }
 }

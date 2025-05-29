@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
@@ -63,8 +63,8 @@ export default function SpaceDetails() {
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`${baseUrl}/Space/${id}`)
+    api
+      .get(`/Space/${id}`)
       .then((res) => {
         setSpace({
           ...res.data,
@@ -177,8 +177,8 @@ export default function SpaceDetails() {
       const decodedToken = jwtDecode<DecodedToken>(token);
       const reservationId = uuidv4();
 
-      const response = await axios.post(
-        `${baseUrl}/Reservation`,
+      const response = await api.post(
+        `/Reservation`,
         {
           id: reservationId,
           userId: decodedToken.userId,
@@ -187,17 +187,12 @@ export default function SpaceDetails() {
           isPaid: reservationData.paymentMethod === "Card",
           startDateTime: reservationData.startDateTime,
           endDateTime: reservationData.endDateTime,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
 
       if (response.status === 200 || response.status === 201) {
         setCurrentReservationId(reservationId);
-        const equipmentResponse = await axios.get(`${baseUrl}/Equipment`);
+        const equipmentResponse = await api.get(`/Equipment`);
         setEquipmentList(equipmentResponse.data);
         setShowEquipmentModal(true);
       }
@@ -210,7 +205,7 @@ export default function SpaceDetails() {
   const handleEquipmentSubmit = async () => {
     try {
       if (selectedEquipment.length > 0) {
-        await axios.post(`${baseUrl}/ReservationEquipment`, {
+        await api.post(`/ReservationEquipment`, {
           reservationId: currentReservationId,
           equipmentIds: selectedEquipment.map((eq) => eq.equipmentId),
           quantity: selectedEquipment.map((eq) => eq.quantity),
