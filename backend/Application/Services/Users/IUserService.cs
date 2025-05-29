@@ -9,7 +9,7 @@ namespace Application.Services.IUserServices
         Task<List<UserDTORead>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(string id, UserDTOUpdate userDto);
         Task<bool> DeleteUserAsync(string id);
-        Task<bool> DeactivateUserOrChangeRole(string id, UserRoleDtoUpdate dto);
+        Task<bool> DeactivateUserOrChangeRole(string id, UserRoleDtoUpdate dto,string token);
 
     }
 }

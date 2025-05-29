@@ -154,6 +154,32 @@ public class AuthService : IAuthService
         return newUser;
     }
 
+    public ClaimsPrincipal? VerifyToken(string token, bool ignoreExpiration = false)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+
+        try
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = !ignoreExpiration,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
+            return principal;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     private async Task<RefreshToken> CreateRefreshToken(string userId)
     {
         var refreshToken = new RefreshToken
