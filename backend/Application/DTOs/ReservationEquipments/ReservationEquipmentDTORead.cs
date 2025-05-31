@@ -14,6 +14,8 @@ namespace Application.DTOs.ReservationEquipments
         public string ReservationId { get; set; }
         public string EquipmentId { get; set; }
         public int Quantity { get; set; }
-      
+        public string Type { get; set; }
+        public string Name { get; set; }
+
     }
 }

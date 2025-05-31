@@ -83,13 +83,16 @@ namespace Application.Services.ReservationEquipments
         {
             var items = await _unitOfWork.Repository<ReservationEquipment>()
                 .GetByCondition(x => x.ReservationId == reservationId)
+                .Include(x => x.Equipment)
                 .ToListAsync();
 
             return items.Select(x => new ReservationEquipmentDTORead
             {
                 ReservationId = x.ReservationId,
                 EquipmentId = x.EquipmentId,
-                Quantity = x.Quantity
+                Quantity = x.Quantity,
+                Name = x.Equipment.Name,
+                Type = x.Equipment.Type
             }).ToList();
         }
     }

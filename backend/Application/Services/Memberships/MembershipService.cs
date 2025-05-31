@@ -198,7 +198,7 @@ namespace Application.Services.Memberships
         public async Task<bool> AssignMembershipToUserAsync(string userId, string membershipId)
         {
             var person = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
-            if(person.MembershipId != null)
+            if(person.MembershipId == null)
             {
                 person.MembershipId = membershipId;
                 _unitOfWork.Repository<User>().Update(person);

@@ -89,7 +89,6 @@ const Memberships = () => {
     try {
       const response = await api.get(`${baseUrl}/Membership`);
       setMemberships(response.data);
-      setNotification({ message: "Memberships loaded successfully.", type: "success" });
     } catch (err: any) {
       console.error("API Error:", err);
       if (err.response) {
@@ -273,7 +272,6 @@ const Memberships = () => {
 
   return (
     <>
-      <Header />
       <div className="flex h-screen">
         <Sidebar />
         <main className=" w-px flex-1 p-6 overflow-auto bg-gray-900 text-white">

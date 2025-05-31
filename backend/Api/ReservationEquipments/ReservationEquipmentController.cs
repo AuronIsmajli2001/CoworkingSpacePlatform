@@ -35,12 +35,12 @@ namespace Api.ReservationEquipments
         }
 
         [Authorize]
-        [HttpGet("{spaceId}", Name = "GetEquipmentspByReservationId")]
-        public async Task<IActionResult> GetReservationBySpaceId(string spaceId)
+        [HttpGet("{reservationId}", Name = "GetEquipmentspByReservationId")]
+        public async Task<IActionResult> GetReservationBySpaceId(string reservationId)
         {
             try
             {
-                var reservationEquipments = _reservationEquipmentService.GetEquipmentsByReservationIdAsync(spaceId);
+                var reservationEquipments = await _reservationEquipmentService.GetEquipmentsByReservationIdAsync(reservationId);
                 return Ok(reservationEquipments);
             }
             catch (Exception ex)

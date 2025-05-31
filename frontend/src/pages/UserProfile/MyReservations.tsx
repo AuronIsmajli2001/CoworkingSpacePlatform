@@ -13,6 +13,7 @@ const MyReservations = () => {
   const [reservations, setReservations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reservationEquipments, setReservationEquipments] = useState<{ [key: string]: any[] }>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +35,30 @@ const MyReservations = () => {
             setError(response.data.message);
           }
           setReservations([]);
+          setReservationEquipments({});
         } else {
           setReservations(response.data.reservations || []);
           setError(null);
+
+          // Fetch equipments for each reservation
+          const equipmentPromises = (response.data.reservations || []).map(async (reservation: any) => {
+            try {
+              const eqRes = await api.get(`${baseUrl}/ReservationEquipment/${reservation.id}`);
+              console.log('Equipment API response for reservation', reservation.id, eqRes.data);
+              const equipments = eqRes.data.equipments || eqRes.data || [];
+              return { id: reservation.id, equipments };
+            } catch (err) {
+              console.log('Equipment API error for reservation', reservation.id, err);
+              return { id: reservation.id, equipments: [] };
+            }
+          });
+
+          const equipmentResults = await Promise.all(equipmentPromises);
+          const equipmentMap: { [key: string]: any[] } = {};
+          equipmentResults.forEach(({ id, equipments }) => {
+            equipmentMap[id] = equipments;
+          });
+          setReservationEquipments(equipmentMap);
         }
       } catch (err: any) {
         console.error("API Error:", err);
@@ -54,6 +76,7 @@ const MyReservations = () => {
           setError(err.message || "An unexpected error occurred");
         }
         setReservations([]);
+        setReservationEquipments({});
       } finally {
         setLoading(false);
       }
@@ -62,6 +85,12 @@ const MyReservations = () => {
     fetchReservations();
   }, [user?.userId]);
 
+  // Debug log for reservationEquipments state
+  useEffect(() => {
+    if (!loading) {
+      console.log('reservationEquipments state:', reservationEquipments);
+    }
+  }, [reservationEquipments, loading]);
 
   return (
     <>
@@ -97,82 +126,99 @@ const MyReservations = () => {
               </div>
             </div>
           ) : reservations.length > 0 ? (
-            <div className="space-y-6">
-              {reservations.map((reservation, idx) => (
-                <div
-                  key={idx}
-                  className="bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
-                >
-                  <div className="px-6 py-5 bg-green-50 rounded-t-xl">
-                    <h3 className="text-xl font-semibold text-green-800">
-                      Space: {reservation.space?.name || reservation.spaceId}
-                    </h3>
-                  </div>
-                  <div className="border-t border-gray-300 px-6 py-6">
-                    <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div>
-                        <dt className="text-sm font-medium text-gray-600">
-                          Start Date & Time
-                        </dt>
-                        <dd className="mt-1 text-gray-900">
-                          {new Date(reservation.startDateTime).toLocaleString()}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-sm font-medium text-gray-600">
-                          End Date & Time
-                        </dt>
-                        <dd className="mt-1 text-gray-900">
-                          {new Date(reservation.endDateTime).toLocaleString()}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-sm font-medium text-gray-600">
-                          Payment Status
-                        </dt>
-                        <dd className="mt-1 text-gray-900">
-                          {reservation.isPaid ? "Paid" : "Not Paid"}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-sm font-medium text-gray-600">
-                          Status
-                        </dt>
-                        <dd className="mt-1">
-                          <span
-                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                              reservation.status.toLowerCase() === "confirmed"
-                                ? "bg-green-200 text-green-900"
-                                : reservation.status.toLowerCase() === "cancelled"
-                                ? "bg-red-200 text-red-900"
-                                : "bg-gray-200 text-gray-700"
-                            }`}
-                          >
-                            {reservation.status}
-                          </span>
-                        </dd>
-                      </div>
-                    </dl>
+            <>
+              <div className="space-y-6">
+                {reservations.map((reservation, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
+                  >
+                    <div className="px-6 py-5 bg-green-50 rounded-t-xl">
+                      <h3 className="text-xl font-semibold text-green-800">
+                        Space : {reservation.space?.name || reservation.spaceId}
+                      </h3>
+                    </div>
+                    <div className="border-t border-gray-300 px-6 py-6">
+                      <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                          <dt className="text-sm font-medium text-gray-600">
+                            Start Date & Time
+                          </dt>
+                          <dd className="mt-1 text-gray-900">
+                            {new Date(reservation.startDateTime).toLocaleString()}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-gray-600">
+                            End Date & Time
+                          </dt>
+                          <dd className="mt-1 text-gray-900">
+                            {new Date(reservation.endDateTime).toLocaleString()}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-gray-600">
+                            Payment Status
+                          </dt>
+                          <dd className="mt-1 text-gray-900">
+                            {reservation.isPaid ? "Paid" : "Not Paid"}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-gray-600">
+                            Status
+                          </dt>
+                          <dd className="mt-1">
+                            <span
+                              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                                reservation.status.toLowerCase() === "confirmed"
+                                  ? "bg-green-200 text-green-900"
+                                  : reservation.status.toLowerCase() === "cancelled"
+                                  ? "bg-red-200 text-red-900"
+                                  : "bg-gray-200 text-gray-700"
+                              }`}
+                            >
+                              {reservation.status}
+                            </span>
+                          </dd>
+                        </div>
+                      </dl>
 
-                    {/* Show equipments if available */}
+                      {/* Show equipments if available */}
                       <div className="mt-6">
-                      <h4 className="text-md font-semibold text-gray-700 mb-2">
-                        Equipments:
-                      </h4>
-                      {reservation.equipments && reservation.equipments.length > 0 ? (
-                        <ul className="list-disc list-inside text-gray-800">
-                          {reservation.equipments.map((eq: any, i: number) => (
-                            <li key={i}>{eq.name || eq}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-gray-500 text-sm italic">No equipments included.</p>
-                      )}
+                        <h4 className="text-md font-semibold text-gray-700 mb-2">
+                          Equipments:
+                        </h4>
+                        {reservationEquipments[reservation.id] && reservationEquipments[reservation.id].length > 0 ? (
+                          <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200 border">
+                              <thead className="bg-gray-100">
+                                <tr>
+                                  <th className="px-4 bg-green-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
+                                  <th className="px-4 bg-green-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Type</th>
+                                  <th className="px-4 bg-green-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Quantity</th>
+                                </tr>
+                              </thead>
+                              <tbody className="bg-white divide-y divide-gray-200">
+                                {reservationEquipments[reservation.id].map((eq: any, i: number) => (
+                                  <tr key={i}>
+                                    <td className="px-4 py-2 whitespace-nowrap">{eq.name || '-'}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{eq.type || '-'}</td>
+                                    <td className="px-4 py-2 whitespace-nowrap">{eq.quantity || '-'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <p className="text-gray-500 text-sm italic">No equipments included.</p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           ) : (
             <div className="text-center">
               <svg
