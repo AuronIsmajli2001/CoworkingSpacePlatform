@@ -50,7 +50,7 @@ namespace Api.SpaceController
         }
 
         [Authorize(Roles = "SuperAdmin,Staff")]
-        [HttpPost(Name = "UpdateSpaceEquipment")]
+        [HttpPut(Name = "UpdateSpaceEquipment")]
         public async Task<IActionResult> UpdateSpaceEquipment(string spaceId,string equipmentId, int quantity)
         {
             try

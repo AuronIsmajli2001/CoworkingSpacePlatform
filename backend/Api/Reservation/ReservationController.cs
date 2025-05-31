@@ -85,7 +85,7 @@ namespace Api.Reservation
             }
         }
 
-        [Authorizes]
+        [Authorize]
         [HttpDelete("{id}", Name = "DeleteReservation")]
         public async Task<IActionResult> DeleteReservation(string id)
         {

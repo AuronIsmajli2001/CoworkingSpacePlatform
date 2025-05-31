@@ -50,8 +50,8 @@ namespace Api.ReservationEquipments
             }
         }
 
-        [Authorize)]
-        [HttpPost(Name = "UpdateReservationEquipment")]
+        [Authorize]
+        [HttpPut(Name = "UpdateReservationEquipment")]
         public async Task<IActionResult> UpdateReservationEquipment(string reservationId, string equipmentId, int quantity)
         {
             try
