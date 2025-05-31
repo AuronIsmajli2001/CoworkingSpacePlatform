@@ -19,12 +19,6 @@ namespace Api.Space
             _logger = logger;
         }
 
-        [HttpGet("Hi")]
-        public IActionResult getHi()
-        {
-            return Ok();
-        }
-
         [HttpGet("{id}", Name = "GetSpaceById")]
         public async Task<IActionResult> GetSpaceById(string id)
         {

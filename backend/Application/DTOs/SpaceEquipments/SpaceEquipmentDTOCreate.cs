@@ -9,11 +9,8 @@ namespace Application.DTOs.SpaceEquipments
 {
     public class SpaceEquipmentDTOCreate
     {
-        [Required]
-        public string SpaceId { get; set; }  
-        [Required]
-        public string EquipmentId { get; set; } 
-        [Required]
-        public int Quantity { get; set; }
+        public string? SpaceId { get; set; }
+        public List<string>? EquipmentIds { get; set; }
+        public List<int>? Quantity { get; set; }
     }
 }

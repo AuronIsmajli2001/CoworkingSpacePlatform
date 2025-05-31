@@ -12,23 +12,10 @@ namespace Application.Services.ReservationEquipments
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ReservationEquipmentService> _logger;
 
-        public ReservationEquipmentService(IUnitOfWork unitOfWork, ILogger<ReservationEquipmentService> logger, IAuthService authService)
+        public ReservationEquipmentService(IUnitOfWork unitOfWork, ILogger<ReservationEquipmentService> logger)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
-        }
-
-        public async Task<List<ReservationEquipmentDTORead>> GetAllReservationEquipmentsAsync()
-        {
-            var items = await _unitOfWork.Repository<ReservationEquipment>().GetAllAsync();
-
-            return items.Select(x => new ReservationEquipmentDTORead
-            {
-                ReservationId = x.ReservationId,
-                EquipmentId = x.EquipmentId,
-                Quantity = x.Quantity,
-               
-            }).ToList();
         }
 
         public async Task<bool> CreateReservationEquipmentAsync(ReservationEquipmentDTOCreate dto)
@@ -60,7 +47,7 @@ namespace Application.Services.ReservationEquipments
             return false;
         }
 
-        public async Task<bool> UpdateReservationEquipmentAsync(string reservationId, string equipmentId, ReservationEquipmentDTOUpdate dto)
+        public async Task<bool> UpdateReservationEquipmentAsync(string reservationId, string equipmentId, int quantity)
         {
             var entity = await _unitOfWork.Repository<ReservationEquipment>()
             .GetByCondition(x => x.ReservationId == reservationId && x.EquipmentId == equipmentId)
@@ -68,8 +55,7 @@ namespace Application.Services.ReservationEquipments
 
             if(entity != null)
             {
-                entity.Quantity = dto.Quantity;
-
+                entity.Quantity = quantity;
                 _unitOfWork.Repository<ReservationEquipment>().Update(entity);
                 await _unitOfWork.CompleteAsync();
                 return true;

@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.SpaceEquipment
+namespace Application.DTOs.SpaceEquipments
 {
-    public class SpaceEquipmentDTORead
+    public class SpaceEquipmentDTOUpdate
     {
-        public string SpaceId { get; set; }
-        public string EquipmentId { get; set; }
         public int Quantity { get; set; }
     }
 }

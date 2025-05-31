@@ -13,13 +13,11 @@ namespace Api.Membership
     {
         private readonly IMembershipService _membershipService;
         private readonly ILogger<MembershipController> _logger;
-        private readonly IUserService _userService;
 
         public MembershipController(IMembershipService membershipService, ILogger<MembershipController> logger, IUserService userService)
         {
             _membershipService = membershipService;
-            _logger = logger;
-            _userService = userService; 
+            _logger = logger; 
         }
 
         [Authorize(Roles = "SuperAdmin")]
@@ -111,7 +109,7 @@ namespace Api.Membership
             }
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpPost("confirm")]
         public async Task<IActionResult> ConfirmMembership([FromBody] ConfirmMembershipDTO dto)
         {
@@ -131,7 +129,7 @@ namespace Api.Membership
             }
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpGet("by-user/{userId}", Name = "GetUserMembership")]
         public async Task<IActionResult> GetUserMembership(string userId)
         {
@@ -161,7 +159,7 @@ namespace Api.Membership
             }
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpPost("cancel")]
         public async Task<IActionResult> CancelMembership([FromBody] string userId)
         {

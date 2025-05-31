@@ -1,14 +1,9 @@
 ﻿using Application.DTOs.SpaceEquipment;
 using Application.DTOs.SpaceEquipments;
 using Application.Interfaces.IUnitOfWork;
-using Application.Services.Auth;
 using Domain.SpaceEquipments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Application.Services.SpaceEquipments
 {
@@ -23,92 +18,79 @@ namespace Application.Services.SpaceEquipments
             _logger = logger;
         }
 
-        public async Task CreateSpaceEquipmentAsync(SpaceEquipmentDTOCreate spaceEquipmentDTO)
+        public async Task<bool> CreateSpaceEquipmentAsync(SpaceEquipmentDTOCreate dto)
         {
-            try
+            if (dto.EquipmentIds != null && dto.Quantity != null)
             {
-                _logger.LogInformation("Associating EquipmentId: {EquipmentId} with SpaceId: {SpaceId}",
-                    spaceEquipmentDTO.EquipmentId, spaceEquipmentDTO.SpaceId);
-
-                var spaceEquipment = new SpaceEquipment
+                if (dto.EquipmentIds.Count != dto.Quantity.Count)
                 {
-                    SpaceId = spaceEquipmentDTO.SpaceId,
-                    EquipmentId = spaceEquipmentDTO.EquipmentId,
-                    Quantity = spaceEquipmentDTO.Quantity
-                };
+                    throw new ArgumentException("EquipmentIds and Quantity have the same count.");
+                }
 
-                _unitOfWork.Repository<SpaceEquipment>().Create(spaceEquipment);
+                for (int i = 0; i < dto.EquipmentIds.Count(); i++)
+                {
+                    var entity = new SpaceEquipment
+                    {
+                        SpaceId = dto.SpaceId,
+                        EquipmentId = dto.EquipmentIds[i],
+                        Quantity = dto.Quantity[i]
+                    };
+                    if (dto.Quantity[i] <= 0)
+                    {
+                        throw new ArgumentException("Quantity cant be negative or zero!");
+                    }
+                    _unitOfWork.Repository<SpaceEquipment>().Create(entity);
+                }
                 await _unitOfWork.CompleteAsync();
-
-                _logger.LogInformation("Successfully associated EquipmentId: {EquipmentId} with SpaceId: {SpaceId}",
-                    spaceEquipmentDTO.EquipmentId, spaceEquipmentDTO.SpaceId);
+                return true;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while associating EquipmentId: {EquipmentId} with SpaceId: {SpaceId}",
-                    spaceEquipmentDTO.EquipmentId, spaceEquipmentDTO.SpaceId);
-                throw;
-            }
+            return false;
         }
 
-        public async Task<IEnumerable<SpaceEquipmentDTORead>> GetAllSpaceEquipmentsAsync()
+        public async Task<bool> UpdateSpaceEquipmentAsync(string spaceId, string equipmentId, int quantity)
         {
-            try
+            var entity = await _unitOfWork.Repository<SpaceEquipment>()
+            .GetByCondition(x => x.SpaceId == spaceId && x.EquipmentId == equipmentId)
+            .FirstOrDefaultAsync();
+
+            if (entity != null)
             {
-                _logger.LogInformation("Fetching all space-equipment associations.");
+                entity.Quantity = quantity;
 
-                var spaceEquipments = await _unitOfWork.Repository<SpaceEquipment>().GetAllAsync();
-
-                var spaceEquipmentDTOs = spaceEquipments.Select(se => new SpaceEquipmentDTORead
-                {
-                    SpaceId = se.SpaceId,
-                    SpaceName = se.Space.Name,  
-                    EquipmentId = se.EquipmentId,
-                    EquipmentName = se.Equipment.Name, 
-                    Quantity = se.Quantity
-                }).ToList();
-
-                return spaceEquipmentDTOs;
+                _unitOfWork.Repository<SpaceEquipment>().Update(entity);
+                await _unitOfWork.CompleteAsync();
+                return true;
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while fetching all space-equipment associations.");
-                throw;
-            }
+            return false;
         }
 
         public async Task<bool> DeleteSpaceEquipmentAsync(string spaceId, string equipmentId)
         {
-            try
+            var entity = await _unitOfWork.Repository<SpaceEquipment>()
+            .GetByCondition(x => x.SpaceId == spaceId && x.EquipmentId == equipmentId)
+            .FirstOrDefaultAsync();
+
+            if (entity != null)
             {
-                _logger.LogInformation("Removing association between SpaceId: {SpaceId} and EquipmentId: {EquipmentId}",
-                    spaceId, equipmentId);
-
-                var spaceEquipment = await _unitOfWork.Repository<SpaceEquipment>()
-                    .GetByCondition(se => se.SpaceId == spaceId && se.EquipmentId == equipmentId)
-                    .FirstOrDefaultAsync();
-
-                if (spaceEquipment == null)
-                {
-                    _logger.LogWarning("No association found between SpaceId: {SpaceId} and EquipmentId: {EquipmentId}",
-                        spaceId, equipmentId);
-                    return false;
-                }
-
-                _unitOfWork.Repository<SpaceEquipment>().Delete(spaceEquipment);
+                _unitOfWork.Repository<SpaceEquipment>().Delete(entity);
                 await _unitOfWork.CompleteAsync();
-
-                _logger.LogInformation("Successfully removed association between SpaceId: {SpaceId} and EquipmentId: {EquipmentId}",
-                    spaceId, equipmentId);
-
                 return true;
             }
-            catch (Exception ex)
+            return false;
+        }
+
+        public async Task<List<SpaceEquipmentDTORead>> GetEquipmentsBySpaceIdAsync(string spaceId)
+        {
+            var items = await _unitOfWork.Repository<SpaceEquipment>()
+                .GetByCondition(x => x.SpaceId == spaceId)
+                .ToListAsync();
+
+            return items.Select(x => new SpaceEquipmentDTORead
             {
-                _logger.LogError(ex, "Error while removing association between SpaceId: {SpaceId} and EquipmentId: {EquipmentId}",
-                    spaceId, equipmentId);
-                throw;
-            }
+                SpaceId = x.SpaceId,
+                EquipmentId = x.EquipmentId,
+                Quantity = x.Quantity
+            }).ToList();
         }
     }
 }

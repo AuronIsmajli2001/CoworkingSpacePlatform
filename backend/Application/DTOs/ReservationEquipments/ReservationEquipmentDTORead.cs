@@ -12,7 +12,6 @@ namespace Application.DTOs.ReservationEquipments
     public class ReservationEquipmentDTORead
     {
         public string ReservationId { get; set; }
-       
         public string EquipmentId { get; set; }
         public int Quantity { get; set; }
       

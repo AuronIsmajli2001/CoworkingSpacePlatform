@@ -44,7 +44,8 @@ namespace Api.Equipment
             }
         }
 
-        [HttpGet(Name = "GetAllEquipment")]
+        [Authorize]
+        [HttpGet(Name = "GetAllEquipments")]
         public async Task<IActionResult> GetAllSpaces()
         {
             try

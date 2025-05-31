@@ -10,11 +10,9 @@ namespace Application.Services.ReservationEquipments
 {
     public interface IReservationEquipmentService
     {
-        Task<List<ReservationEquipmentDTORead>> GetAllReservationEquipmentsAsync();
         Task<bool> CreateReservationEquipmentAsync(ReservationEquipmentDTOCreate dto);
-        Task<bool> UpdateReservationEquipmentAsync(string reservationId, string equipmentId, ReservationEquipmentDTOUpdate dto);
+        Task<bool> UpdateReservationEquipmentAsync(string reservationId, string equipmentId, int quantity);
         Task<bool> DeleteReservationEquipmentAsync(string reservationId, string equipmentId);
         Task<List<ReservationEquipmentDTORead>> GetEquipmentsByReservationIdAsync(string reservationId);
-
     }
 }

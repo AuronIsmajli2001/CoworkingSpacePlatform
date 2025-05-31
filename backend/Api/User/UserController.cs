@@ -36,7 +36,7 @@ namespace Api.Users
             }
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpGet("{id}", Name = "GetUserById")]
         public async Task<IActionResult> GetUserById(string id)
         {
@@ -87,7 +87,7 @@ namespace Api.Users
             }
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserDTOUpdate userDto)
         {

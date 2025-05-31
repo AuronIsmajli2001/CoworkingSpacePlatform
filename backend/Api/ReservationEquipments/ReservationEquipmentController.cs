@@ -18,14 +18,14 @@ namespace Api.ReservationEquipments
             _logger = logger;
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpPost(Name = "CreateReservationEquipment")]
         public async Task<IActionResult> CreateReservationEquipment([FromBody] ReservationEquipmentDTOCreate dto)
         {
             try
             {
                 await _reservationEquipmentService.CreateReservationEquipmentAsync(dto);
-                return Ok("Reservation created successfully.");
+                return Ok("ReservationEquipment created successfully.");
             }
             catch (Exception ex)
             {
@@ -33,5 +33,54 @@ namespace Api.ReservationEquipments
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [Authorize]
+        [HttpGet("{spaceId}", Name = "GetEquipmentspByReservationId")]
+        public async Task<IActionResult> GetReservationBySpaceId(string spaceId)
+        {
+            try
+            {
+                var reservationEquipments = _reservationEquipmentService.GetEquipmentsByReservationIdAsync(spaceId);
+                return Ok(reservationEquipments);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in GetReservationBySpaceId: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Authorize)]
+        [HttpPost(Name = "UpdateReservationEquipment")]
+        public async Task<IActionResult> UpdateReservationEquipment(string reservationId, string equipmentId, int quantity)
+        {
+            try
+            {
+                await _reservationEquipmentService.UpdateReservationEquipmentAsync(reservationId, equipmentId, quantity);
+                return Ok("ReservationEquipment updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in UpdateReservationEquipment: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [Authorize]
+        [HttpDelete(Name = "DeleteReservationEquipment")]
+        public async Task<IActionResult> DeleteReservationEquipment(string reservationId, string spaceId)
+        {
+            try
+            {
+                await _reservationEquipmentService.DeleteReservationEquipmentAsync(reservationId, spaceId);
+                return Ok("ReservationEquipment deleted successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in DeleteReservationEquipments: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
     }
 }

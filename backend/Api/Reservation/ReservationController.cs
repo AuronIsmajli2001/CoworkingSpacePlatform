@@ -19,7 +19,7 @@ namespace Api.Reservation
             _logger = logger;
         }
 
-        [Authorize(Roles = "SuperAdmin,Staff,User")]
+        [Authorize]
         [HttpPost(Name = "CreateReservation")]
         public async Task<IActionResult> CreateReservation([FromBody] ReservationDTOCreate dto)
         {
@@ -67,7 +67,7 @@ namespace Api.Reservation
             }
         }
 
-        [Authorize(Roles = "User,Staff,SuperAdmin")]
+        [Authorize]
         [HttpPut("{id}", Name = "UpdateReservation")]
         public async Task<IActionResult> UpdateReservation(string id, [FromBody] ReservationDTOUpdate dto)
         {
@@ -85,7 +85,7 @@ namespace Api.Reservation
             }
         }
 
-        [Authorize(Roles = "User,Staff,SuperAdmin")]
+        [Authorizes]
         [HttpDelete("{id}", Name = "DeleteReservation")]
         public async Task<IActionResult> DeleteReservation(string id)
         {
