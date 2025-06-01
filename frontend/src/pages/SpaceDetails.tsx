@@ -476,139 +476,144 @@ export default function SpaceDetails() {
       </div>
       <Footer />
 
-      {/* Equipment Modal */}
-      {showEquipmentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 max-w-2xl w-full mx-4">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Add Equipment to Your Reservation
-            </h2>
+     {/* Equipment Modal */}
+{showEquipmentModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl p-8 max-w-2xl w-full mx-4">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Add Equipment to Your Reservation
+      </h2>
 
-            <div className="space-y-4">
-              {selectedEquipment.map((selection, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+      <div className="space-y-4">
+        {selectedEquipment.map((selection, index) => (
+          <div
+            key={selection.equipmentId || `new-${index}`} // Fixed key
+            className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+          >
+            <select
+              value={selection.equipmentId}
+              onChange={(e) => {
+                const newEquipment = [...selectedEquipment];
+                newEquipment[index].equipmentId = e.target.value;
+                setSelectedEquipment(newEquipment);
+              }}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select Equipment</option>
+              {equipmentList.map((equipment) => (
+                <option
+                  key={equipment.id}
+                  value={equipment.id}
+                  disabled={selectedEquipment.some(
+                    (sel, i) => i !== index && sel.equipmentId === equipment.id
+                  )}
                 >
-                  <select
-                    value={selection.equipmentId}
-                    onChange={(e) =>
-                      handleEquipmentChange(e.target.value, selection.quantity)
-                    }
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">Select Equipment</option>
-                    {equipmentList.map((equipment) => (
-                      <option
-                        key={equipment.id}
-                        value={equipment.id}
-                        disabled={selectedEquipment.some(
-                          (sel, i) =>
-                            i !== index && sel.equipmentId === equipment.id
-                        )}
-                      >
-                        {equipment.name}
-                        {equipment.price_per_piece
-                          ? ` (€${equipment.price_per_piece.toFixed(2)})`
-                          : ""}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="number"
-                    min="1"
-                    value={selection.quantity}
-                    onChange={(e) =>
-                      handleEquipmentChange(
-                        selection.equipmentId,
-                        parseInt(e.target.value) || 1
-                      )
-                    }
-                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  <button
-                    onClick={() =>
-                      handleEquipmentChange(selection.equipmentId, 0)
-                    }
-                    className="p-2 text-red-600 hover:text-red-800"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                  {equipment.name}
+                  {equipment.price_per_piece
+                    ? ` (€${equipment.price_per_piece.toFixed(2)})`
+                    : ""}
+                </option>
               ))}
-
-              <button
-                onClick={() =>
-                  setSelectedEquipment([
-                    ...selectedEquipment,
-                    { equipmentId: "", quantity: 1 },
-                  ])
-                }
-                className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+            </select>
+            <input
+              type="number"
+              min="1"
+              value={selection.quantity}
+              onChange={(e) => {
+                const newEquipment = [...selectedEquipment];
+                newEquipment[index].quantity = parseInt(e.target.value) || 1;
+                setSelectedEquipment(newEquipment);
+              }}
+              className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <button
+              onClick={() => {
+                setSelectedEquipment(
+                  selectedEquipment.filter((_, i) => i !== index)
+                );
+              }}
+              className="p-2 text-red-600 hover:text-red-800"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Add Equipment
-              </button>
-            </div>
-
-            <div className="mt-6 flex flex-col items-end gap-2">
-              <div className="text-lg font-semibold text-gray-700">
-                Equipment Total:{" "}
-                {selectedEquipment
-                  .reduce((sum, sel) => {
-                    const eq = equipmentList.find(
-                      (e) => e.id === sel.equipmentId
-                    );
-                    return sum + (eq?.price_per_piece || 0) * sel.quantity;
-                  }, 0)
-                  .toFixed(2)}{" "}
-                €
-              </div>
-              <div className="text-lg font-bold text-blue-700">
-                Grand Total: {totalPrice.toFixed(2)} €
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-end gap-4">
-              <button
-                onClick={handleEquipmentSubmit}
-                className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
-              >
-                Skip Equipment
-              </button>
-              <button
-                onClick={handleEquipmentSubmit}
-                disabled={selectedEquipment.some((eq) => !eq.equipmentId)}
-                className="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Confirm Equipment
-              </button>
-            </div>
+                <path
+                  fillRule="evenodd"
+                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
+        ))}
+
+        <button
+          onClick={() => {
+            // Only add if there isn't already an empty selection
+            if (!selectedEquipment.some(eq => eq.equipmentId === "")) {
+              setSelectedEquipment([
+                ...selectedEquipment,
+                { equipmentId: "", quantity: 1 }
+              ]);
+            }
+          }}
+          className="w-full py-2 px-4 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Add Equipment
+        </button>
+      </div>
+
+      <div className="mt-6 flex flex-col items-end gap-2">
+        <div className="text-lg font-semibold text-gray-700">
+          Equipment Total:{" "}
+          {selectedEquipment
+            .reduce((sum, sel) => {
+              const eq = equipmentList.find(
+                (e) => e.id === sel.equipmentId
+              );
+              return sum + (eq?.price_per_piece || 0) * sel.quantity;
+            }, 0)
+            .toFixed(2)}{" "}
+          €
         </div>
-      )}
+        <div className="text-lg font-bold text-blue-700">
+          Grand Total: {totalPrice.toFixed(2)} €
+        </div>
+      </div>
+
+      <div className="mt-6 flex justify-end gap-4">
+        <button
+          onClick={handleEquipmentSubmit}
+          className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+        >
+          Skip Equipment
+        </button>
+        <button
+          onClick={handleEquipmentSubmit}
+          disabled={selectedEquipment.some((eq) => !eq.equipmentId)}
+          className="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Confirm Equipment
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 }
