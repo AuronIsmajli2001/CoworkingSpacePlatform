@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
+import { v4 as uuidv4 } from 'uuid';
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 //@ts-ignore
@@ -292,13 +292,14 @@ const Reservations = () => {
   const handleAddReservation = async () => {
     try {
       const payload = {
+        id  : uuidv4(),
         userId: newReservation.user.id,
         spaceId: newReservation.space.id,
         paymentMethod: newReservation.paymentMethod,
         isPaid: newReservation.paymentMethod === PaymentMethod.Card,
         startDateTime: newReservation.startDateTime.toISOString(),
         endDateTime: newReservation.endDateTime.toISOString(),
-        status: ReservationStatus.Confirmed,
+        status: ReservationStatus.Confirmed
       };
 
       const response = await api.post(
