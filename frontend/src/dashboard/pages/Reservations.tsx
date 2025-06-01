@@ -95,6 +95,13 @@ const Reservations = () => {
     paymentMethod: PaymentMethod.Card,
   });
 
+  const [editingEquipment, setEditingEquipment] = useState<ReservationEquipment[]>([]);
+  const [allEquipment, setAllEquipment] = useState<ReservationEquipment[]>([]);
+  const [equipmentLoading, setEquipmentLoading] = useState(false);
+  const [equipmentError, setEquipmentError] = useState<string | null>(null);
+  const [addEquipId, setAddEquipId] = useState("");
+  const [addEquipQty, setAddEquipQty] = useState(1);
+
   const navigate = useNavigate();
 
   // Auth validation
@@ -300,8 +307,22 @@ const Reservations = () => {
     }
   };
 
-  const handleEdit = (reservation: Reservation) => {
+  const handleEdit = async (reservation: Reservation) => {
     setEditingReservation(reservation);
+    setEquipmentLoading(true);
+    setEquipmentError(null);
+    try {
+      const [resEquipRes, allEquipRes] = await Promise.all([
+        api.get(`${baseUrl}/ReservationEquipment/${reservation.id}`),
+        api.get(`${baseUrl}/Equipment`)
+      ]);
+      setEditingEquipment(resEquipRes.data); // Array of {id, name, quantity}
+      setAllEquipment(allEquipRes.data);     // Array of all equipment
+    } catch (err: any) {
+      setEquipmentError("Failed to load equipment.");
+    } finally {
+      setEquipmentLoading(false);
+    }
   };
 
   const handleSaveEdit = async (updatedReservation: Reservation) => {
@@ -319,36 +340,34 @@ const Reservations = () => {
         payload
       );
 
-      setReservations((prev) =>
-        prev.map((res) =>
-          res.id === updatedReservation.id ? updatedReservation : res
-        )
-      );
-      
-      // Update counts if status changed
-      const oldReservation = reservations.find(res => res.id === updatedReservation.id);
-      if (oldReservation && oldReservation.status !== updatedReservation.status) {
-        if (oldReservation.status === ReservationStatus.Pending) {
-          setPendingReservations(prev => prev - 1);
-        } else {
-          if (new Date(oldReservation.startDateTime) > new Date()) {
-            setUpcomingReservations(prev => prev - 1);
-          } else {
-            setCompletedReservations(prev => prev - 1);
-          }
-        }
-        
-        if (updatedReservation.status === ReservationStatus.Pending) {
-          setPendingReservations(prev => prev + 1);
-        } else {
-          if (new Date(updatedReservation.startDateTime) > new Date()) {
-            setUpcomingReservations(prev => prev + 1);
-          } else {
-            setCompletedReservations(prev => prev + 1);
-          }
-        }
-      }
-      
+      // Refresh reservations from server to show updates immediately
+      const reservationsResponse = await api.get(`${baseUrl}/reservation`);
+      const mappedReservations = reservationsResponse.data.map((res: any) => ({
+        id: res.id,
+        userId: res.userId,
+        spaceId: res.spaceId,
+        startDateTime: new Date(res.startDateTime),
+        endDateTime: new Date(res.endDateTime),
+        createdAt: new Date(res.createdAt),
+        status: res.status as ReservationStatus,
+        user: {
+          id: res.user?.id || res.userId || "",
+          userName: res.user?.userName || `User ${res.userId}`,
+          email: res.user?.email || "",
+        },
+        space: {
+          id: res.space?.id || res.spaceId || "",
+          name: res.space?.name || `Space ${res.spaceId}`,
+        },
+        reservationEquipment: res.reservationEquipment?.map((eq: any) => ({
+          id: eq.id,
+          name: eq.name,
+          quantity: eq.quantity,
+        })) || [],
+        paymentMethod: res.paymentMethod,
+        isPaid: res.isPaid,
+      }));
+      setReservations(mappedReservations);
       setEditingReservation(null);
     } catch (error: any) {
       console.error("Failed to update reservation:", error);
@@ -501,6 +520,36 @@ const Reservations = () => {
     return equipment.length === 0
       ? "0"
       : equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
+  };
+
+  const handleAddEquipment = async () => {
+    if (!addEquipId || addEquipQty < 1 || !editingReservation) return;
+    try {
+      await api.post(`${baseUrl}/ReservationEquipment`, {
+        reservationId: editingReservation.id,
+        equipmentIds: [addEquipId],
+        quantity: [addEquipQty]
+      });
+      // Refresh equipment list
+      const resEquipRes = await api.get(`${baseUrl}/ReservationEquipment/${editingReservation.id}`);
+      setEditingEquipment(resEquipRes.data);
+      setAddEquipId("");
+      setAddEquipQty(1);
+    } catch (err) {
+      setEquipmentError("Failed to add equipment.");
+    }
+  };
+
+  const handleRemoveEquipment = async (equipmentId: string) => {
+    if (!editingReservation) return;
+    try {
+      await api.delete(`${baseUrl}/ReservationEquipment/${editingReservation.id}/${equipmentId}`);
+      // Refresh equipment list
+      const resEquipRes = await api.get(`${baseUrl}/ReservationEquipment/${editingReservation.id}`);
+      setEditingEquipment(resEquipRes.data);
+    } catch (err) {
+      setEquipmentError("Failed to remove equipment.");
+    }
   };
 
   return (
@@ -851,6 +900,54 @@ const Reservations = () => {
                       <option value={ReservationStatus.Confirmed}>Confirmed</option>
                     </select>
                   </div>
+                </div>
+
+                {/* Equipment Section */}
+                <div>
+                  <h4 className="text-gray-300 mb-2">Equipment</h4>
+                  {equipmentLoading ? (
+                    <div>Loading equipment...</div>
+                  ) : equipmentError ? (
+                    <div className="text-red-400">{equipmentError}</div>
+                  ) : (
+                    <>
+                      <ul>
+                        {editingEquipment.map(eq => (
+                          <li key={eq.id} className="flex items-center gap-2">
+                            {eq.name} (x{eq.quantity})
+                            <button onClick={() => handleRemoveEquipment(eq.id)} className="text-red-400 ml-2">Remove</button>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="mt-2 flex gap-2 items-center">
+                        <select
+                          value={addEquipId}
+                          onChange={e => setAddEquipId(e.target.value)}
+                          className="bg-gray-700 text-white rounded px-3 py-2"
+                        >
+                          <option value="">Add equipment...</option>
+                          {allEquipment
+                            .filter(eq => !editingEquipment.some(e => e.id === eq.id))
+                            .map(eq => (
+                              <option key={eq.id} value={eq.id}>{eq.name}</option>
+                            ))}
+                        </select>
+                        <input
+                          type="number"
+                          min={1}
+                          value={addEquipQty}
+                          onChange={e => setAddEquipQty(Number(e.target.value))}
+                          className="bg-gray-700 text-white rounded px-3 py-2 w-20"
+                        />
+                        <button
+                          onClick={handleAddEquipment}
+                          className="ml-2 bg-blue-600 px-2 py-1 rounded text-white"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex justify-end gap-2">
