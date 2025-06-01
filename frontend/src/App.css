@@ -4,6 +4,9 @@
   padding: 2rem;
   text-align: center;
 }
+.swal2-popup {
+  border-radius: 20px !important;
+}
 
 .logo {
   height: 6em;

@@ -9,6 +9,7 @@ import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from "uuid";
 import { Users, MapPin, Euro, Info } from "lucide-react";
+import Swal from "sweetalert2";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -177,18 +178,15 @@ export default function SpaceDetails() {
       const decodedToken = jwtDecode<DecodedToken>(token);
       const reservationId = uuidv4();
 
-      const response = await api.post(
-        `/Reservation`,
-        {
-          id: reservationId,
-          userId: decodedToken.userId,
-          spaceId: id,
-          paymentMethod: reservationData.paymentMethod,
-          isPaid: reservationData.paymentMethod === "Card",
-          startDateTime: reservationData.startDateTime,
-          endDateTime: reservationData.endDateTime,
-        }
-      );
+      const response = await api.post(`/Reservation`, {
+        id: reservationId,
+        userId: decodedToken.userId,
+        spaceId: id,
+        paymentMethod: reservationData.paymentMethod,
+        isPaid: reservationData.paymentMethod === "Card",
+        startDateTime: reservationData.startDateTime,
+        endDateTime: reservationData.endDateTime,
+      });
 
       if (response.status === 200 || response.status === 201) {
         setCurrentReservationId(reservationId);
@@ -213,11 +211,19 @@ export default function SpaceDetails() {
       }
 
       setShowEquipmentModal(false);
-      setSuccess(
-        selectedEquipment.length > 0
-          ? "Reservation created successfully with equipment!"
-          : "Reservation created successfully!"
-      );
+      await Swal.fire({
+        icon: "success",
+        title: "Reservation Confirmed",
+        text:
+          selectedEquipment.length > 0
+            ? "Reservation created successfully with equipment!"
+            : "Reservation created successfully!",
+        confirmButtonText: "Okay",
+        confirmButtonColor: "#2563EB", // Tailwind blue
+        customClass: {
+          popup: "rounded-2xl",
+        },
+      });
 
       setReservationData({
         paymentMethod: "",
@@ -329,11 +335,11 @@ export default function SpaceDetails() {
               </div>
             )}
 
-            {success && (
+            {/* {success && (
               <div className="mb-4 p-4 bg-green-50 text-green-600 rounded-lg">
                 {success}
               </div>
-            )}
+            )} */}
 
             <form onSubmit={handleReservationSubmit} className="space-y-4">
               <div>

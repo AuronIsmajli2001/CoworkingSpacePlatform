@@ -50,6 +50,7 @@ namespace Api.Reservation
             }
         }
 
+        [Authorize]
         [HttpGet("{id}", Name = "GetReservationById")]
         public async Task<IActionResult> GetReservationById(string id)
         {

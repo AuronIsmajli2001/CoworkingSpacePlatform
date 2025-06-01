@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import api from "../api/axiosConfig";
 import { User } from "lucide-react";
+import Swal from "sweetalert2";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -40,7 +41,7 @@ const EditProfile = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+
   const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
@@ -52,24 +53,27 @@ const EditProfile = () => {
         if (!userId) return;
         setUserId(userId);
         // Fetch user profile from backend for sidebar only
-        api.get(`${baseUrl}/User/${userId}`).then(res => {
-          setSidebarProfile({
-            firstName: res.data.firstName || "",
-            lastName: res.data.lastName || "",
-            username: res.data.userName || "",
-            email: res.data.email || "",
-            password: ""
+        api
+          .get(`${baseUrl}/User/${userId}`)
+          .then((res) => {
+            setSidebarProfile({
+              firstName: res.data.firstName || "",
+              lastName: res.data.lastName || "",
+              username: res.data.userName || "",
+              email: res.data.email || "",
+              password: "",
+            });
+          })
+          .catch((err) => {
+            console.error("Failed to fetch user profile:", err);
+            if (err.response) {
+              setError(err.response.data?.message || "Failed to fetch profile");
+            } else if (err.request) {
+              setError("Network error. Please check your connection");
+            } else {
+              setError("An unexpected error occurred");
+            }
           });
-        }).catch(err => {
-          console.error("Failed to fetch user profile:", err);
-          if (err.response) {
-            setError(err.response.data?.message || "Failed to fetch profile");
-          } else if (err.request) {
-            setError("Network error. Please check your connection");
-          } else {
-            setError("An unexpected error occurred");
-          }
-        });
       } catch (error) {
         console.error("Error decoding token:", error);
         setError("Invalid authentication token");
@@ -88,30 +92,36 @@ const EditProfile = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     const updateData: UpdateData = {
       firstName: profileData.firstName.trim() || null,
       lastName: profileData.lastName.trim() || null,
       username: profileData.username.trim() || null,
       email: profileData.email.trim() || null,
-      password: profileData.password.trim() || null
+      password: profileData.password.trim() || null,
     };
 
     try {
-      const response = await api.put(
-        `${baseUrl}/User/${userId}`,
-        updateData,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
+      const response = await api.put(`${baseUrl}/User/${userId}`, updateData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.status === 200) {
-        setSuccess("Profile updated successfully!");
-        setProfileData(prev => ({ ...prev, password: "" }));
+        setProfileData((prev) => ({ ...prev, password: "" }));
+
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated",
+          text: "Your profile has been successfully updated!",
+          confirmButtonText: "Okay",
+          confirmButtonColor: "#2563EB",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/");
+          }
+        });
       }
     } catch (err: any) {
       if (err.response) {
@@ -141,15 +151,29 @@ const EditProfile = () => {
           <div className="w-28 h-28 rounded-full bg-blue-100 flex items-center justify-center mb-8 mx-auto">
             <User size={64} className="text-blue-700" />
           </div>
-          <div className="mb-4 text-lg font-semibold text-gray-700 text-center">
-            Hello {sidebarProfile.username}
-          </div>
+          {
+            <div className="mb-4 text-lg font-semibold text-gray-700 text-center">
+              Hello {sidebarProfile.username}
+            </div>
+            /* 
           <div className="mb-2 text-sm text-gray-600 text-center">
-            <div><span className="font-bold">First Name:</span> {sidebarProfile.firstName}</div>
-            <div><span className="font-bold">Last Name:</span> {sidebarProfile.lastName}</div>
-            <div><span className="font-bold">Email:</span> {sidebarProfile.email}</div>
-            <div><span className="font-bold">Username:</span> {sidebarProfile.username}</div>
-          </div>
+            <div className="mb-2">
+              <span className="font-bold">First Name:</span>{" "}
+              {sidebarProfile.firstName}
+            </div>
+            <div className="mb-2">
+              <span className="font-bold">Last Name:</span>{" "}
+              {sidebarProfile.lastName}
+            </div>
+            <div className="mb-2">
+              <span className="font-bold">Email:</span> {sidebarProfile.email}
+            </div>
+            <div className="mb-2">
+              <span className="font-bold">Username:</span>{" "}
+              {sidebarProfile.username}
+            </div>
+          </div> */
+          }
           <button
             onClick={() => navigate("/")}
             className="w-11/12 flex items-center justify-center gap-2 px-6 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-semibold"
@@ -170,12 +194,6 @@ const EditProfile = () => {
           </div>
         )}
 
-        {success && (
-          <div className="mb-4 p-4 bg-green-50 text-green-600 rounded-lg">
-            {success}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -190,6 +208,7 @@ const EditProfile = () => {
               name="email"
               value={profileData.email}
               onChange={handleChange}
+              placeholder={`Current: ${sidebarProfile.email}`}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -206,6 +225,7 @@ const EditProfile = () => {
               name="firstName"
               value={profileData.firstName}
               onChange={handleChange}
+              placeholder={`Current: ${sidebarProfile.firstName}`}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -222,6 +242,7 @@ const EditProfile = () => {
               name="lastName"
               value={profileData.lastName}
               onChange={handleChange}
+              placeholder={`Current: ${sidebarProfile.lastName}`}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -238,6 +259,7 @@ const EditProfile = () => {
               name="username"
               value={profileData.username}
               onChange={handleChange}
+              placeholder={`Current: ${sidebarProfile.username}`}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -254,6 +276,7 @@ const EditProfile = () => {
               name="password"
               value={profileData.password}
               onChange={handleChange}
+              placeholder="Leave blank to keep current password"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
