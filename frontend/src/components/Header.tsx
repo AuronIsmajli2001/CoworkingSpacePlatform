@@ -18,8 +18,9 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userName, setUserName] = useState("");
-  const menuRef = useRef(null);
-  const mobileMenuRef = useRef(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -35,12 +36,18 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !(menuRef.current as any).contains(event.target)) {
+      // Check if click is outside both menu and menu button
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target as Node)
+      ) {
         setIsMenuOpen(false);
       }
       if (
         mobileMenuRef.current &&
-        !(mobileMenuRef.current as any).contains(event.target)
+        !mobileMenuRef.current.contains(event.target as Node)
       ) {
         setIsMobileMenuOpen(false);
       }
@@ -67,9 +74,19 @@ const Header = () => {
     { name: "Pricing Plans", path: "/pricingPlans" },
   ];
 
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleMobileMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <header className="fixed top-0 w-full z-50 bg-white shadow-sm px-6 py-4">
-      {/* Desktop View - Exactly as before */}
+      {/* Desktop View */}
       <div className="hidden md:flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="text-3xl font-extrabold text-blue-600">☉</div>
@@ -95,9 +112,10 @@ const Header = () => {
         </nav>
 
         {isAuthenticated() ? (
-          <div className="relative" ref={menuRef}>
+          <div className="relative">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              ref={menuButtonRef}
+              onClick={toggleMenu}
               className="flex items-center gap-2 bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-md hover:bg-blue-800 transition-colors"
             >
               <User size={20} />
@@ -105,10 +123,13 @@ const Header = () => {
             </button>
 
             {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50">
+              <div
+                ref={menuRef}
+                className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50 border border-gray-200"
+              >
                 <Link
                   to="/profile"
-                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 hover:rounded-t-xl"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Settings size={18} />
@@ -123,8 +144,8 @@ const Header = () => {
                   My Memberships
                 </Link>
                 <Link
-                  to="/myreservations"
-                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  to="/userprofile/myreservation"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 hover:rounded-b-xl"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <CalendarCheck size={18} />
@@ -135,7 +156,7 @@ const Header = () => {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-100 w-full text-left"
+                  className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-100 w-full text-left border-t border-gray-200"
                 >
                   <LogOut size={18} />
                   Logout
@@ -153,7 +174,7 @@ const Header = () => {
         )}
       </div>
 
-      {/* Mobile View - New additions */}
+      {/* Mobile View */}
       <div className="md:hidden flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="text-3xl font-extrabold text-blue-600">☉</div>
@@ -164,14 +185,56 @@ const Header = () => {
 
         <div className="flex items-center gap-4">
           {isAuthenticated() ? (
-            <div className="relative" ref={menuRef}>
+            <div className="relative">
               <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                onClick={toggleMenu}
                 className="flex items-center gap-1 bg-blue-700 text-white font-semibold py-2 px-3 rounded-xl text-sm hover:bg-blue-800 transition-colors"
               >
                 <User size={18} />
                 <span className="max-w-[80px] truncate">{userName}</span>
               </button>
+
+              {isMenuOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50 border border-gray-200"
+                  ref={menuRef}
+                >
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 hover:rounded-t-xl"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Settings size={18} />
+                    Edit Profile
+                  </Link>
+                  <Link
+                    to="/userprofile/mymembership"
+                    className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <IdCard size={18} />
+                    My Memberships
+                  </Link>
+                  <Link
+                    to="/userprofile/myreservation"
+                    className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 hover:rounded-b-xl"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <CalendarCheck size={18} />
+                    My Reservations
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-100 w-full text-left border-t border-gray-200"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <Link
@@ -183,7 +246,7 @@ const Header = () => {
           )}
 
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={toggleMobileMenu}
             className="p-2 text-gray-700 hover:text-blue-600 focus:outline-none"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

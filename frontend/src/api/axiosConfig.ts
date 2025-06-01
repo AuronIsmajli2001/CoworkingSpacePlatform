@@ -1,12 +1,12 @@
 import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
+  AxiosResponse,
+} from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true
+  withCredentials: true,
 });
 
 // Optional: if you want to switch baseURL in production
@@ -18,7 +18,7 @@ const api = axios.create({
 
 // Request interceptor
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
@@ -38,13 +38,13 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const newTokens = await api.post('/auth/refresh-token', {
-          accessToken: localStorage.getItem('accessToken'),
-          refreshToken: localStorage.getItem('refreshToken')
+        const newTokens = await api.post("/auth/refresh-token", {
+          accessToken: localStorage.getItem("accessToken"),
+          refreshToken: localStorage.getItem("refreshToken"),
         });
 
-        localStorage.setItem('accessToken', newTokens.data.accessToken);
-        localStorage.setItem('refreshToken', newTokens.data.refreshToken);
+        localStorage.setItem("accessToken", newTokens.data.accessToken);
+        localStorage.setItem("refreshToken", newTokens.data.refreshToken);
 
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${newTokens.data.accessToken}`;
@@ -52,7 +52,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         localStorage.clear();
-        window.location.href = '/login';
+        window.location.href = "/";
         return Promise.reject(refreshError);
       }
     }

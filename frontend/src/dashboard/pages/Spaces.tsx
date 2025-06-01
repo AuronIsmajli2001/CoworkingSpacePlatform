@@ -28,6 +28,7 @@ const Spaces = () => {
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const [newSpace, setNewSpace] = useState({
     name: "",
@@ -58,7 +59,11 @@ const Spaces = () => {
     }
     try {
       const decoded: any = jwtDecode(token);
-      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+      if (
+        decoded.role !== "Staff" &&
+        decoded.role !== "SuperAdmin" &&
+        decoded.role !== "Admin"
+      ) {
         navigate("/auth");
       }
     } catch (err) {
@@ -129,7 +134,10 @@ const Spaces = () => {
         if (err.response.status === 401) {
           navigate("/auth");
         } else {
-          alert(err.response.data?.message || "Failed to delete space. Please try again.");
+          alert(
+            err.response.data?.message ||
+              "Failed to delete space. Please try again."
+          );
         }
       } else if (err.request) {
         alert("Network error. Please check your connection.");
@@ -141,8 +149,12 @@ const Spaces = () => {
 
   const handleBulkDelete = async () => {
     try {
-      await Promise.all(selectedSpaces.map(id => api.delete(`${baseUrl}/Space/${id}`)));
-      setSpaces((prev) => prev.filter((space) => !selectedSpaces.includes(space.id)));
+      await Promise.all(
+        selectedSpaces.map((id) => api.delete(`${baseUrl}/Space/${id}`))
+      );
+      setSpaces((prev) =>
+        prev.filter((space) => !selectedSpaces.includes(space.id))
+      );
       setSelectedSpaces([]);
       setShowConfirmModal(false);
     } catch (err: any) {
@@ -151,7 +163,10 @@ const Spaces = () => {
         if (err.response.status === 401) {
           navigate("/auth");
         } else {
-          alert(err.response.data?.message || "Failed to delete selected spaces. Please try again.");
+          alert(
+            err.response.data?.message ||
+              "Failed to delete selected spaces. Please try again."
+          );
         }
       } else if (err.request) {
         alert("Network error. Please check your connection.");
@@ -167,14 +182,28 @@ const Spaces = () => {
         const formData = new FormData();
         formData.append("name", editingSpace.name ? editingSpace.name : "null");
         formData.append("type", editingSpace.type ? editingSpace.type : "null");
-        formData.append("description", editingSpace.description ? editingSpace.description : "null");
-        if (editingSpace.capacity !== undefined && editingSpace.capacity !== null && editingSpace.capacity !== "") {
+        formData.append(
+          "description",
+          editingSpace.description ? editingSpace.description : "null"
+        );
+        if (
+          editingSpace.capacity !== undefined &&
+          editingSpace.capacity !== null &&
+          editingSpace.capacity !== ""
+        ) {
           formData.append("capacity", editingSpace.capacity.toString());
         }
-        if (editingSpace.price !== undefined && editingSpace.price !== null && editingSpace.price !== "") {
+        if (
+          editingSpace.price !== undefined &&
+          editingSpace.price !== null &&
+          editingSpace.price !== ""
+        ) {
           formData.append("price", editingSpace.price.toString());
         }
-        formData.append("location", editingSpace.location ? editingSpace.location : "null");
+        formData.append(
+          "location",
+          editingSpace.location ? editingSpace.location : "null"
+        );
         if (editingImage) {
           formData.append("image", editingImage);
         }
@@ -204,7 +233,10 @@ const Spaces = () => {
           if (err.response.status === 401) {
             navigate("/auth");
           } else {
-            alert(err.response.data?.message || "Failed to update space. Please try again.");
+            alert(
+              err.response.data?.message ||
+                "Failed to update space. Please try again."
+            );
           }
         } else if (err.request) {
           alert("Network error. Please check your connection.");
@@ -264,7 +296,10 @@ const Spaces = () => {
         if (err.response.status === 401) {
           navigate("/auth");
         } else {
-          alert(err.response.data?.message || "Failed to add space. Please try again.");
+          alert(
+            err.response.data?.message ||
+              "Failed to add space. Please try again."
+          );
         }
       } else if (err.request) {
         alert("Network error. Please check your connection.");
@@ -276,13 +311,30 @@ const Spaces = () => {
 
   // Stats Calculations
   const totalSpaces = spaces.length;
-  const totalCapacity = spaces.reduce((sum, space) => sum + Number(space.capacity), 0);
+  const totalCapacity = spaces.reduce(
+    (sum, space) => sum + Number(space.capacity),
+    0
+  );
   const averagePrice =
     spaces.length > 0
       ? (
-          spaces.reduce((sum, space) => sum + Number(space.price), 0) / spaces.length
+          spaces.reduce((sum, space) => sum + Number(space.price), 0) /
+          spaces.length
         ).toFixed(2)
       : 0;
+
+  // Get unique space types for filtering
+  const spaceTypes = [...new Set(spaces.map((space) => space.type))];
+
+  // Filter spaces based on active filter
+  const filteredSpaces = activeFilter
+    ? spaces.filter((space) => space.type === activeFilter)
+    : spaces;
+
+  const displayedSpaces = filteredSpaces.slice(
+    indexOfFirstSpace,
+    indexOfLastSpace
+  );
 
   return (
     <div className="flex h-screen">
@@ -330,14 +382,43 @@ const Spaces = () => {
             </div>
           </div>
 
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search spaces..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-800 text-white border border-gray-700 rounded px-4 py-2 text-sm w-64 mb-4"
-          />
+          {/* Search and Filters */}
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Search spaces..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-gray-800 text-white border border-gray-700 rounded px-4 py-2 text-sm w-full md:w-64"
+            />
+
+            {/* Space Type Filters - Responsive */}
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setActiveFilter(null)}
+                className={`px-3 py-1 rounded-full text-xs ${
+                  !activeFilter
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                }`}
+              >
+                All
+              </button>
+              {spaceTypes.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setActiveFilter(type)}
+                  className={`px-3 py-1 rounded-full text-xs ${
+                    activeFilter === type
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Main Table */}
           <div className="overflow-x-auto">
@@ -356,15 +437,15 @@ const Spaces = () => {
                     />
                   </th>
                   <th className="p-3">Name</th>
-                  <th className="p-3">Type</th>
+                  <th className="p-3 hidden sm:table-cell">Type</th>
                   <th className="p-3">Capacity</th>
                   <th className="p-3">Price</th>
-                  <th className="p-3">Location</th>
+                  <th className="p-3 hidden md:table-cell">Location</th>
                   <th className="p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {currentSpaces
+                {displayedSpaces
                   .filter(
                     (space) =>
                       space.name
@@ -402,14 +483,14 @@ const Spaces = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="p-3">
+                      <td className="p-3 hidden sm:table-cell">
                         <span className="px-2 py-1 bg-gray-700 rounded-full text-xs">
                           {space.type}
                         </span>
                       </td>
                       <td className="p-3">{space.capacity}</td>
                       <td className="p-3">${Number(space.price).toFixed(2)}</td>
-                      <td className="p-3 text-gray-300 text-sm">
+                      <td className="p-3 text-gray-300 text-sm hidden md:table-cell">
                         {space.location}
                       </td>
                       <td className="p-3 flex gap-2">
@@ -417,7 +498,8 @@ const Spaces = () => {
                           onClick={() => setEditingSpace(space)}
                           className="bg-blue-600 hover:bg-blue-700 px-3 py-1 text-sm rounded flex items-center gap-1"
                         >
-                          <Pencil size={14} /> Edit
+                          <Pencil size={14} />{" "}
+                          <span className="hidden sm:inline">Edit</span>
                         </button>
                         <button
                           onClick={() => {
@@ -426,7 +508,8 @@ const Spaces = () => {
                           }}
                           className="bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded flex items-center gap-1"
                         >
-                          <Trash2 size={14} /> Delete
+                          <Trash2 size={14} />{" "}
+                          <span className="hidden sm:inline">Delete</span>
                         </button>
                       </td>
                     </tr>
@@ -447,22 +530,25 @@ const Spaces = () => {
               </button>
 
               <span className="text-sm text-gray-300">
-                Page {currentPage} of {Math.ceil(spaces.length / spacesPerPage)}
+                Page {currentPage} of{" "}
+                {Math.ceil(filteredSpaces.length / spacesPerPage)}
               </span>
 
               <button
                 onClick={() =>
                   setCurrentPage((prev) =>
-                    prev < Math.ceil(spaces.length / spacesPerPage)
+                    prev < Math.ceil(filteredSpaces.length / spacesPerPage)
                       ? prev + 1
                       : prev
                   )
                 }
                 disabled={
-                  currentPage === Math.ceil(spaces.length / spacesPerPage)
+                  currentPage ===
+                  Math.ceil(filteredSpaces.length / spacesPerPage)
                 }
                 className={`px-4 py-1 rounded ${
-                  currentPage === Math.ceil(spaces.length / spacesPerPage)
+                  currentPage ===
+                  Math.ceil(filteredSpaces.length / spacesPerPage)
                     ? "bg-gray-600 text-gray-400 cursor-not-allowed"
                     : "bg-gray-700 text-white hover:bg-gray-600"
                 }`}
@@ -502,7 +588,7 @@ const Spaces = () => {
           {/* Edit Modal */}
           {editingSpace && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-w-2xl">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-full md:w-1/2 max-w-2xl mx-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Edit Space</h3>
                   <button
@@ -513,7 +599,7 @@ const Spaces = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
                       Name
@@ -560,7 +646,10 @@ const Spaces = () => {
                       type="text"
                       value={editingSpace.capacity}
                       onChange={(e) =>
-                        setEditingSpace({ ...editingSpace, capacity: e.target.value })
+                        setEditingSpace({
+                          ...editingSpace,
+                          capacity: e.target.value,
+                        })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
@@ -575,14 +664,17 @@ const Spaces = () => {
                       type="text"
                       value={editingSpace.price}
                       onChange={(e) =>
-                        setEditingSpace({ ...editingSpace, price: e.target.value })
+                        setEditingSpace({
+                          ...editingSpace,
+                          price: e.target.value,
+                        })
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     />
                   </div>
 
-                  <div className="col-span-2">
+                  <div className="md:col-span-2">
                     <label className="block text-sm text-gray-300 mb-1">
                       Description
                     </label>
@@ -622,7 +714,9 @@ const Spaces = () => {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={e => setEditingImage(e.target.files?.[0] || null)}
+                      onChange={(e) =>
+                        setEditingImage(e.target.files?.[0] || null)
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     />
                   </div>
@@ -649,7 +743,7 @@ const Spaces = () => {
           {/* Add Space Modal */}
           {showAddModal && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-              <div className="bg-gray-800 p-6 rounded shadow-lg w-1/2 max-w-2xl">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-full md:w-1/2 max-w-2xl mx-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold">Add New Space</h3>
                   <button
@@ -660,7 +754,7 @@ const Spaces = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   <div>
                     <label className="block text-sm text-gray-300 mb-1">
                       Name*
@@ -727,7 +821,7 @@ const Spaces = () => {
                     />
                   </div>
 
-                  <div className="col-span-2">
+                  <div className="md:col-span-2">
                     <label className="block text-sm text-gray-300 mb-1">
                       Description
                     </label>
@@ -759,11 +853,15 @@ const Spaces = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-300 mb-1">Image*</label>
+                    <label className="block text-sm text-gray-300 mb-1">
+                      Image*
+                    </label>
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={e => setNewSpaceImage(e.target.files?.[0] || null)}
+                      onChange={(e) =>
+                        setNewSpaceImage(e.target.files?.[0] || null)
+                      }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                       required
                     />
