@@ -133,8 +133,8 @@ const MyReservations = () => {
                     key={idx}
                     className="bg-white shadow-lg rounded-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-300"
                   >
-                    <div className="px-6 py-5 bg-green-50 rounded-t-xl">
-                      <h3 className="text-xl font-semibold text-green-800">
+                    <div className="px-6 py-5 bg-blue-100 rounded-t-xl">
+                      <h3 className="text-xl font-semibold text-blue-800">
                         Space : {reservation.space?.name || reservation.spaceId}
                       </h3>
                     </div>
@@ -194,9 +194,9 @@ const MyReservations = () => {
                             <table className="min-w-full divide-y divide-gray-200 border">
                               <thead className="bg-gray-100">
                                 <tr>
-                                  <th className="px-4 bg-green-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
-                                  <th className="px-4 bg-green-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Type</th>
-                                  <th className="px-4 bg-green-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Quantity</th>
+                                  <th className="px-4 bg-blue-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Name</th>
+                                  <th className="px-4 bg-blue-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Type</th>
+                                  <th className="px-4 bg-blue-50 py-2 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Quantity</th>
                                 </tr>
                               </thead>
                               <tbody className="bg-white divide-y divide-gray-200">

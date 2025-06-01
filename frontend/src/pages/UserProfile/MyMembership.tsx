@@ -131,21 +131,21 @@ const MyMembership = () => {
             <div className="text-center text-sm text-red-600">{error}</div>
           ) : membership ? (
             <div className="bg-white shadow overflow-hidden rounded-lg">
-              <div className="px-4 py-5 sm:px-6 bg-green-100">
-                <h3 className="text-lg leading-6 font-medium text-green-800">
+              <div className="px-4 py-5 sm:px-6 bg-blue-100">
+                <h3 className="text-lg leading-6 font-medium text-blue-800">
                   Active Membership
                 </h3>
               </div>
               <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
                 <dl className="sm:divide-y sm:divide-gray-200">
                   <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">Plan</dt>
+                    <dt className="text-sm font-medium text-blue-500">Plan</dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {membership.title}
                     </dd>
                   </div>
                   <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">
+                    <dt className="text-sm font-medium text-blue-500">
                       Billing
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -153,14 +153,14 @@ const MyMembership = () => {
                     </dd>
                   </div>
                   <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">Price</dt>
+                    <dt className="text-sm font-medium text-blue-500">Price</dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                       {formatPrice(membership.price)}
                       {membership.includesVAT && " (VAT included)"}
                     </dd>
                   </div>
                   <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-500">
+                    <dt className="text-sm font-medium text-blue-500">
                       Description
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -169,7 +169,7 @@ const MyMembership = () => {
                   </div>
                   {membership.additionalServices && (
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">
+                      <dt className="text-sm font-medium text-blue-500">
                         Additional Services
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">

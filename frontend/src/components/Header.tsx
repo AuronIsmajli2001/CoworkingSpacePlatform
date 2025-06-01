@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, LogOut, Settings, Icon, Book } from "lucide-react";
+import { User, LogOut, Settings, Icon, Book, IdCard, CalendarCheck } from "lucide-react";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
 
@@ -101,7 +101,7 @@ const Header = () => {
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <Book size={18} />
+                <IdCard size={18} />
                 My Memberships
               </Link>
               <Link
@@ -109,7 +109,7 @@ const Header = () => {
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <Book size={18} />
+                <CalendarCheck size={18} />
                 My Reservations
               </Link>
               <button

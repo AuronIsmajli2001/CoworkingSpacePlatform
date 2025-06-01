@@ -30,6 +30,9 @@ const Equipment = () => {
   const [notification, setNotification] = useState<Notification>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const equipmentPerPage = 5;
+  const totalEquipment = equipment.length;
+const totalQuantity = equipment.reduce((sum, eq) => sum + eq.quantity, 0);
+const totalValue = equipment.reduce((sum, eq) => sum + (eq.quantity * eq.price_per_piece), 0);
 
   const [newEquipment, setNewEquipment] = useState({
     type: "",
@@ -181,9 +184,27 @@ const Equipment = () => {
   const currentEquipment = filteredEquipment.slice(indexOfFirstEquipment, indexOfLastEquipment);
 
   return (
-    <div className="flex h-screen">
-      <Sidebar />
-      <main className="w-px flex-1 p-6 overflow-auto bg-gray-900 text-white">
+        <div className="flex h-screen">
+          <Sidebar />
+          <main className="w-px flex-1 p-6 overflow-auto bg-gray-900 text-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Total Equipment</p>
+              <h2 className="text-2xl font-bold">{totalEquipment}</h2>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Total Quantity</p>
+              <h2 className="text-2xl font-bold text-blue-400">
+                {totalQuantity}
+              </h2>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Total Value</p>
+              <h2 className="text-2xl font-bold text-green-400">
+                ${totalValue.toFixed(2)}
+              </h2>
+            </div>
+          </div>
         {notification && (
           <div
             className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeInOut ${
