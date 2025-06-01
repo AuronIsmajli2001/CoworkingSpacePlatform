@@ -8,6 +8,8 @@ import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { v4 as uuidv4 } from 'uuid';
+
+
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 //@ts-ignore
@@ -66,15 +68,16 @@ type NewReservation = {
 
 const Reservations = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedReservations, setSelectedReservations] = useState<string[]>(
-    []
-  );
+  const [selectedReservations, setSelectedReservations] = useState<string[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [editingReservation, setEditingReservation] =
-    useState<Reservation | null>(null);
+  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [spaces, setSpaces] = useState<Space[]>([]);
+  const [totalReservations, setTotalReservations] = useState(0);
+  const [upcomingReservations, setUpcomingReservations] = useState(0);
+  const [completedReservations, setCompletedReservations] = useState(0);
+  const [pendingReservations, setPendingReservations] = useState(0);
 
   const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
   const [currentPage, setCurrentPage] = useState(1);
@@ -155,6 +158,26 @@ const Reservations = () => {
         }));
 
         setReservations(mappedReservations);
+        setTotalReservations(mappedReservations.length);
+        setUpcomingReservations(
+          mappedReservations.filter(
+            (res: Reservation) => 
+              res.status === ReservationStatus.Confirmed && 
+              new Date(res.startDateTime) > new Date()
+          ).length
+        );
+        setCompletedReservations(
+          mappedReservations.filter(
+            (res: Reservation) => 
+              res.status === ReservationStatus.Confirmed && 
+              new Date(res.endDateTime) < new Date()
+          ).length
+        );
+        setPendingReservations(
+          mappedReservations.filter(
+            (res: Reservation) => res.status === ReservationStatus.Pending
+          ).length
+        );
       } catch (error: any) {
         console.error("Failed to fetch data:", error);
         if (error.response) {
@@ -204,6 +227,20 @@ const Reservations = () => {
       await api.delete(`${baseUrl}/Reservation/${id}`);
       setReservations((prev) => prev.filter((res) => res.id !== id));
       setSelectedReservations((prev) => prev.filter((resId) => resId !== id));
+      // Update counts
+      setTotalReservations(prev => prev - 1);
+      const deletedRes = reservations.find(res => res.id === id);
+      if (deletedRes) {
+        if (deletedRes.status === ReservationStatus.Confirmed) {
+          if (new Date(deletedRes.startDateTime) > new Date()) {
+            setUpcomingReservations(prev => prev - 1);
+          } else {
+            setCompletedReservations(prev => prev - 1);
+          }
+        } else {
+          setPendingReservations(prev => prev - 1);
+        }
+      }
     } catch (error: any) {
       console.error("Failed to delete reservation:", error);
       if (error.response) {
@@ -227,11 +264,26 @@ const Reservations = () => {
           api.delete(`${baseUrl}/Reservation/${id}`)
         )
       );
+      const deletedCount = selectedReservations.length;
+      const deletedReservations = reservations.filter(res => selectedReservations.includes(res.id));
+      
       setReservations((prev) =>
         prev.filter((res) => !selectedReservations.includes(res.id))
       );
       setSelectedReservations([]);
       setShowConfirmModal(false);
+      
+      // Update counts
+      setTotalReservations(prev => prev - deletedCount);
+      setUpcomingReservations(prev => prev - deletedReservations.filter(
+        res => res.status === ReservationStatus.Confirmed && new Date(res.startDateTime) > new Date()
+      ).length);
+      setCompletedReservations(prev => prev - deletedReservations.filter(
+        res => res.status === ReservationStatus.Confirmed && new Date(res.endDateTime) < new Date()
+      ).length);
+      setPendingReservations(prev => prev - deletedReservations.filter(
+        res => res.status === ReservationStatus.Pending
+      ).length);
     } catch (error: any) {
       console.error("Failed to delete reservations:", error);
       if (error.response) {
@@ -272,6 +324,31 @@ const Reservations = () => {
           res.id === updatedReservation.id ? updatedReservation : res
         )
       );
+      
+      // Update counts if status changed
+      const oldReservation = reservations.find(res => res.id === updatedReservation.id);
+      if (oldReservation && oldReservation.status !== updatedReservation.status) {
+        if (oldReservation.status === ReservationStatus.Pending) {
+          setPendingReservations(prev => prev - 1);
+        } else {
+          if (new Date(oldReservation.startDateTime) > new Date()) {
+            setUpcomingReservations(prev => prev - 1);
+          } else {
+            setCompletedReservations(prev => prev - 1);
+          }
+        }
+        
+        if (updatedReservation.status === ReservationStatus.Pending) {
+          setPendingReservations(prev => prev + 1);
+        } else {
+          if (new Date(updatedReservation.startDateTime) > new Date()) {
+            setUpcomingReservations(prev => prev + 1);
+          } else {
+            setCompletedReservations(prev => prev + 1);
+          }
+        }
+      }
+      
       setEditingReservation(null);
     } catch (error: any) {
       console.error("Failed to update reservation:", error);
@@ -332,6 +409,14 @@ const Reservations = () => {
       setReservations([...reservations, newReservationWithId]);
       setShowAddModal(false);
       resetNewReservationForm();
+      
+      // Update counts
+      setTotalReservations(prev => prev + 1);
+      if (newReservation.startDateTime > new Date()) {
+        setUpcomingReservations(prev => prev + 1);
+      } else {
+        setCompletedReservations(prev => prev + 1);
+      }
     } catch (error: any) {
       console.error("Failed to add reservation:", error);
       if (error.response) {
@@ -417,11 +502,38 @@ const Reservations = () => {
       ? "0"
       : equipment.map((e) => `${e.name} (${e.quantity})`).join(", ");
   };
+
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 pb-0 pt-0">
         <div className="p-6 bg-gray-900 text-white min-h-screen">
+          {/* Dashboard Cards Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Total Reservations</p>
+              <h2 className="text-2xl font-bold">{totalReservations}</h2>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Upcoming Reservations</p>
+              <h2 className="text-2xl font-bold text-blue-400">
+                {upcomingReservations}
+              </h2>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Completed Reservations</p>
+              <h2 className="text-2xl font-bold text-green-400">
+                {completedReservations}
+              </h2>
+            </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Pending Reservations</p>
+              <h2 className="text-2xl font-bold text-yellow-400">
+                {pendingReservations}
+              </h2>
+            </div>
+          </div>
+
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">All Reservations</h2>
             <div className="flex gap-2">

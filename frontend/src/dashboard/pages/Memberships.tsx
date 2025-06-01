@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api/axiosConfig";
-import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext";
 import Swal from "sweetalert2";
 import { Pencil, Trash2, X, Check } from "lucide-react";
@@ -39,6 +38,12 @@ const Memberships = () => {
     isActive: string;
     billingType: string;
   } | null>(null);
+
+  // Statistics states
+  const [totalMemberships, setTotalMemberships] = useState(0);
+  const [activeMemberships, setActiveMemberships] = useState(0);
+  const [monthlyMemberships, setMonthlyMemberships] = useState(0);
+  const [yearlyMemberships, setYearlyMemberships] = useState(0);
 
   const [newMembership, setNewMembership] = useState({
     title: "",
@@ -89,6 +94,12 @@ const Memberships = () => {
     try {
       const response = await api.get(`${baseUrl}/Membership`);
       setMemberships(response.data);
+      
+      // Calculate statistics
+      setTotalMemberships(response.data.length);
+      setActiveMemberships(response.data.filter((m: Membership) => m.isActive).length);
+      setMonthlyMemberships(response.data.filter((m: Membership) => m.billingType === "Monthly").length);
+      setYearlyMemberships(response.data.filter((m: Membership) => m.billingType === "Yearly").length);
     } catch (err: any) {
       console.error("API Error:", err);
       if (err.response) {
@@ -153,6 +164,26 @@ const Memberships = () => {
       }
     });
   };
+
+  const toggleMembershipStatus = async (id: string, currentStatus: boolean) => {
+  try {
+    await api.put(`${baseUrl}/Membership/${id}`, {
+      isActive: !currentStatus,
+    });
+    fetchMemberships();
+    setNotification({
+      message: `Membership has been ${!currentStatus ? "activated" : "deactivated"}.`,
+      type: "success",
+    });
+  } catch (err) {
+    console.error("Status toggle failed", err);
+    setNotification({
+      message: "Failed to update membership status.",
+      type: "error",
+    });
+  }
+};
+
 
   const handleBulkDelete = async () => {
     try {
@@ -286,6 +317,45 @@ const Memberships = () => {
             </div>
           )}
 
+          {/* Statistics Cards Section */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+          <p className="text-sm text-gray-400">Active Memberships</p>
+          <h2 className="text-2xl font-bold text-green-400">{activeMemberships}</h2>
+        </div>
+
+        <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+    <p className="text-sm text-gray-400">Inactive Memberships</p>
+    <h2 className="text-2xl font-bold text-red-400">
+      {totalMemberships - activeMemberships}
+    </h2>
+  </div>
+
+          <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+            <p className="text-sm text-gray-400">Total Revenue</p>
+            <h2 className="text-2xl font-bold text-yellow-400">
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(
+                memberships
+                  .filter((m) => m.isActive)
+                  .reduce((sum, m) => sum + m.price, 0)
+              )}
+            </h2>
+          </div>
+
+  <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+    <p className="text-sm text-gray-400">Popular Billing Type</p>
+    <h2 className="text-2xl font-bold text-blue-400">
+      {monthlyMemberships > yearlyMemberships
+        ? `Monthly (${Math.round((monthlyMemberships / totalMemberships) * 100)}%)`
+        : `Yearly (${Math.round((yearlyMemberships / totalMemberships) * 100)}%)`}
+    </h2>
+  </div>
+</div>
+
+
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Memberships</h2>
             <div className="flex gap-2">
@@ -358,7 +428,19 @@ const Memberships = () => {
                     <td className="p-3">{m.title}</td>
                     <td className="p-3">{formatPrice(m.price)}</td>
                     <td className="p-3">{m.billingType}</td>
-                    <td className="p-3">{m.isActive ? "Yes" : "No"}</td>
+                    <td className="p-3">
+                    <button
+                      onClick={() => toggleMembershipStatus(m.id, m.isActive)}
+                      className={`px-2 py-1 text-sm rounded ${
+                        m.isActive
+                          ? "bg-green-600 hover:bg-green-700"
+                          : "bg-gray-600 hover:bg-gray-700"
+                      }`}
+                    >
+                      {m.isActive ? "Active" : "Inactive"}
+                    </button>
+                  </td>
+
                     <td className="p-3 flex gap-2">
                       <button
                         className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm flex items-center gap-1"

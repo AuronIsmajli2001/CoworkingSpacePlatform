@@ -12,7 +12,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 h-screen bg-gray-900 text-white p-6">
+     <div className="w-64 min-h-screen bg-gray-900 text-white p-6">
       <h2 className="text-gray-400 uppercase text-sm mb-6">Main</h2>
       <nav className="space-y-2">
         {links.map((link) => (
