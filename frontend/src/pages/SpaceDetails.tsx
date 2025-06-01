@@ -22,6 +22,12 @@ interface ReservationData {
   endDateTime: string;
 }
 
+interface CardDetails {
+  number: string;
+  expiry: string;
+  cvv: string;
+}
+
 interface DecodedToken {
   userId: string;
 }
@@ -52,6 +58,12 @@ export default function SpaceDetails() {
     endDateTime: "",
     dateRange: "",
   });
+
+  const [cardDetails, setCardDetails] = useState<CardDetails>({
+  number: "",
+  expiry: "",
+  cvv: "",
+});
 
   const { id } = useParams();
   const [space, setSpace] = useState<any>(null);
@@ -109,9 +121,36 @@ export default function SpaceDetails() {
     let isValid = true;
 
     if (!reservationData.paymentMethod) {
-      errors.paymentMethod = "Please select a payment method";
+    errors.paymentMethod = "Please select a payment method";
+    isValid = false;
+  }
+
+  if (reservationData.paymentMethod === "Card") {
+    const cleanedCardNumber = cardDetails.number.replace(/\s/g, "");
+    
+    if (!cleanedCardNumber || !cardDetails.expiry || !cardDetails.cvv) {
+      errors.paymentMethod = "Please complete all card details";
+      isValid = false;
+    } else if (cleanedCardNumber.length !== 16) {
+      errors.paymentMethod = "Card number must be 16 digits";
+      isValid = false;
+    } else if (!/^\d+$/.test(cleanedCardNumber)) {
+      errors.paymentMethod = "Card number must contain only digits";
       isValid = false;
     }
+    
+    // Add basic expiry validation (MM/YY format)
+    if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) {
+      errors.paymentMethod = "Expiry must be in MM/YY format";
+      isValid = false;
+    }
+    
+    // Add basic CVV validation (3-4 digits)
+    if (!/^\d{3,4}$/.test(cardDetails.cvv)) {
+      errors.paymentMethod = "CVV must be 3 or 4 digits";
+      isValid = false;
+    }
+  }
 
     if (!reservationData.startDateTime) {
       errors.startDateTime = "Please select a start date and time";
@@ -138,41 +177,66 @@ export default function SpaceDetails() {
   };
 
   const handleReservationChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
-  ) => {
-    const { name, value } = e.target;
-    setReservationData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+) => {
+  const { name, value } = e.target;
+  
+  // Clear card details when switching from Card to another method
+  if (name === "paymentMethod" && value !== "Card") {
+    setCardDetails({
+      number: "",
+      expiry: "",
+      cvv: "",
+    });
+  }
 
-    // Clear error when field is changed
-    if (formErrors[name as keyof typeof formErrors]) {
-      setFormErrors((prev) => ({
-        ...prev,
-        [name]: "",
-        dateRange:
-          name === "startDateTime" || name === "endDateTime"
-            ? ""
-            : prev.dateRange,
-      }));
-    }
-  };
+  setReservationData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  // Clear error when field is changed
+  if (formErrors[name as keyof typeof formErrors]) {
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: "",
+      dateRange:
+        name === "startDateTime" || name === "endDateTime"
+          ? ""
+          : prev.dateRange,
+    }));
+  }
+};
 
   const handleReservationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
+  e.preventDefault();
+  setError("");
+  setSuccess("");
 
-    if (!validateForm()) {
+  if (!validateForm()) {
+    return; // This will stop execution if validation fails
+  }
+
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setError("You must be logged in to make a reservation");
       return;
     }
 
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        setError("You must be logged in to make a reservation");
-        return;
+    const decodedToken = jwtDecode<DecodedToken>(token);
+    const reservationId = uuidv4();
+
+    // Process card payment if selected
+    if (reservationData.paymentMethod === "Card") {
+      // Clear error state before processing payment
+      setError(""); 
+      
+      // Your payment processing logic...
+      const paymentSuccess = true; // Replace with actual payment processing
+      
+      if (!paymentSuccess) {
+        throw new Error("Payment processing failed");
       }
 
       const decodedToken = jwtDecode<DecodedToken>(token);
@@ -209,7 +273,29 @@ export default function SpaceDetails() {
         },
       });
     }
-  };
+
+    const response = await api.post(`/Reservation`, {
+      id: reservationId,
+      userId: decodedToken.userId,
+      spaceId: id,
+      paymentMethod: reservationData.paymentMethod,
+      isPaid: reservationData.paymentMethod === "Card",
+      startDateTime: reservationData.startDateTime,
+      endDateTime: reservationData.endDateTime,
+    });
+
+    if (response.status === 200 || response.status === 201) {
+       setError("");
+      setCurrentReservationId(reservationId);
+      const equipmentResponse = await api.get(`/Equipment`);
+      setEquipmentList(equipmentResponse.data);
+      setShowEquipmentModal(true);
+    }
+  } catch (err: any) {
+    console.error("Error creating reservation:", err);
+    setError(err.response?.data?.message || "Failed to create reservation");
+  }
+};
 
   const handleEquipmentSubmit = async () => {
     try {
@@ -264,12 +350,16 @@ export default function SpaceDetails() {
 
   if (!space) return <p className="text-center mt-10">Loading...</p>;
 
-  const isFormValid =
-    reservationData.paymentMethod &&
-    reservationData.startDateTime &&
-    reservationData.endDateTime &&
-    new Date(reservationData.endDateTime) >
-      new Date(reservationData.startDateTime);
+ const isFormValid =
+  reservationData.paymentMethod &&
+  (reservationData.paymentMethod !== "Card" ||
+    (cardDetails.number &&
+      cardDetails.expiry &&
+      cardDetails.cvv &&
+      cardDetails.number.replace(/\s/g, "").length === 16)) &&
+  reservationData.startDateTime &&
+  reservationData.endDateTime &&
+  new Date(reservationData.endDateTime) > new Date(reservationData.startDateTime);
 
   return (
     <>
@@ -348,33 +438,83 @@ export default function SpaceDetails() {
 
             <form onSubmit={handleReservationSubmit} className="space-y-4">
               <div>
-                <label
-                  htmlFor="paymentMethod"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Payment Method *
-                </label>
-                <select
-                  id="paymentMethod"
-                  name="paymentMethod"
-                  value={reservationData.paymentMethod}
-                  onChange={handleReservationChange}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                    formErrors.paymentMethod
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  }`}
-                >
-                  <option value="">Select payment method</option>
-                  <option value="Cash">Cash</option>
-                  <option value="Card">Card</option>
-                </select>
-                {formErrors.paymentMethod && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {formErrors.paymentMethod}
+              <label
+                htmlFor="paymentMethod"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Payment Method *
+              </label>
+              <select
+                id="paymentMethod"
+                name="paymentMethod"
+                value={reservationData.paymentMethod}
+                onChange={handleReservationChange}
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                  formErrors.paymentMethod ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select payment method</option>
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+              </select>
+              {formErrors.paymentMethod && (
+                <p className="mt-1 text-sm text-red-600">{formErrors.paymentMethod}</p>
+              )}
+
+              {/* Card Details Section - Only shown when Card is selected */}
+              {reservationData.paymentMethod === "Card" && (
+                <div className="mt-4 space-y-3 p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-700 mb-2">Card Details</h4>
+                  <input
+                    type="text"
+                    placeholder="Card Number"
+                    className="w-full p-2 border rounded-lg"
+                    value={cardDetails.number}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                      if (value.length > 16) value = value.slice(0, 16); // Limit to 16 digits
+                      const formatted = value.replace(/(\d{4})(?=\d)/g, "$1 "); // Add space every 4 digits
+                      setCardDetails({ ...cardDetails, number: formatted });
+                    }}
+                    inputMode="numeric"
+                    pattern="[0-9\s]*"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="MM/YY"
+                    className="p-2 border rounded-lg"
+                    value={cardDetails.expiry}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, "");
+                      if (value.length > 2) {
+                        value = `${value.slice(0, 2)}/${value.slice(2, 4)}`;
+                      }
+                      if (value.length > 5) value = value.slice(0, 5);
+                      setCardDetails({ ...cardDetails, expiry: value });
+                    }}
+                    maxLength={5}
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="CVV"
+                    className="p-2 border rounded-lg"
+                    value={cardDetails.cvv}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      if (value.length > 4) return;
+                      setCardDetails({ ...cardDetails, cvv: value });
+                    }}
+                    maxLength={4}
+                    inputMode="numeric"
+                  />
+                  <p className="text-sm text-gray-500 mt-2">
+                    Your card will be charged immediately upon reservation.
                   </p>
-                )}
-              </div>
+                </div>
+              )}
+            </div>
 
               <div>
                 <label
@@ -552,10 +692,13 @@ export default function SpaceDetails() {
 
         <button
           onClick={() => {
-            // Only add if there isn't already an empty selection
-            if (!selectedEquipment.some(eq => eq.equipmentId === "")) {
+            // Filter out any empty selections first
+            const filteredSelections = selectedEquipment.filter(eq => eq.equipmentId !== "");
+            
+            // Only add new empty selection if all existing ones have equipment selected
+            if (filteredSelections.length === selectedEquipment.length) {
               setSelectedEquipment([
-                ...selectedEquipment,
+                ...filteredSelections,
                 { equipmentId: "", quantity: 1 }
               ]);
             }
@@ -603,13 +746,13 @@ export default function SpaceDetails() {
         >
           Skip Equipment
         </button>
-        <button
-          onClick={handleEquipmentSubmit}
-          disabled={selectedEquipment.some((eq) => !eq.equipmentId)}
-          className="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Confirm Equipment
-        </button>
+       <button
+        onClick={handleEquipmentSubmit}
+        disabled={selectedEquipment.some(eq => !eq.equipmentId || eq.quantity < 1)} 
+        className="px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Confirm Equipment
+      </button>
       </div>
     </div>
   </div>
