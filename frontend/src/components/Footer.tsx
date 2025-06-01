@@ -48,20 +48,6 @@ const Footer = () => {
               )}
             </div>
           </div>
-
-          <div>
-            <h4 className="text-2xl font-semibold mb-4">Payment Methods</h4>
-            <div className="flex gap-3">
-              {[CreditCard, Wallet].map((Icon, i) => (
-                <span
-                  key={i}
-                  className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center"
-                >
-                  <Icon className="w-5 h-5 text-white" />
-                </span>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* 3️⃣ Contacts */}
@@ -84,9 +70,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-neutral-700 text-sm flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-6 container mx-auto">
-        <span>
-          © {new Date().getFullYear()} CoSpace. All rights reserved.
-        </span>
+        <span>© {new Date().getFullYear()} CoSpace. All rights reserved.</span>
         <Link to="/terms" className="hover:text-neutral-400">
           Terms of use
         </Link>

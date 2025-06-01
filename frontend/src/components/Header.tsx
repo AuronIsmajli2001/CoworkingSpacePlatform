@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, LogOut, Settings, Icon, Book, IdCard, CalendarCheck } from "lucide-react";
+import {
+  User,
+  LogOut,
+  Settings,
+  Menu,
+  X,
+  IdCard,
+  CalendarCheck,
+} from "lucide-react";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
 
@@ -8,8 +16,10 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const menuRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -27,6 +37,12 @@ const Header = () => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !(menuRef.current as any).contains(event.target)) {
         setIsMenuOpen(false);
+      }
+      if (
+        mobileMenuRef.current &&
+        !(mobileMenuRef.current as any).contains(event.target)
+      ) {
+        setIsMobileMenuOpen(false);
       }
     };
 
@@ -52,86 +68,157 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-white shadow-sm px-6 py-4 flex justify-between items-center">
-      <div className="flex items-center gap-2">
-        <div className="text-3xl font-extrabold text-blue-600">☉</div>
-        <span className="text-2xl font-semibold tracking-wide text-gray-800">
-          Co<span className="text-blue-600">Space</span>
-        </span>
+    <header className="fixed top-0 w-full z-50 bg-white shadow-sm px-6 py-4">
+      {/* Desktop View - Exactly as before */}
+      <div className="hidden md:flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <div className="text-3xl font-extrabold text-blue-600">☉</div>
+          <span className="text-2xl font-semibold tracking-wide text-gray-800">
+            Co<span className="text-blue-600">Space</span>
+          </span>
+        </div>
+
+        <nav className="flex gap-10">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              className={`font-medium ${
+                location.pathname === item.path
+                  ? "text-blue-600"
+                  : "text-black hover:text-blue-600"
+              }`}
+            >
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+
+        {isAuthenticated() ? (
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="flex items-center gap-2 bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-md hover:bg-blue-800 transition-colors"
+            >
+              <User size={20} />
+              <span>{userName}</span>
+            </button>
+
+            {isMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50">
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Settings size={18} />
+                  Edit Profile
+                </Link>
+                <Link
+                  to="/userprofile/mymembership"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <IdCard size={18} />
+                  My Memberships
+                </Link>
+                <Link
+                  to="/myreservations"
+                  className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <CalendarCheck size={18} />
+                  My Reservations
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-100 w-full text-left"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link
+            to="/auth"
+            className="bg-blue-700 text-white font-semibold py-2 px-7 rounded-xl text-md hover:bg-blue-800 transition-colors"
+          >
+            Log In
+          </Link>
+        )}
       </div>
 
-      <nav className="flex gap-10">
-        {navItems.map((item) => (
-          <Link
-            key={item.name}
-            to={item.path}
-            className={`font-medium ${
-              location.pathname === item.path
-                ? "text-blue-600"
-                : "text-black hover:text-blue-600"
-            }`}
-          >
-            {item.name}
-          </Link>
-        ))}
-      </nav>
+      {/* Mobile View - New additions */}
+      <div className="md:hidden flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <div className="text-3xl font-extrabold text-blue-600">☉</div>
+          <span className="text-2xl font-semibold tracking-wide text-gray-800">
+            Co<span className="text-blue-600">Space</span>
+          </span>
+        </div>
 
-      {isAuthenticated() ? (
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center gap-2 bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-md hover:bg-blue-800 transition-colors"
-          >
-            <User size={20} />
-            <span>{userName}</span>
-          </button>
-
-          {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-50">
-              <Link
-                to="/profile"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Settings size={18} />
-                Edit Profile
-              </Link>
-              <Link
-                to="/userprofile/mymembership"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <IdCard size={18} />
-                My Memberships
-              </Link>
-              <Link
-                to="/myreservations"
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <CalendarCheck size={18} />
-                My Reservations
-              </Link>
+        <div className="flex items-center gap-4">
+          {isAuthenticated() ? (
+            <div className="relative" ref={menuRef}>
               <button
-                onClick={() => {
-                  handleLogout();
-                  setIsMenuOpen(false);
-                }}
-                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-gray-100 w-full text-left"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="flex items-center gap-1 bg-blue-700 text-white font-semibold py-2 px-3 rounded-xl text-sm hover:bg-blue-800 transition-colors"
               >
-                <LogOut size={18} />
-                Logout
+                <User size={18} />
+                <span className="max-w-[80px] truncate">{userName}</span>
               </button>
             </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl text-sm hover:bg-blue-800 transition-colors"
+            >
+              Log In
+            </Link>
           )}
+
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 text-gray-700 hover:text-blue-600 focus:outline-none"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-      ) : (
-        <Link
-          to="/auth"
-          className="bg-blue-700 text-white font-semibold py-2 px-7 rounded-xl text-md hover:bg-blue-800 transition-colors"
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div
+          ref={mobileMenuRef}
+          className="md:hidden bg-white shadow-md w-full mt-4"
         >
-          Log In
-        </Link>
+          <nav className="flex flex-col">
+            <div className="border-t border-gray-200 w-full"></div>
+            {navItems.map((item, index) => (
+              <React.Fragment key={item.name}>
+                <Link
+                  to={item.path}
+                  className={`font-medium py-4 px-6 ${
+                    location.pathname === item.path
+                      ? "text-blue-600"
+                      : "text-black hover:text-blue-600"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+                {index < navItems.length - 1 && (
+                  <div className="border-t border-gray-200 w-full"></div>
+                )}
+              </React.Fragment>
+            ))}
+          </nav>
+        </div>
       )}
     </header>
   );

@@ -196,7 +196,18 @@ export default function SpaceDetails() {
       }
     } catch (err: any) {
       console.error("Error creating reservation:", err);
-      setError(err.response?.data?.message || "Failed to create reservation");
+      await Swal.fire({
+        icon: "error",
+        title: "Reservation Failed",
+        text:
+          err.response?.data?.message ||
+          "This space is already reserved at the selected time. Please choose a different time.",
+        confirmButtonText: "Okay",
+        confirmButtonColor: "#DC2626", // Tailwind red-600
+        customClass: {
+          popup: "rounded-2xl",
+        },
+      });
     }
   };
 
@@ -334,12 +345,6 @@ export default function SpaceDetails() {
                 {error}
               </div>
             )}
-
-            {/* {success && (
-              <div className="mb-4 p-4 bg-green-50 text-green-600 rounded-lg">
-                {success}
-              </div>
-            )} */}
 
             <form onSubmit={handleReservationSubmit} className="space-y-4">
               <div>

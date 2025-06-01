@@ -6,6 +6,7 @@ import React from "react";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { isAuthenticated } from "../utils/auth";
+import Swal from "sweetalert2";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -149,7 +150,17 @@ export default function Auth() {
           })
           .then((e) => console.log(e));
 
-        alert("Registration successful! Please login.");
+        await Swal.fire({
+          icon: "success",
+          title: "Registration Successful!",
+          text: "You can now log in to your account.",
+          confirmButtonText: "Proceed to Login",
+          confirmButtonColor: "#2563eb",
+          customClass: {
+            popup: "rounded-2xl",
+          },
+        });
+
         window.location.href = `${frontUrl}/Auth`;
         setIsLogin(true);
         setFormData({
