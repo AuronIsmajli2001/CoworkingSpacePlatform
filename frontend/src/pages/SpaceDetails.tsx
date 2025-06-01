@@ -238,40 +238,6 @@ export default function SpaceDetails() {
       if (!paymentSuccess) {
         throw new Error("Payment processing failed");
       }
-
-      const decodedToken = jwtDecode<DecodedToken>(token);
-      const reservationId = uuidv4();
-
-      const response = await api.post(`/Reservation`, {
-        id: reservationId,
-        userId: decodedToken.userId,
-        spaceId: id,
-        paymentMethod: reservationData.paymentMethod,
-        isPaid: reservationData.paymentMethod === "Card",
-        startDateTime: reservationData.startDateTime,
-        endDateTime: reservationData.endDateTime,
-      });
-
-      if (response.status === 200 || response.status === 201) {
-        setCurrentReservationId(reservationId);
-        const equipmentResponse = await api.get(`/Equipment`);
-        setEquipmentList(equipmentResponse.data);
-        setShowEquipmentModal(true);
-      }
-    } catch (err: any) {
-      console.error("Error creating reservation:", err);
-      await Swal.fire({
-        icon: "error",
-        title: "Reservation Failed",
-        text:
-          err.response?.data?.message ||
-          "This space is already reserved at the selected time. Please choose a different time.",
-        confirmButtonText: "Okay",
-        confirmButtonColor: "#DC2626", // Tailwind red-600
-        customClass: {
-          popup: "rounded-2xl",
-        },
-      });
     }
 
     const response = await api.post(`/Reservation`, {
