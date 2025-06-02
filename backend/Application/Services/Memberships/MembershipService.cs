@@ -205,11 +205,14 @@ namespace Application.Services.Memberships
         {
             var user = await _unitOfWork.Repository<User>().GetByIdAsync(userId);
             if (user == null) return false;
-
-            user.MembershipId = membershipId;
-            _unitOfWork.Repository<User>().Update(user);
-            await _unitOfWork.CompleteAsync();
-            return true;
+            if(user.MembershipId == null)
+            {
+                user.MembershipId = membershipId;
+                _unitOfWork.Repository<User>().Update(user);
+                await _unitOfWork.CompleteAsync();
+                return true;
+            }
+            return false;
         }
 
         public async Task<MembershipDTORead> GetUserMembershipAsync(string userId)
