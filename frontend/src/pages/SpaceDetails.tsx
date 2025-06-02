@@ -110,6 +110,46 @@ export default function SpaceDetails() {
     setTotalPrice(spaceTotal + equipmentTotal);
   }, [reservationData, space, selectedEquipment, equipmentList]);
 
+  const validateDates = () => {
+    const errors = {
+      startDateTime: "",
+      endDateTime: "",
+      dateRange: "",
+    };
+    let isValid = true;
+
+    if (reservationData.startDateTime) {
+      const startDate = new Date(reservationData.startDateTime);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (startDate < today) {
+        errors.startDateTime = "Start date cannot be before today";
+        isValid = false;
+      }
+    }
+
+    if (reservationData.startDateTime && reservationData.endDateTime) {
+      const start = new Date(reservationData.startDateTime);
+      const end = new Date(reservationData.endDateTime);
+
+      if (end <= start) {
+        errors.dateRange = "End date must be after start date";
+        isValid = false;
+      }
+
+      const durationInHours =
+        (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      if (durationInHours < 1) {
+        errors.dateRange = "Reservation must be at least 1 hour long";
+        isValid = false;
+      }
+    }
+
+    setFormErrors((prev) => ({ ...prev, ...errors }));
+    return isValid;
+  };
+
   const validateForm = () => {
     const errors = {
       paymentMethod: "",
@@ -209,7 +249,7 @@ export default function SpaceDetails() {
     setError("");
     setSuccess("");
 
-    if (!validateForm()) {
+    if (!validateForm() || !validateDates()) {
       return;
     }
 
@@ -327,7 +367,9 @@ export default function SpaceDetails() {
     reservationData.startDateTime &&
     reservationData.endDateTime &&
     new Date(reservationData.endDateTime) >
-      new Date(reservationData.startDateTime);
+      new Date(reservationData.startDateTime) &&
+    new Date(reservationData.startDateTime) >=
+      new Date(new Date().setHours(0, 0, 0, 0));
 
   return (
     <>
@@ -502,6 +544,7 @@ export default function SpaceDetails() {
                   name="startDateTime"
                   value={reservationData.startDateTime}
                   onChange={handleReservationChange}
+                  min={new Date().toISOString().slice(0, 16)}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     formErrors.startDateTime
                       ? "border-red-500"
@@ -528,6 +571,10 @@ export default function SpaceDetails() {
                   name="endDateTime"
                   value={reservationData.endDateTime}
                   onChange={handleReservationChange}
+                  min={
+                    reservationData.startDateTime ||
+                    new Date().toISOString().slice(0, 16)
+                  }
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     formErrors.endDateTime
                       ? "border-red-500"

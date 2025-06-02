@@ -41,45 +41,53 @@ export default function BookingModal({
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const confirmMembership = async () => {
     if (!user) {
-      setError("You must be logged in to purchase a membership");
+      await MySwal.fire({
+        title: "Login Required",
+        text: "You must be logged in to purchase a membership",
+        icon: "error",
+        confirmButtonColor: "#2563EB",
+      });
       return;
     }
 
-    if (!paymentMethod || (paymentMethod === "Online" && !cardDetails.number)) {
-      setError("Please complete all payment details");
+    if (!paymentMethod) {
+      await MySwal.fire({
+        title: "Payment Method Required",
+        text: "Please select a payment method",
+        icon: "error",
+        confirmButtonColor: "#2563EB",
+      });
+      return;
+    }
+
+    if (paymentMethod === "Online" && !cardDetails.number) {
+      await MySwal.fire({
+        title: "Card Details Required",
+        text: "Please complete all card details",
+        icon: "error",
+        confirmButtonColor: "#2563EB",
+      });
       return;
     }
 
     setIsLoading(true);
-    setError("");
 
     try {
-      console.log("Confirm payload", {
+      const response = await api.post(`${baseUrl}/Membership/confirm`, {
         userId: user.userId,
         membershipId: plan.id,
-        paymentMethod,
+        paymentMethod: paymentMethod,
         amount: Number(plan.price.replace(/[^0-9.-]+/g, "")),
       });
-
-      const response = await api.post(
-        `${baseUrl}/Membership/confirm`,
-        {
-          userId: user.userId,
-          membershipId: plan.id,
-          paymentMethod: paymentMethod,
-          amount: Number(plan.price.replace(/[^0-9.-]+/g, "")),
-        }
-      );
 
       if (response.data.success) {
         onSuccess();
         onClose();
 
-        MySwal.fire({
+        await MySwal.fire({
           title: "Membership Confirmed!",
           text: `You are now subscribed to the ${plan.title} plan.`,
           icon: "success",
@@ -89,14 +97,28 @@ export default function BookingModal({
           },
         });
       } else {
-        setError(response.data.message); // 👈 Shows message like "User already has membership"
+        await MySwal.fire({
+          title: "Membership Error",
+          text:
+            response.data.message || "You already have an active membership",
+          icon: "warning",
+          confirmButtonColor: "#2563EB",
+        });
       }
     } catch (err) {
+      let errorMessage = "An unexpected error occurred";
       if (err instanceof AxiosError) {
-        setError(err.response?.data?.message || "Failed to confirm membership");
-      } else {
-        setError("An unexpected error occurred");
+        errorMessage =
+          err.response?.data?.message ||
+          "You already have an active membershipp";
       }
+
+      await MySwal.fire({
+        title: "Error",
+        text: errorMessage,
+        icon: "error",
+        confirmButtonColor: "#2563EB",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -255,9 +277,9 @@ export default function BookingModal({
                   className="w-full p-2 border rounded-lg"
                   value={cardDetails.number}
                   onChange={(e) => {
-                    let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
-                    if (value.length > 16) value = value.slice(0, 16); // Limit to 16 digits
-                    const formatted = value.replace(/(.{4})/g, "$1 ").trim(); // Add space every 4 digits
+                    let value = e.target.value.replace(/\D/g, "");
+                    if (value.length > 16) value = value.slice(0, 16);
+                    const formatted = value.replace(/(.{4})/g, "$1 ").trim();
                     setCardDetails({ ...cardDetails, number: formatted });
                   }}
                   inputMode="numeric"
@@ -286,8 +308,6 @@ export default function BookingModal({
                 </div>
               </div>
             )}
-
-            {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
             <div className="flex gap-4 pt-2">
               <button

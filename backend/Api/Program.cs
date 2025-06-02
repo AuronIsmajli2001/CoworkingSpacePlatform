@@ -30,12 +30,12 @@ public class Program
 
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowFrontend", policy =>
+            options.AddPolicy("AllowFrontend",policy =>
             {
-                policy.WithOrigins("http://localhost:5173", "http://localhost:5176")
-                      .AllowAnyHeader()
-                      .AllowAnyMethod()
-                      .AllowCredentials();
+                policy.WithOrigins("http://localhost:5173", "http://localhost:5176", "http://localhost:5174") 
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
             });
         });
 
