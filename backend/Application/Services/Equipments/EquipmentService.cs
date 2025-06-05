@@ -89,8 +89,7 @@ namespace Application.Services.Equipments
                     Name = s.Name,
                     Type = s.Type,
                     Price_per_piece = s.Price_per_piece,
-                    Quantity = s.Quantity,
-                    //Lists
+                    Quantity = s.Quantity
                 }).ToList();
 
                 _logger.LogInformation("Successfully fetched {Count} equipments from the database.", equipmentsDTOs.Count);

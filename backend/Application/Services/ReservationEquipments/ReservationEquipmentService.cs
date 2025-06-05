@@ -24,7 +24,7 @@ namespace Application.Services.ReservationEquipments
             {
                 if (dto.EquipmentIds.Count != dto.Quantity.Count)
                 {
-                    throw new ArgumentException("EquipmentIds and Quantity have the same count.");
+                    throw new ArgumentException("EquipmentIds and Quantity dont have the same count.");
                 }
 
                 for (int i = 0; i < dto.EquipmentIds.Count(); i++)
