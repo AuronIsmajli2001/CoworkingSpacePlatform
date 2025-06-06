@@ -85,15 +85,11 @@ const MyMembership = () => {
     }).then(async (result) => {
       if (result.isConfirmed && user?.userId) {
         try {
-          await api.post(
-            `${baseUrl}/Membership/cancel`,
-            user.userId,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          await api.post(`${baseUrl}/Membership/cancel`, user.userId, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
 
           Swal.fire(
             "Cancelled!",
@@ -102,8 +98,9 @@ const MyMembership = () => {
           );
 
           // Refresh state
+          setNoMembership(true);
           setMembership(null);
-          setError("You have no active membership.");
+          setError(null);
         } catch (error) {
           console.error("Failed to cancel membership", error);
           Swal.fire(
