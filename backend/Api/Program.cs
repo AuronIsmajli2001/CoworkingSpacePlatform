@@ -32,7 +32,7 @@ public class Program
         {
             options.AddPolicy("AllowFrontend",policy =>
             {
-                policy.WithOrigins("http://localhost:5173", "http://localhost:5176", "http://localhost:5174") 
+                policy.WithOrigins("http://localhost:5173", "http://localhost:5175", "http://localhost:5174") 
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
