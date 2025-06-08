@@ -150,6 +150,10 @@ export default function SpaceDetails() {
     return isValid;
   };
 
+  /*Checks that the start date is not in the past
+Ensures the end date is after the start date
+Makes sure the reservation is at least 1 hour long */
+
   const validateForm = () => {
     const errors = {
       paymentMethod: "",
