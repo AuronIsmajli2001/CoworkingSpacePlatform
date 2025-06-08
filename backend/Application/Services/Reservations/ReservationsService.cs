@@ -7,6 +7,7 @@ using Application.DTOs.Users;
 using Application.Interfaces.IUnitOfWork;
 using Application.Services.Auth;
 using Application.Services.ReservationEquipments;
+using Domain.Enums;
 using Domain.Reservations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -186,6 +187,26 @@ namespace Application.Services.Reservations
                 throw;
             }
         }
+
+        public async Task<bool> CancelReservationAsync(string id)
+        {
+            var reservation = await _unitOfWork.Repository<Reservation>().GetByIdAsync(id);
+
+            if (reservation == null || reservation.Status == ReservationStatus.Cancelled)
+            {
+                _logger.LogWarning($"[CancelReservationAsync] Reservation with ID {id} not found or already cancelled.");
+                return false;
+            }
+
+            reservation.Status = ReservationStatus.Cancelled;
+            _unitOfWork.Repository<Reservation>().Update(reservation);
+            await _unitOfWork.CompleteAsync();
+
+            _logger.LogInformation($"[CancelReservationAsync] Reservation with ID {id} was cancelled.");
+            return true;
+        }
+
+
 
         public async Task<List<ReservationDTORead>> GetReservationsByUserIdAsync(string userId)
         {

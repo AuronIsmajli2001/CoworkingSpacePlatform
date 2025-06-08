@@ -35,6 +35,7 @@ type ReservationEquipment = {
 enum ReservationStatus {
   Pending = "Pending",
   Confirmed = "Confirmed",
+  Cancelled = "Cancelled",
 }
 
 enum PaymentMethod {
@@ -902,6 +903,8 @@ const Reservations = () => {
                     >
                       <option value={ReservationStatus.Pending}>Pending</option>
                       <option value={ReservationStatus.Confirmed}>Confirmed</option>
+                      <option value={ReservationStatus.Cancelled}>Cancelled</option>
+
                     </select>
                   </div>
                 </div>
