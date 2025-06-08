@@ -300,7 +300,21 @@ export default function SpaceDetails() {
       }
     } catch (err: any) {
       console.error("Error creating reservation:", err);
-      setError(err.response?.data?.message || "Failed to create reservation");
+
+      const errorMessage =
+        err.response?.data?.message ||
+        "This space is already reserved during the selected time. Please choose a different time.";
+
+      await Swal.fire({
+        icon: "error",
+        title: "Reservation Failed",
+        text: errorMessage,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#dc2626",
+        customClass: {
+          popup: "rounded-2xl",
+        },
+      });
     }
   };
 
@@ -437,11 +451,11 @@ export default function SpaceDetails() {
               Make a Reservation
             </h2>
 
-            {error && (
+            {/* {error && (
               <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
                 {error}
               </div>
-            )}
+            )} */}
 
             <form onSubmit={handleReservationSubmit} className="space-y-4">
               <div>
