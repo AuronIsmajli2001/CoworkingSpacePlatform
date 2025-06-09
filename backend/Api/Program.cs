@@ -17,7 +17,6 @@ using Application.Services.IUserServices;
 using Application.Services.Users;
 using Application.Services.Reservations;
 using Application.Services.ReservationEquipments;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
@@ -50,7 +49,6 @@ public class Program
         // Add your existing services
         builder.Services.AddScoped<ISpaceService, SpaceService>();
         builder.Services.AddScoped<IMembershipService, MembershipService>();
-        /*builder.Services.AddScoped<IPaymentService, PaymentService>();*/
         builder.Services.AddScoped<ISpaceEquipmentService, SpaceEquipmentService>();
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<IAuthService, AuthService>();

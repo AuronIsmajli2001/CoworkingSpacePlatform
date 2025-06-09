@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Payments\**" />
+    <EmbeddedResource Remove="Payments\**" />
+    <None Remove="Payments\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -25,7 +31,6 @@
     <Folder Include="Equipments\" />
     <Folder Include="Memberships\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Payments\" />
     <Folder Include="ReservationEquipments\" />
     <Folder Include="Reservations\" />
     <Folder Include="SpaceEquipments\" />

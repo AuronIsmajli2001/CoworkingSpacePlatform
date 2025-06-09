@@ -23,7 +23,7 @@ const Sidebar = () => {
       icon: <Calendar size={18} />,
     },
     { to: "/memberships", label: "Memberships", icon: <Layers size={18} /> },
-    { to: "/equipment", label: "Equipment", icon: <Wrench size={18} /> },
+    { to: "/equipment", label: "Equipment", icon: <Wrench size={18} /> }
   ];
 
   return (

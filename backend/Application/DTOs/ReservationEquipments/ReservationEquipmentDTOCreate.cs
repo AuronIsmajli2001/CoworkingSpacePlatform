@@ -8,7 +8,6 @@ namespace Application.DTOs.ReservationEquipments
 {
    public  class ReservationEquipmentDTOCreate
     {
-
         public string? ReservationId { get; set; }
         public List<string>? EquipmentIds { get; set; }
         public List<int>? Quantity { get; set; }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
-namespace Api.Reservation
+namespace Api.Reservations
 {
     [ApiController]
     [Route("[controller]")]

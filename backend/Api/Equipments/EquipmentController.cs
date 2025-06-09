@@ -4,7 +4,7 @@ using Application.Services.Equipments;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Api.Equipment
+namespace Api.Equipments
 {
     [ApiController]
     [Route("[controller]")]
