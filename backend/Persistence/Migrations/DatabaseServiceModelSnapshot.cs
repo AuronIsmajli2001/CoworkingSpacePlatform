@@ -88,11 +88,13 @@ namespace Persistence.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("MembershipId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
                     b.Property<string>("ReservationId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("Status")
@@ -103,6 +105,8 @@ namespace Persistence.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MembershipId");
 
                     b.HasIndex("ReservationId");
 
@@ -258,6 +262,9 @@ namespace Persistence.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
+                    b.Property<int>("TokenVersion")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -301,17 +308,21 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Payments.Payment", b =>
                 {
+                    b.HasOne("Domain.Memberships.Membership", "Membership")
+                        .WithMany()
+                        .HasForeignKey("MembershipId");
+
                     b.HasOne("Domain.Reservations.Reservation", "Reservation")
                         .WithMany()
-                        .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReservationId");
 
                     b.HasOne("Domain.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Membership");
 
                     b.Navigation("Reservation");
 
