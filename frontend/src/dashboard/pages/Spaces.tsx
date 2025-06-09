@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -295,12 +296,21 @@ const Spaces = () => {
       console.error("Failed to add space:", err);
       if (err.response) {
         if (err.response.status === 401) {
-          navigate("/auth");
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "You don't have permission to do this action.",
+          }).then(() => {
+            navigate("/auth");
+          });
         } else {
-          alert(
-            err.response.data?.message ||
-              "Failed to add space. Please try again."
-          );
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text:
+              err.response.data?.message ||
+              "You don't have permission to do this action.",
+          });
         }
       } else if (err.request) {
         alert("Network error. Please check your connection.");
