@@ -53,11 +53,13 @@ export default function PricingPlans() {
     setLoading(true);
     api
       .get("/Membership")
-      .then((res) => {
-        if (Array.isArray(res.data)) {
-          setPlans(res.data);
-        }
-      })
+     .then((res) => {
+      if (Array.isArray(res.data)) {
+        const activePlans = res.data.filter((plan: MembershipPlan) => plan.isActive);
+        setPlans(activePlans);
+      }
+    })
+
       .catch((err) => {
         setError("Failed to load plans. Please try again.");
         console.error(err);

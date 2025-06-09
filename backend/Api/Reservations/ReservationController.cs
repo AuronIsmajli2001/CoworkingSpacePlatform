@@ -87,6 +87,25 @@ namespace Api.Reservations
         }
 
         [Authorize]
+        [HttpPost("cancel/{id}")]
+        public async Task<IActionResult> CancelReservation(string id)
+        {
+            try
+            {
+                var result = await _reservationService.CancelReservationAsync(id);
+                if (!result) return NotFound("Reservation not found or already cancelled.");
+
+                return Ok("Reservation cancelled successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in CancelReservation: {ex.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+
+        [Authorize]
         [HttpDelete("{id}", Name = "DeleteReservation")]
         public async Task<IActionResult> DeleteReservation(string id)
         {

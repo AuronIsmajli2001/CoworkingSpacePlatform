@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -92,6 +93,48 @@ const MyReservations = () => {
     }
   }, [reservationEquipments, loading]);
 
+const handleCancelReservation = (reservationId: string) => {
+  Swal.fire({
+    title: "Cancel Reservation",
+    text: "Are you sure you want to cancel this reservation?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, cancel it!",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        const res = await api.post(`${baseUrl}/Reservation/cancel/${reservationId}`);
+
+        const success =
+          (typeof res.data === "string" && res.data.toLowerCase().includes("cancelled")) ||
+          res.status === 200;
+
+        if (success) {
+          Swal.fire("Cancelled!", "Your reservation has been cancelled.", "success");
+          setReservations(prev =>
+            prev.map(r => r.id === reservationId ? { ...r, status: "Cancelled" } : r)
+          );
+        } else {
+          Swal.fire("Error", "Cancellation failed. Try again.", "error");
+        }
+      } catch (err: any) {
+        Swal.fire("Error", err.response?.data?.message || "Failed to cancel the reservation.", "error");
+      }
+    }
+  });
+};
+
+const isCancellable = (createdAt: string, status: string) => {
+  if (status.toLowerCase() === "cancelled") return false;
+  const now = new Date();
+  const created = new Date(createdAt);
+  const diffInHours = (now.getTime() - created.getTime()) / (1000 * 60 * 60);
+  return diffInHours <= 48;
+};
+
+
   return (
     <>
       <Header />
@@ -158,14 +201,6 @@ const MyReservations = () => {
                         </div>
                         <div>
                           <dt className="text-sm font-medium text-gray-600">
-                            Payment Status
-                          </dt>
-                          <dd className="mt-1 text-gray-900">
-                            {reservation.isPaid ? "Paid" : "Not Paid"}
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-sm font-medium text-gray-600">
                             Status
                           </dt>
                           <dd className="mt-1">
@@ -183,6 +218,7 @@ const MyReservations = () => {
                           </dd>
                         </div>
                       </dl>
+
 
                       {/* Show equipments if available */}
                       <div className="mt-6">
@@ -214,6 +250,17 @@ const MyReservations = () => {
                           <p className="text-gray-500 text-sm italic">No equipments included.</p>
                         )}
                       </div>
+                      {isCancellable(reservation.createdAt, reservation.status) && (
+                      <div className="mt-6 flex justify-end">
+                        <button
+                          onClick={() => handleCancelReservation(reservation.id)}
+                          className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+                        >
+                          Cancel Reservation
+                        </button>
+                      </div>
+                    )}
+
                     </div>
                   </div>
                 ))}

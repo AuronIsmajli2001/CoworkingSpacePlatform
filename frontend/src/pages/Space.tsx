@@ -12,90 +12,6 @@ type Space = {
   imageUrl: string;
 };
 
-
-// const allSpaces: Space[] = [
-//   {
-//     id: "1",
-//     name: "Conference Room 1",
-//     type: "Conference Room",
-//     imageUrl: Room1,
-//   },
-//   {
-//     id: "2",
-//     name: "Dedicated Desk",
-//     type: "Dedicated Desk",
-//     imageUrl: DedicatedDesk1,
-//   },
-//   {
-//     id: "11",
-//     name: "Dedicated Desk",
-//     type: "Dedicated Desk",
-//     imageUrl: DedicatedDesk2,
-//   },
-//   {
-//     id: "3",
-//     name: "Executive Events Area",
-//     type: "Events Area",
-//     imageUrl: eventArea,
-//   },
-//   {
-//     id: "4",
-//     name: "Private Office - ZenDen 1",
-//     type: "Private Office",
-//     imageUrl: private_office_1,
-//   },
-//   {
-//     id: "13",
-//     name: "Private Office - ZenDen 1",
-//     type: "Private Office",
-//     imageUrl: private_office_2,
-//   },
-//   {
-//     id: "5",
-//     name: "ZenVen 2 - Team Office",
-//     type: "Private Office",
-//     imageUrl: private_office_3,
-//   },
-
-//   {
-//     id: "6",
-//     name: "Kitchen",
-//     type: "All",
-//     imageUrl: Kitchen,
-//   },
-//   {
-//     id: "7",
-//     name: "Conference Room 3",
-//     type: "Conference Room",
-//     imageUrl: Room3,
-//   },
-//   {
-//     id: "8",
-//     name: "Conference Room 4",
-//     type: "Conference Room",
-//     imageUrl: Room4,
-//   },
-
-//   {
-//     id: "10",
-//     name: "Conference Room 6",
-//     type: "Conference Room",
-//     imageUrl: Room6,
-//   },
-//   {
-//     id: "12",
-//     name: "ZenVen 2 - Team Office",
-//     type: "Private Office",
-//     imageUrl: private_office_4,
-//   },
-//   {
-//     id: "14",
-//     name: "ZenVen 2 - Team Office",
-//     type: "Events Area",
-//     imageUrl: eventArea2,
-//   },
-// ];
-
 const categories = [
   "All",
   "Conference Room",
@@ -115,7 +31,6 @@ export default function Spaces() {
   const [spaces, setSpaces] = useState<Space[]>([]);
 
   useEffect(() => {
-    
     console.log("📡 Requesting spaces from:");
 
     axios
@@ -148,11 +63,9 @@ export default function Spaces() {
           (space) => space.type.toLowerCase() === activeCategory.toLowerCase()
         );
 
-
-useEffect(() => {
-  window.scrollTo(0, 0); // Forces scroll to top on page load
-}, []);
-
+  useEffect(() => {
+    window.scrollTo(0, 0); // Forces scroll to top on page load
+  }, []);
 
   return (
     <>

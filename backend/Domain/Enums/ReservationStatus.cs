@@ -12,6 +12,8 @@ namespace Domain.Enums
         [Display(Name = "Confirmed")]
         Confirmed,
         [Display(Name = "Pending")]
-        Pending
+        Pending,
+        [Display(Name = "Cancelled")]
+        Cancelled
     }
 }

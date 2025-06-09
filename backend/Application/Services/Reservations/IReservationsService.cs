@@ -17,5 +17,7 @@ namespace Application.Services.Reservations
             Task<bool> UpdateReservationAsync(string id, ReservationDTOUpdate dto); 
             Task<bool> DeleteReservationAsync(string id);
             Task<List<ReservationDTORead>> GetReservationsByUserIdAsync(string userId);
+            Task<bool> CancelReservationAsync(string id);
+
     }
 }

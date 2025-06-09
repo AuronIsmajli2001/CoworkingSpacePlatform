@@ -110,6 +110,50 @@ export default function SpaceDetails() {
     setTotalPrice(spaceTotal + equipmentTotal);
   }, [reservationData, space, selectedEquipment, equipmentList]);
 
+  const validateDates = () => {
+    const errors = {
+      startDateTime: "",
+      endDateTime: "",
+      dateRange: "",
+    };
+    let isValid = true;
+
+    if (reservationData.startDateTime) {
+      const startDate = new Date(reservationData.startDateTime);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (startDate < today) {
+        errors.startDateTime = "Start date cannot be before today";
+        isValid = false;
+      }
+    }
+
+    if (reservationData.startDateTime && reservationData.endDateTime) {
+      const start = new Date(reservationData.startDateTime);
+      const end = new Date(reservationData.endDateTime);
+
+      if (end <= start) {
+        errors.dateRange = "End date must be after start date";
+        isValid = false;
+      }
+
+      const durationInHours =
+        (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+      if (durationInHours < 1) {
+        errors.dateRange = "Reservation must be at least 1 hour long";
+        isValid = false;
+      }
+    }
+
+    setFormErrors((prev) => ({ ...prev, ...errors }));
+    return isValid;
+  };
+
+  /*Checks that the start date is not in the past
+Ensures the end date is after the start date
+Makes sure the reservation is at least 1 hour long */
+
   const validateForm = () => {
     const errors = {
       paymentMethod: "",
@@ -209,7 +253,7 @@ export default function SpaceDetails() {
     setError("");
     setSuccess("");
 
-    if (!validateForm()) {
+    if (!validateForm() || !validateDates()) {
       return;
     }
 
@@ -260,7 +304,21 @@ export default function SpaceDetails() {
       }
     } catch (err: any) {
       console.error("Error creating reservation:", err);
-      setError(err.response?.data?.message || "Failed to create reservation");
+
+      const errorMessage =
+        err.response?.data?.message ||
+        "This space is already reserved during the selected time. Please choose a different time.";
+
+      await Swal.fire({
+        icon: "error",
+        title: "Reservation Failed",
+        text: errorMessage,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#dc2626",
+        customClass: {
+          popup: "rounded-2xl",
+        },
+      });
     }
   };
 
@@ -327,7 +385,9 @@ export default function SpaceDetails() {
     reservationData.startDateTime &&
     reservationData.endDateTime &&
     new Date(reservationData.endDateTime) >
-      new Date(reservationData.startDateTime);
+      new Date(reservationData.startDateTime) &&
+    new Date(reservationData.startDateTime) >=
+      new Date(new Date().setHours(0, 0, 0, 0));
 
   return (
     <>
@@ -395,11 +455,11 @@ export default function SpaceDetails() {
               Make a Reservation
             </h2>
 
-            {error && (
+            {/* {error && (
               <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
                 {error}
               </div>
-            )}
+            )} */}
 
             <form onSubmit={handleReservationSubmit} className="space-y-4">
               <div>
@@ -502,6 +562,7 @@ export default function SpaceDetails() {
                   name="startDateTime"
                   value={reservationData.startDateTime}
                   onChange={handleReservationChange}
+                  min={new Date().toISOString().slice(0, 16)}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     formErrors.startDateTime
                       ? "border-red-500"
@@ -528,6 +589,10 @@ export default function SpaceDetails() {
                   name="endDateTime"
                   value={reservationData.endDateTime}
                   onChange={handleReservationChange}
+                  min={
+                    reservationData.startDateTime ||
+                    new Date().toISOString().slice(0, 16)
+                  }
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                     formErrors.endDateTime
                       ? "border-red-500"

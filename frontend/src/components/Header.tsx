@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   Menu,
   X,
+  LayoutDashboard,
 } from "lucide-react";
 import { isAuthenticated } from "../utils/auth";
 import { jwtDecode } from "jwt-decode";
@@ -18,6 +19,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userName, setUserName] = useState("");
+  const [userRole, setUserRole] = useState("");
   const menuRef = useRef(null);
 
   const navItems = [
@@ -34,6 +36,7 @@ const Header = () => {
       try {
         const decoded: any = jwtDecode(token);
         setUserName(decoded.name);
+        setUserRole(decoded.role);
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -54,8 +57,11 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user_role");
     navigate("/auth");
+  };
+
+  const isAdmin = () => {
+    return userRole === "Staff" || userRole === "SuperAdmin";
   };
 
   return (
@@ -124,6 +130,19 @@ const Header = () => {
                   <CalendarCheck size={18} />
                   My Reservations
                 </Link>
+
+                {/* Show Dashboard link only for admin users */}
+                {isAdmin() && (
+                  <Link
+                    to="/dashboard"
+                    className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <LayoutDashboard size={18} />
+                    Dashboard
+                  </Link>
+                )}
+
                 <button
                   onClick={() => {
                     handleLogout();

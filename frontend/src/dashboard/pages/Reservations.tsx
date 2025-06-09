@@ -35,6 +35,7 @@ type ReservationEquipment = {
 enum ReservationStatus {
   Pending = "Pending",
   Confirmed = "Confirmed",
+  Cancelled = "Cancelled",
 }
 
 enum PaymentMethod {
@@ -156,13 +157,17 @@ const Reservations = () => {
             name: res.space?.name || `Space ${res.spaceId}`,
           },
           reservationEquipment: res.reservationEquipment?.map((eq: any) => ({
-            id: eq.id,
-            name: eq.name,
-            quantity: eq.quantity,
-          })) || [],
-          paymentMethod: res.paymentMethod,
-          isPaid: res.isPaid,
-        }));
+          id: eq.equipment?.id || eq.id,
+          name: eq.equipment?.name || eq.name,
+          quantity: eq.quantity,
+        })) || res.equipment?.map((eq: any) => ({
+          id: eq.id,
+          name: eq.name,
+          quantity: eq.quantity,
+        })) || [],
+        paymentMethod: res.paymentMethod,
+        isPaid: res.isPaid,
+      }));
 
         setReservations(mappedReservations);
         setTotalReservations(mappedReservations.length);
@@ -898,6 +903,8 @@ const Reservations = () => {
                     >
                       <option value={ReservationStatus.Pending}>Pending</option>
                       <option value={ReservationStatus.Confirmed}>Confirmed</option>
+                      <option value={ReservationStatus.Cancelled}>Cancelled</option>
+
                     </select>
                   </div>
                 </div>

@@ -29,6 +29,7 @@ const Spaces = () => {
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [showTypeFilter, setShowTypeFilter] = useState(false);
 
   const [newSpace, setNewSpace] = useState({
     name: "",
@@ -391,33 +392,6 @@ const Spaces = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-gray-800 text-white border border-gray-700 rounded px-4 py-2 text-sm w-full md:w-64"
             />
-
-            {/* Space Type Filters - Responsive */}
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveFilter(null)}
-                className={`px-3 py-1 rounded-full text-xs ${
-                  !activeFilter
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                }`}
-              >
-                All
-              </button>
-              {spaceTypes.map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setActiveFilter(type)}
-                  className={`px-3 py-1 rounded-full text-xs ${
-                    activeFilter === type
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                  }`}
-                >
-                  {type}
-                </button>
-              ))}
-            </div>
           </div>
 
           {/* Main Table */}
@@ -437,7 +411,46 @@ const Spaces = () => {
                     />
                   </th>
                   <th className="p-3">Name</th>
-                  <th className="p-3 hidden sm:table-cell">Type</th>
+                  <th className="p-3 hidden sm:table-cell relative">
+                    <div className="flex items-center gap-1">
+                      Type
+                      <button
+                        onClick={() => setShowTypeFilter(!showTypeFilter)}
+                        className="text-gray-400 hover:text-white"
+                        title="Filter by type"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path d="M3 5a1 1 0 012 0v1h10V5a1 1 0 112 0v1a1 1 0 01-1 1H4a1 1 0 01-1-1V5zM5 9h10a1 1 0 010 2H5a1 1 0 010-2zm3 4h4a1 1 0 010 2H8a1 1 0 010-2z" />
+                        </svg>
+                      </button>
+                    </div>
+                    {showTypeFilter && (
+                      <div className="absolute top-full left-0 mt-2 bg-gray-800 border border-gray-700 rounded shadow-md z-10 p-2">
+                        <select
+                          value={activeFilter || "All"}
+                          onChange={(e) => {
+                            setActiveFilter(
+                              e.target.value === "All" ? null : e.target.value
+                            );
+                            setShowTypeFilter(false);
+                          }}
+                          className="bg-gray-700 text-white p-1 text-xs rounded"
+                        >
+                          <option value="All">All</option>
+                          {spaceTypes.map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </th>
                   <th className="p-3">Capacity</th>
                   <th className="p-3">Price</th>
                   <th className="p-3 hidden md:table-cell">Location</th>

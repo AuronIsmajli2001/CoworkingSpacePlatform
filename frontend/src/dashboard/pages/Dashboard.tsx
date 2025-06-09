@@ -75,11 +75,11 @@ const Dashboard = () => {
       value: 0,
       icon: FiMapPin,
     },
-    {
-      title: "Revenue",
-      value: 0,
-      icon: FiDollarSign,
-    },
+    // {
+    //   title: "Revenue",
+    //   value: 0,
+    //   icon: FiDollarSign,
+    // },
   ]);
 
   const [loading, setLoading] = useState({
@@ -108,7 +108,11 @@ const Dashboard = () => {
     }
     try {
       const decoded: any = jwtDecode(token);
-      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+      if (
+        decoded.role !== "Staff" &&
+        decoded.role !== "SuperAdmin" &&
+        decoded.role !== "Admin"
+      ) {
         navigate("/auth");
       }
     } catch (err) {
