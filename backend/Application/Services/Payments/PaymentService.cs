@@ -1,182 +1,9 @@
-﻿//using Application.DTOs.Payments;
-//using Application.Interfaces.IUnitOfWork;
-//using Domain.Payments;
-//using Microsoft.Extensions.Logging;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
-//using Microsoft.EntityFrameworkCore;
-
-//namespace Application.Services.Payments
-//{
-//    public class PaymentService : IPaymentService
-//    {
-//        private readonly IUnitOfWork _unitOfWork;
-//        private readonly ILogger<PaymentService> _logger;
-
-//        public PaymentService(IUnitOfWork unitOfWork, ILogger<PaymentService> logger)
-//        {
-//            _unitOfWork = unitOfWork;
-//            _logger = logger;
-//        }
-
-//        // Create a new payment
-//        public async Task CreatePaymentAsync(PaymentDTOCreate paymentDTO)
-//        {
-//            try
-//            {
-//                _logger.LogInformation("Creating a new payment for Reservation ID: {ReservationId} by User ID: {UserId}", paymentDTO.ReservationId, paymentDTO.UserId);
-
-//                var payment = new Payment
-//                {
-//                    Id = Guid.NewGuid().ToString(),
-//                    UserId = paymentDTO.UserId,
-//                    MembershipId = paymentDTO.MembershipId, 
-//                    ReservationId = paymentDTO.ReservationId,                
-//                    PaymentMethod = paymentDTO.PaymentMethod
-//                };
-
-//                _unitOfWork.Repository<Payment>().Create(payment);
-//                await _unitOfWork.CompleteAsync();
-//                _logger.LogInformation("Payment created successfully with ID: {PaymentId}", payment.Id);
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "Error occurred while creating payment.");
-//                throw;
-//            }
-//        }
-
-//        // Get a payment by ID
-//        public async Task<PaymentDTORead> GetPaymentByIdAsync(string id)
-//        {
-//            try
-//            {
-//                _logger.LogInformation("Fetching payment with ID: {PaymentId}", id);
-
-//                var payment = await _unitOfWork.Repository<Payment>().GetById(id).FirstOrDefaultAsync();
-
-//                if (payment == null)
-//                {
-//                    _logger.LogWarning("Payment with ID: {PaymentId} not found", id);
-//                    return null;
-//                }
-
-//                _logger.LogInformation("Successfully fetched payment with ID: {PaymentId}", id);
-
-//                return new PaymentDTORead
-//                {
-//                    Id = payment.Id,
-//                    UserId = payment.UserId,
-//                    ReservationId = payment.ReservationId,
-//                    Status = payment.Status,
-//                    PaymentMethod = payment.PaymentMethod
-//                };
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "Error occurred while fetching payment with ID: {PaymentId}", id);
-//                throw;
-//            }
-//        }
-
-//        // Get all payments
-//        public async Task<IEnumerable<PaymentDTORead>> GetAllPaymentsAsync()
-//        {
-//            try
-//            {
-//                _logger.LogInformation("Fetching all payments");
-
-//                var payments = await _unitOfWork.Repository<Payment>().GetAllAsync();
-
-//                var paymentDTOs = payments.Select(p => new PaymentDTORead
-//                {
-//                    Id = p.Id,
-//                    UserId = p.UserId,
-//                    ReservationId = p.ReservationId,
-//                    Status = p.Status,
-//                    PaymentMethod = p.PaymentMethod
-//                }).ToList();
-
-//                _logger.LogInformation("Successfully fetched {Count} payments", paymentDTOs.Count);
-//                return paymentDTOs;
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "Error occurred while fetching all payments.");
-//                throw;
-//            }
-//        }
-
-//        // Update an existing payment
-//        public async Task<PaymentDTORead> UpdatePaymentAsync(PaymentDTOUpdate paymentDTOUpdate)
-//        {
-//            try
-//            {
-//                _logger.LogInformation("Updating payment with ID: {PaymentId}", paymentDTOUpdate.Id);
-
-//                var payment = await _unitOfWork.Repository<Payment>().GetById(paymentDTOUpdate.Id).FirstOrDefaultAsync();
-
-//                if (payment == null)
-//                {
-//                    _logger.LogWarning("Cannot update. Payment with ID: {PaymentId} not found.", paymentDTOUpdate.Id);
-//                    return null;
-//                }
-
-//                // Update the payment status and method
-//                payment.Status = paymentDTOUpdate.Status ?? payment.Status;
-//                payment.PaymentMethod = paymentDTOUpdate.PaymentMethod ?? payment.PaymentMethod;
-
-//                _unitOfWork.Repository<Payment>().Update(payment);
-//                await _unitOfWork.CompleteAsync();
-
-//                _logger.LogInformation("Payment with ID: {PaymentId} updated successfully", paymentDTOUpdate.Id);
-
-//                return new PaymentDTORead
-//                {
-//                    Id = payment.Id,
-//                    UserId = payment.UserId,
-//                    ReservationId = payment.ReservationId,
-//                    Status = payment.Status,
-//                    PaymentMethod = payment.PaymentMethod
-//                };
-//            }
-//            catch (Exception ex)
-//            {
-//                _logger.LogError(ex, "Error occurred while updating payment with ID: {PaymentId}", paymentDTOUpdate.Id);
-//                throw;
-//            }
-//        }
-
-//        public Task<PaymentDTORead> GetPaymentById(string id)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public Task<IEnumerable<PaymentDTORead>> GetAllPayments()
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        Task<Payment> IPaymentService.UpdatePaymentAsync(PaymentDTOUpdate paymentDTOUpdate)
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
-//}using Application.DTOs.Payments;
-
-
-using Application.DTOs.Payments;
+﻿using Application.DTOs.Payments;
 using Application.Interfaces.IUnitOfWork;
+using Domain.Enums;
 using Domain.Payments;
-using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Application.Services.Payments
 {
@@ -191,50 +18,117 @@ namespace Application.Services.Payments
             _logger = logger;
         }
 
-        public async Task CreatePaymentAsync(PaymentDTOCreate paymentDTO)
+        public async Task<string> CreatePaymentAsync(PaymentDTOCreate dto)
         {
             try
             {
-                _logger.LogInformation("Creating payment for User {UserId}", paymentDTO.UserId);
+                var status = Status.Approved;
+                if(dto.PaymentMethod == PaymentMethod.Cash)
+                {
+                    status = Status.Pending;
+                }
 
-                // Validate the payment first
-                if (string.IsNullOrEmpty(paymentDTO.UserId))
-                    throw new ArgumentException("User ID is required");
-
-                if (string.IsNullOrEmpty(paymentDTO.ReservationId) && string.IsNullOrEmpty(paymentDTO.MembershipId))
-                    throw new ArgumentException("Either ReservationID or MembershipID must be provided");
-
-                // Create the payment record
                 var payment = new Payment
                 {
                     Id = Guid.NewGuid().ToString(),
-                    UserId = paymentDTO.UserId,
-                    ReservationId = paymentDTO.ReservationId,
-                    MembershipId = paymentDTO.MembershipId,
-                    PaymentMethod = paymentDTO.PaymentMethod
+                    UserId = dto.UserId,
+                    ReservationId = dto.ReservationId,
+                    MembershipId = dto.MembershipId,
+                    PaymentMethod = dto.PaymentMethod,
+                    CreatedAt = DateTime.UtcNow,
+                    Status = status,
                 };
-
                 _unitOfWork.Repository<Payment>().Create(payment);
                 await _unitOfWork.CompleteAsync();
-
-                _logger.LogInformation("Payment {PaymentId} created successfully", payment.Id);
+                _logger.LogInformation("Payment created successfully with ID: {Id}", payment.Id);
+                return "Payment created successfully!";
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while creating payment!");
+                throw new Exception("Database error!" + dbEx.Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to create payment");
+                _logger.LogError(ex, "Error while creating payment!");
                 throw;
             }
         }
 
-        public async Task<PaymentDTORead> GetPaymentById(string id)
+        public async Task<string> DeletePaymentAsync(string id)
         {
             try
             {
-                var payment = await _unitOfWork.Repository<Payment>()
-                    .GetByIdAsync(id); // Using GetByIdAsync directly
+                var payment = await _unitOfWork.Repository<Payment>().GetByIdAsync(id);
 
                 if (payment == null)
+                {
+                    throw new Exception("This Payment does not exist");
+                }
+
+                _unitOfWork.Repository<Payment>().Delete(payment);
+                await _unitOfWork.CompleteAsync();
+                return ("Payment deleted successfully!");
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while deleting Payment with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while deleting Payment with ID: {Id}", id);
+                throw;
+            }
+        }
+
+        public async Task<List<PaymentDTORead>> GetAllPaymentsAsync()
+        {
+            try
+            {
+                var payments = await _unitOfWork.Repository<Payment>().GetAllAsync();
+
+                var paymentsDTOs = payments.Select(dto => new PaymentDTORead
+                {
+                    Id = dto.Id,
+                    UserId = dto.UserId,
+                    ReservationId = dto.ReservationId,
+                    MembershipId = dto.MembershipId,
+                    PaymentMethod = dto.PaymentMethod,
+                    CreatedAt = dto.CreatedAt,
+                }).ToList();
+
+                _logger.LogInformation("Successfully fetched {Count} Payments from the database.", paymentsDTOs.Count);
+
+                return paymentsDTOs;
+            }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while retrieving all Payments.");
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while retrieving all Payments.");
+                throw;
+            }
+        }
+
+        public async Task<PaymentDTORead> GetPaymentByIdAsync(string id)
+        {
+            try
+            {
+                _logger.LogInformation("Fetching Payment with ID: {Id}", id);
+
+                var payment = await _unitOfWork.Repository<Payment>().GetByIdAsync(id);
+
+                if (payment == null)
+                {
+                    _logger.LogWarning("Payment with ID {Id} not found.", id);
                     return null;
+                }
+
+                _logger.LogInformation("Successfully fetched Payment with ID: {Id}", id);
 
                 return new PaymentDTORead
                 {
@@ -242,90 +136,63 @@ namespace Application.Services.Payments
                     UserId = payment.UserId,
                     ReservationId = payment.ReservationId,
                     MembershipId = payment.MembershipId,
-                    PaymentMethod = payment.PaymentMethod
+                    PaymentMethod = payment.PaymentMethod,
+                    CreatedAt = payment.CreatedAt,
+
                 };
             }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while retrieving space with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting payment {PaymentId}", id);
+                _logger.LogError(ex, "Error while fetching space with ID: {Id}", id);
                 throw;
             }
         }
 
-        public async Task<IEnumerable<PaymentDTORead>> GetAllPayments()
+        public async Task<string> UpdatePaymentAsync(string id, PaymentDTOUpdate dto)
         {
             try
             {
-                var payments = await _unitOfWork.Repository<Payment>()
-                    .GetAllAsync();
+                _logger.LogInformation("Updating Payment with ID: {Id}", id);
 
-                return payments.Select(p => new PaymentDTORead
-                {
-                    Id = p.Id,
-                    UserId = p.UserId,
-                    ReservationId = p.ReservationId,
-                    MembershipId = p.MembershipId,
-                    PaymentMethod = p.PaymentMethod
-                }).ToList();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting payments");
-                throw;
-            }
-        }
-
-        public async Task<Payment> UpdatePaymentAsync(PaymentDTOUpdate paymentDTOUpdate)
-        {
-            try
-            {
-                _logger.LogInformation("Updating payment with ID: {PaymentId}", paymentDTOUpdate.Id);
-
-                var payment = await _unitOfWork.Repository<Payment>()
-                    .GetByIdAsync(paymentDTOUpdate.Id);
+                var payment = await _unitOfWork.Repository<Payment>().GetByIdAsync(id);
 
                 if (payment == null)
                 {
-                    _logger.LogWarning("Payment with ID: {PaymentId} not found", paymentDTOUpdate.Id);
+                    _logger.LogWarning("Cannot update. Payment with ID {Id} not found.", id);
                     return null;
                 }
 
-                // Update payment properties
-                if (paymentDTOUpdate.PaymentMethod.HasValue)
+                if (dto.PaymentMethod == null)
                 {
-                    payment.PaymentMethod = paymentDTOUpdate.PaymentMethod.Value;
+                    dto.PaymentMethod = payment.PaymentMethod;
                 }
 
+                payment.PaymentMethod = dto.PaymentMethod;
 
-                //                _unitOfWork.Repository<Payment>().Update(payment);
-                //                await _unitOfWork.CompleteAsync();
+                _unitOfWork.Repository<Payment>().Update(payment);
+                await _unitOfWork.CompleteAsync();
 
-                return payment;
+                _logger.LogInformation("Successfully updated space with ID: {Id}", id);
+
+                return ("Payment updated successfully!");
             }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Database error while updating space with ID: {Id} !", id);
+                throw new Exception(dbEx.Message);
+            }
+
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating payment {PaymentId}", paymentDTOUpdate.Id);
+                _logger.LogError(ex, "Error while updating space with ID: {Id}", id);
                 throw;
             }
         }
 
-        // Additional methods not in the interface but useful for business logic
-        public async Task<bool> UserHasMembershipAsync(string userId)
-        {
-            try
-            {
-                var user = await _unitOfWork.Repository<User>()
-                    .GetByIdAsync(userId);
-
-                return user?.MembershipId != null;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error checking membership for user {UserId}", userId);
-                throw;
-            }
-        }
     }
 }
-    
-    

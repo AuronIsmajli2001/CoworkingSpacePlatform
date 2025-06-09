@@ -10,8 +10,8 @@ namespace Domain.Enums
     public enum PaymentMethod
     {
         [Display(Name = "Cash")]
-        OnSite,
+        Cash,
         [Display(Name = "Card")]
-        Online
+        Card
     }
 }
