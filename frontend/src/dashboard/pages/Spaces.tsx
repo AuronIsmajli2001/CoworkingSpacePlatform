@@ -439,6 +439,7 @@ const Spaces = () => {
                         </svg>
                       </button>
                     </div>
+
                     {showTypeFilter && (
                       <div className="absolute top-full left-0 mt-2 bg-gray-800 border border-gray-700 rounded shadow-md z-10 p-2">
                         <select
@@ -452,11 +453,12 @@ const Spaces = () => {
                           className="bg-gray-700 text-white p-1 text-xs rounded"
                         >
                           <option value="All">All</option>
-                          {spaceTypes.map((type) => (
-                            <option key={type} value={type}>
-                              {type}
-                            </option>
-                          ))}
+                          <option value="Conference Room">
+                            Conference Room
+                          </option>
+                          <option value="Events Area">Events Area</option>
+                          <option value="Dedicated Desk">Dedicated Desk</option>
+                          <option value="Private Office">Private Office</option>
                         </select>
                       </div>
                     )}
@@ -654,10 +656,10 @@ const Spaces = () => {
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
-                      <option>Conference</option>
-                      <option>Workspace</option>
-                      <option>Meeting Room</option>
-                      <option>Event Space</option>
+                      <option>Conference Room</option>
+                      <option>Events Area</option>
+                      <option>Dedicated Desk</option>
+                      <option>Private Office</option>
                     </select>
                   </div>
 
