@@ -14,7 +14,7 @@ export const login = async (
   formData.append("username", username);
   formData.append("password", password);
 
-  const response = await api.post<AuthResponse>("/auth/login", formData, {
+  const response = await api.post<AuthResponse>("/api/Auth/login", formData, {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
@@ -36,7 +36,7 @@ export const signUp = async (
   formData.append("firstName", firstName);
   formData.append("lastName", lastName);
 
-  await api.post("/auth/signup", formData);
+  await api.post("/api/Auth/signup", formData);
 };
 
 export const getCurrentUser = async (): Promise<any> => {
@@ -47,7 +47,7 @@ export const getCurrentUser = async (): Promise<any> => {
 export const logout = async (): Promise<void> => {
   const refreshToken = localStorage.getItem("refreshToken");
   if (refreshToken) {
-    await api.post("/auth/revoke-token", { refreshToken });
+    await api.post("/api/Auth/revoke-token", { refreshToken });
   }
   localStorage.clear();
 };

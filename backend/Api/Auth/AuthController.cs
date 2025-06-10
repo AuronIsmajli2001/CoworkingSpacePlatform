@@ -78,26 +78,40 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh-token")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(AuthTokens), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AuthTokens>> RefreshToken([FromBody] RefreshTokenRequestDTO request)
     {
         try
         {
+            _logger.LogInformation("Refresh token attempt - Access Token: {AccessToken}, Refresh Token: {RefreshToken}", 
+                request.AccessToken?.Substring(0, 10) + "...", 
+                request.RefreshToken?.Substring(0, 10) + "...");
+
+            if (string.IsNullOrEmpty(request.AccessToken) || string.IsNullOrEmpty(request.RefreshToken))
+            {
+                _logger.LogWarning("Missing tokens in refresh request");
+                return BadRequest(new ErrorResponseDTO("Both access token and refresh token are required"));
+            }
+
             var tokens = await _authService.RefreshToken(request.AccessToken, request.RefreshToken);
+            
+            _logger.LogInformation("Token refresh successful for user");
             return Ok(tokens);
         }
         catch (SecurityTokenException ex)
         {
-            _logger.LogWarning(ex, "Invalid refresh token attempt");
+            _logger.LogWarning(ex, "Invalid refresh token attempt: {Message}", ex.Message);
             return Unauthorized(new ErrorResponseDTO(ex.Message));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during token refresh");
+            _logger.LogError(ex, "Error during token refresh: {Message}", ex.Message);
             return StatusCode(500, new ErrorResponseDTO("An error occurred while refreshing token"));
         }
     }
 
-    [Authorize]
     [HttpPost("revoke-token")]
     public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequestDTO request)
     {

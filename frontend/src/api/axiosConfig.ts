@@ -77,7 +77,7 @@ const refreshToken = async (): Promise<string> => {
         }
 
         console.log("Making refresh token request...");
-        const response = await api.post("/auth/refresh-token", {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/Auth/refresh-token`, {
           accessToken,
           refreshToken: refreshTokenValue,
         });

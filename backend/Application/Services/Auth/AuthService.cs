@@ -67,45 +67,71 @@ public class AuthService : IAuthService
 
     public async Task<AuthTokens> RefreshToken(string accessToken, string refreshToken)
     {
-        // 1. Validate the expired access token
-        var principal = GetPrincipalFromExpiredToken(accessToken);
-        var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+        try
+        {
+            // 1. Validate the expired access token
+            var principal = GetPrincipalFromExpiredToken(accessToken);
+            var userIdClaim = principal.FindFirst("userId");
 
-        if (userIdClaim == null)
-            throw new SecurityTokenException("Invalid token claims");
+            if (userIdClaim == null)
+                throw new SecurityTokenException("Invalid token claims - missing user ID");
 
-        var userId = userIdClaim.Value;
+            var userId = userIdClaim.Value;
 
-        // 2. Validate the refresh token
-        var storedToken = await _unitOfWork.Repository<RefreshToken>()
-            .GetByCondition(rt =>
-                rt.Token == refreshToken &&
-                rt.UserId == userId &&
-                rt.Expires > DateTime.UtcNow &&
-                rt.Revoked == null)
-            .FirstOrDefaultAsync();
+            // 2. Validate the refresh token
+            var storedToken = await _unitOfWork.Repository<RefreshToken>()
+                .GetByCondition(rt =>
+                    rt.Token == refreshToken &&
+                    rt.UserId == userId &&
+                    rt.Expires > DateTime.UtcNow &&
+                    rt.Revoked == null)
+                .FirstOrDefaultAsync();
 
-        if (storedToken == null)
-            throw new SecurityTokenException("Invalid refresh token");
+            if (storedToken == null)
+            {
+                // Check if token exists but is expired
+                var expiredToken = await _unitOfWork.Repository<RefreshToken>()
+                    .GetByCondition(rt => rt.Token == refreshToken)
+                    .FirstOrDefaultAsync();
 
-        // 3. Revoke the old token
-        storedToken.Revoked = DateTime.UtcNow;
-        _unitOfWork.Repository<RefreshToken>().Update(storedToken);
+                if (expiredToken != null)
+                {
+                    if (expiredToken.Expires <= DateTime.UtcNow)
+                        throw new SecurityTokenException("Refresh token has expired");
+                    if (expiredToken.Revoked != null)
+                        throw new SecurityTokenException("Refresh token has been revoked");
+                    if (expiredToken.UserId != userId)
+                        throw new SecurityTokenException("Refresh token does not belong to this user");
+                }
+                else
+                {
+                    throw new SecurityTokenException("Refresh token not found");
+                }
+            }
 
-        // 4. Get user and generate new tokens
-        var user = await _unitOfWork.Repository<User>()
-            .GetByCondition(u => u.Id == userId)
-            .FirstOrDefaultAsync();
+            // 3. Revoke the old token
+            storedToken.Revoked = DateTime.UtcNow;
+            _unitOfWork.Repository<RefreshToken>().Update(storedToken);
 
-        if (user == null)
-            throw new SecurityTokenException("User not found");
+            // 4. Get user and generate new tokens
+            var user = await _unitOfWork.Repository<User>()
+                .GetByCondition(u => u.Id == userId)
+                .FirstOrDefaultAsync();
 
-        // 5. Generate new tokens (this creates a new refresh token)
-        var newTokens = await GenerateTokens(user);
+            if (user == null)
+                throw new SecurityTokenException("User not found");
 
-        await _unitOfWork.CompleteAsync();
+            // 5. Generate new tokens (this creates a new refresh token)
+            var newTokens = await GenerateTokens(user);
 
-        return newTokens;
+            await _unitOfWork.CompleteAsync();
+
+            return newTokens;
+        }
+        catch (Exception ex)
+        {
+            throw new SecurityTokenException($"Token refresh failed: {ex.Message}");
+        }
     }
 
     public async Task RevokeRefreshToken(string refreshToken)

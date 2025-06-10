@@ -5,6 +5,7 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import api from "../api/axiosConfig";
 
 interface User {
   userId: string;
@@ -19,25 +20,87 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const callRefreshToken = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
+  console.log("[AuthContext] Attempting refresh with:", { accessToken, refreshToken });
+  if (!accessToken || !refreshToken) return;
+
+  try {
+    const response = await api.post(`${import.meta.env.VITE_API_BASE_URL}/api/Auth/refresh-token`, {
+      accessToken,
+      refreshToken,
+    });
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+    console.log("[AuthContext] Refresh successful. Old accessToken:", accessToken, "New accessToken:", newAccessToken);
+    localStorage.setItem("accessToken", newAccessToken);
+    localStorage.setItem("refreshToken", newRefreshToken);
+    return newAccessToken;
+  } catch (error) {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      console.error("[AuthContext] Refresh failed: Unauthorized/Invalid token", error);
+      localStorage.clear();
+      window.location.href = "/auth";
+    } else {
+      console.warn("[AuthContext] Token refresh failed due to network or server error. Will retry on next activity.", error);
+    }
+  }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      try {
+  const refreshUserToken = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
         const decoded: any = jwtDecode(token);
         setUser({
           userId: decoded.userId,
           role: decoded.role,
           membershipId: decoded.membershipId,
         });
-      } catch (err) {
-        console.error("Failed to decode token", err);
       }
-    }
+    } catch (err) {
+      console.error("Failed to refresh user token", err);
+      // If token is invalid, clear user state
+      setUser(null);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+    } 
+  };
+
+  useEffect(() => {
+    // Initial token check
+    refreshUserToken();
+
+    // Set up periodic token refresh (every 2 minutes)
+    const refreshInterval = setInterval(() => {
+      callRefreshToken().then(refreshUserToken);
+    }, 2 * 60 * 1000); // every 2 minutes
+
+    // Set up visibility change listener to refresh token when tab becomes visible
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        callRefreshToken().then(refreshUserToken);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      clearInterval(refreshInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Call your refresh logic here
+    }, 60 * 1000); // every 1 minute
+    return () => clearInterval(interval);
   }, []);
 
   return (
