@@ -808,10 +808,10 @@ const Spaces = () => {
                       required
                     >
                       <option value="">Select type</option>
-                      <option>Conference</option>
-                      <option>Workspace</option>
-                      <option>Meeting Room</option>
-                      <option>Event Space</option>
+                      <option>Conference Room</option>
+                      <option>Dedicated Desk</option>
+                      <option>Private Office</option>
+                      <option>Events Area</option>
                     </select>
                   </div>
 

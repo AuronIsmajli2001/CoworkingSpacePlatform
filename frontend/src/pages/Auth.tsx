@@ -312,7 +312,7 @@ export default function Auth() {
                   className={`bg-white border ${
                     errors.username ? "border-red-500" : "border-gray-300"
                   } text-gray-900 rounded-lg block w-full pl-10 p-2.5 text-sm`}
-                  placeholder="johndoe"
+                  placeholder="username"
                 />
               </div>
               {errors.username && (
