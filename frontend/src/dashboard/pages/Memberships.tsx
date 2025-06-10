@@ -82,7 +82,11 @@ const Memberships = () => {
     }
     try {
       const decoded: any = jwtDecode(token);
-      if (decoded.role !== "Staff" && decoded.role !== "SuperAdmin" && decoded.role !== "Admin") {
+      if (
+        decoded.role !== "Staff" &&
+        decoded.role !== "SuperAdmin" &&
+        decoded.role !== "Admin"
+      ) {
         navigate("/auth");
       }
     } catch (err) {
@@ -94,26 +98,47 @@ const Memberships = () => {
     try {
       const response = await api.get(`${baseUrl}/Membership`);
       setMemberships(response.data);
-      
+
       // Calculate statistics
       setTotalMemberships(response.data.length);
-      setActiveMemberships(response.data.filter((m: Membership) => m.isActive).length);
-      setMonthlyMemberships(response.data.filter((m: Membership) => m.billingType === "Monthly").length);
-      setYearlyMemberships(response.data.filter((m: Membership) => m.billingType === "Yearly").length);
+      setActiveMemberships(
+        response.data.filter((m: Membership) => m.isActive).length
+      );
+      setMonthlyMemberships(
+        response.data.filter((m: Membership) => m.billingType === "Monthly")
+          .length
+      );
+      setYearlyMemberships(
+        response.data.filter((m: Membership) => m.billingType === "Yearly")
+          .length
+      );
     } catch (err: any) {
       console.error("API Error:", err);
       if (err.response) {
         if (err.response.status === 404) {
           setNotification({ message: "No memberships found.", type: "error" });
         } else if (err.response.status === 500) {
-          setNotification({ message: "Server error. Please try again later.", type: "error" });
+          setNotification({
+            message: "Server error. Please try again later.",
+            type: "error",
+          });
         } else {
-          setNotification({ message: err.response.data?.message || "Failed to load memberships.", type: "error" });
+          setNotification({
+            message:
+              err.response.data?.message || "Failed to load memberships.",
+            type: "error",
+          });
         }
       } else if (err.request) {
-        setNotification({ message: "Network error. Please check your connection.", type: "error" });
+        setNotification({
+          message: "Network error. Please check your connection.",
+          type: "error",
+        });
       } else {
-        setNotification({ message: err.message || "An unexpected error occurred", type: "error" });
+        setNotification({
+          message: err.message || "An unexpected error occurred",
+          type: "error",
+        });
       }
     }
   };
@@ -166,24 +191,25 @@ const Memberships = () => {
   };
 
   const toggleMembershipStatus = async (id: string, currentStatus: boolean) => {
-  try {
-    await api.put(`${baseUrl}/Membership/${id}`, {
-      isActive: !currentStatus,
-    });
-    fetchMemberships();
-    setNotification({
-      message: `Membership has been ${!currentStatus ? "activated" : "deactivated"}.`,
-      type: "success",
-    });
-  } catch (err) {
-    console.error("Status toggle failed", err);
-    setNotification({
-      message: "Failed to update membership status.",
-      type: "error",
-    });
-  }
-};
-
+    try {
+      await api.put(`${baseUrl}/Membership/${id}`, {
+        isActive: !currentStatus,
+      });
+      fetchMemberships();
+      setNotification({
+        message: `Membership has been ${
+          !currentStatus ? "activated" : "deactivated"
+        }.`,
+        type: "success",
+      });
+    } catch (err) {
+      console.error("Status toggle failed", err);
+      setNotification({
+        message: "Failed to update membership status.",
+        type: "error",
+      });
+    }
+  };
 
   const handleBulkDelete = async () => {
     try {
@@ -196,11 +222,17 @@ const Memberships = () => {
         prev.filter((m) => !selectedMemberships.includes(m.id))
       );
       setSelectedMemberships([]);
-      setNotification({ message: "Selected memberships deleted.", type: "success" });
+      setNotification({
+        message: "Selected memberships deleted.",
+        type: "success",
+      });
       fetchMemberships();
     } catch (error) {
       console.error("Bulk delete failed", error);
-      setNotification({ message: "Failed to delete selected memberships.", type: "error" });
+      setNotification({
+        message: "Failed to delete selected memberships.",
+        type: "error",
+      });
     }
   };
 
@@ -221,24 +253,46 @@ const Memberships = () => {
     if (!editingMembership) return;
     try {
       const body = {
-        title: editingMembership.title.trim() === "" ? null : editingMembership.title,
-        price: editingMembership.price === null ? null : editingMembership.price,
-        includesVAT: editingMembership.includesVAT.trim() === "" ? null : editingMembership.includesVAT === "true",
-        description: editingMembership.description.trim() === "" ? null : editingMembership.description,
-        additionalServices: editingMembership.additionalServices.trim() === "" ? null : editingMembership.additionalServices,
-        isActive: editingMembership.isActive.trim() === "" ? null : editingMembership.isActive === "true",
-        billingType: editingMembership.billingType.trim() === "" ? null : editingMembership.billingType,
+        title:
+          editingMembership.title.trim() === ""
+            ? null
+            : editingMembership.title,
+        price:
+          editingMembership.price === null ? null : editingMembership.price,
+        includesVAT:
+          editingMembership.includesVAT.trim() === ""
+            ? null
+            : editingMembership.includesVAT === "true",
+        description:
+          editingMembership.description.trim() === ""
+            ? null
+            : editingMembership.description,
+        additionalServices:
+          editingMembership.additionalServices.trim() === ""
+            ? null
+            : editingMembership.additionalServices,
+        isActive:
+          editingMembership.isActive.trim() === ""
+            ? null
+            : editingMembership.isActive === "true",
+        billingType:
+          editingMembership.billingType.trim() === ""
+            ? null
+            : editingMembership.billingType,
       };
-      await api.put(
-        `${baseUrl}/Membership/${editingMembership.id}`,
-        body
-      );
+      await api.put(`${baseUrl}/Membership/${editingMembership.id}`, body);
       fetchMemberships();
-      setNotification({ message: "Membership successfully updated.", type: "success" });
+      setNotification({
+        message: "Membership successfully updated.",
+        type: "success",
+      });
       setEditingMembership(null);
     } catch (error) {
       console.error("Edit membership failed", error);
-      setNotification({ message: "Failed to update membership.", type: "error" });
+      setNotification({
+        message: "Failed to update membership.",
+        type: "error",
+      });
     }
   };
 
@@ -263,9 +317,18 @@ const Memberships = () => {
         additionalServices: newMembership.additionalServices,
         billingType: newMembership.billingType,
       };
+
       await api.post(`${baseUrl}/Membership`, body);
+
+      // Success notification with SweetAlert
+      await Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Membership successfully added.",
+        confirmButtonColor: "#3085d6",
+      });
+
       fetchMemberships();
-      setNotification({ message: "Membership successfully added.", type: "success" });
       setShowAddModal(false);
       setNewMembership({
         title: "",
@@ -275,9 +338,25 @@ const Memberships = () => {
         additionalServices: "",
         billingType: "",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Add membership failed", error);
-      setNotification({ message: "Failed to add membership.", type: "error" });
+
+      // Error notification with SweetAlert
+      if (error.response && error.response.status === 403) {
+        await Swal.fire({
+          icon: "error",
+          title: "Permission Denied",
+          text: "You don't have permission to do this action.",
+          confirmButtonColor: "#d33",
+        });
+      } else {
+        await Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to add membership. Please try again.",
+          confirmButtonColor: "#d33",
+        });
+      }
     }
   };
 
@@ -287,7 +366,10 @@ const Memberships = () => {
 
   const indexOfLastMembership = currentPage * membershipsPerPage;
   const indexOfFirstMembership = indexOfLastMembership - membershipsPerPage;
-  const currentMemberships = filteredMemberships.slice(indexOfFirstMembership, indexOfLastMembership);
+  const currentMemberships = filteredMemberships.slice(
+    indexOfFirstMembership,
+    indexOfLastMembership
+  );
 
   const updateEditingField = (field: keyof Membership, value: any) => {
     if (!editingMembership) return;
@@ -309,9 +391,15 @@ const Memberships = () => {
           {notification && (
             <div
               className={`fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg z-50 animate-fadeInOut ${
-                notification.type === "success" ? "bg-green-500 text-white" : "bg-red-600 text-white"
+                notification.type === "success"
+                  ? "bg-green-500 text-white"
+                  : "bg-red-600 text-white"
               }`}
-              style={{ minWidth: "280px", textAlign: "center", fontWeight: "600" }}
+              style={{
+                minWidth: "280px",
+                textAlign: "center",
+                fontWeight: "600",
+              }}
             >
               {notification.message}
             </div>
@@ -319,42 +407,47 @@ const Memberships = () => {
 
           {/* Statistics Cards Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
-          <p className="text-sm text-gray-400">Active Memberships</p>
-          <h2 className="text-2xl font-bold text-green-400">{activeMemberships}</h2>
-        </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Active Memberships</p>
+              <h2 className="text-2xl font-bold text-green-400">
+                {activeMemberships}
+              </h2>
+            </div>
 
-        <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
-    <p className="text-sm text-gray-400">Inactive Memberships</p>
-    <h2 className="text-2xl font-bold text-red-400">
-      {totalMemberships - activeMemberships}
-    </h2>
-  </div>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Inactive Memberships</p>
+              <h2 className="text-2xl font-bold text-red-400">
+                {totalMemberships - activeMemberships}
+              </h2>
+            </div>
 
-          <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
-            <p className="text-sm text-gray-400">Total Revenue</p>
-            <h2 className="text-2xl font-bold text-yellow-400">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(
-                memberships
-                  .filter((m) => m.isActive)
-                  .reduce((sum, m) => sum + m.price, 0)
-              )}
-            </h2>
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Total Revenue</p>
+              <h2 className="text-2xl font-bold text-yellow-400">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(
+                  memberships
+                    .filter((m) => m.isActive)
+                    .reduce((sum, m) => sum + m.price, 0)
+                )}
+              </h2>
+            </div>
+
+            <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
+              <p className="text-sm text-gray-400">Popular Billing Type</p>
+              <h2 className="text-2xl font-bold text-blue-400">
+                {monthlyMemberships > yearlyMemberships
+                  ? `Monthly (${Math.round(
+                      (monthlyMemberships / totalMemberships) * 100
+                    )}%)`
+                  : `Yearly (${Math.round(
+                      (yearlyMemberships / totalMemberships) * 100
+                    )}%)`}
+              </h2>
+            </div>
           </div>
-
-  <div className="bg-gray-800 p-4 rounded-lg shadow text-white">
-    <p className="text-sm text-gray-400">Popular Billing Type</p>
-    <h2 className="text-2xl font-bold text-blue-400">
-      {monthlyMemberships > yearlyMemberships
-        ? `Monthly (${Math.round((monthlyMemberships / totalMemberships) * 100)}%)`
-        : `Yearly (${Math.round((yearlyMemberships / totalMemberships) * 100)}%)`}
-    </h2>
-  </div>
-</div>
-
 
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">Memberships</h2>
@@ -406,7 +499,7 @@ const Memberships = () => {
                   <th className="p-3">Title</th>
                   <th className="p-3">Price</th>
                   <th className="p-3">Billing Type</th>
-                  <th className="p-3">Active</th>
+                  <th className="p-3">Status</th>
                   <th className="p-3">Actions</th>
                 </tr>
               </thead>
@@ -424,22 +517,22 @@ const Memberships = () => {
                         className="accent-blue-600"
                       />
                     </td>
-                    <td className="p-3">{m.id}</td> 
+                    <td className="p-3">{m.id}</td>
                     <td className="p-3">{m.title}</td>
                     <td className="p-3">{formatPrice(m.price)}</td>
                     <td className="p-3">{m.billingType}</td>
                     <td className="p-3">
-                    <button
-                      onClick={() => toggleMembershipStatus(m.id, m.isActive)}
-                      className={`px-2 py-1 text-sm rounded ${
-                        m.isActive
-                          ? "bg-green-600 hover:bg-green-700"
-                          : "bg-gray-600 hover:bg-gray-700"
-                      }`}
-                    >
-                      {m.isActive ? "Active" : "Inactive"}
-                    </button>
-                  </td>
+                      <button
+                        onClick={() => toggleMembershipStatus(m.id, m.isActive)}
+                        className={`px-2 py-1 text-sm rounded ${
+                          m.isActive
+                            ? "bg-green-600 hover:bg-green-700"
+                            : "bg-gray-600 hover:bg-gray-700"
+                        }`}
+                      >
+                        {m.isActive ? "Active" : "Inactive"}
+                      </button>
+                    </td>
 
                     <td className="p-3 flex gap-2">
                       <button
@@ -473,12 +566,15 @@ const Memberships = () => {
               ←
             </button>
             <span className="text-sm text-gray-300">
-              Page {currentPage} of {Math.ceil(filteredMemberships.length / membershipsPerPage)}
+              Page {currentPage} of{" "}
+              {Math.ceil(filteredMemberships.length / membershipsPerPage)}
             </span>
             <button
               onClick={() =>
                 setCurrentPage((prev) =>
-                  indexOfLastMembership < filteredMemberships.length ? prev + 1 : prev
+                  indexOfLastMembership < filteredMemberships.length
+                    ? prev + 1
+                    : prev
                 )
               }
               disabled={indexOfLastMembership >= filteredMemberships.length}
@@ -499,7 +595,10 @@ const Memberships = () => {
                   placeholder="Title"
                   value={newMembership.title}
                   onChange={(e) =>
-                    setNewMembership({ ...newMembership, title: e.target.value })
+                    setNewMembership({
+                      ...newMembership,
+                      title: e.target.value,
+                    })
                   }
                   className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
                 />
@@ -508,10 +607,11 @@ const Memberships = () => {
                   type="number"
                   placeholder="Price"
                   value={newMembership.price ?? ""}
-                  onChange={e =>
+                  onChange={(e) =>
                     setNewMembership({
                       ...newMembership,
-                      price: e.target.value === '' ? null : Number(e.target.value),
+                      price:
+                        e.target.value === "" ? null : Number(e.target.value),
                     })
                   }
                   className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
@@ -520,7 +620,10 @@ const Memberships = () => {
                 <select
                   value={newMembership.billingType}
                   onChange={(e) =>
-                    setNewMembership({ ...newMembership, billingType: e.target.value })
+                    setNewMembership({
+                      ...newMembership,
+                      billingType: e.target.value,
+                    })
                   }
                   className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
                 >
@@ -537,7 +640,10 @@ const Memberships = () => {
                     onChange={() =>
                       setNewMembership({
                         ...newMembership,
-                        includesVAT: newMembership.includesVAT === "true" ? "false" : "true",
+                        includesVAT:
+                          newMembership.includesVAT === "true"
+                            ? "false"
+                            : "true",
                       })
                     }
                   />
@@ -548,7 +654,10 @@ const Memberships = () => {
                   placeholder="Description"
                   value={newMembership.description}
                   onChange={(e) =>
-                    setNewMembership({ ...newMembership, description: e.target.value })
+                    setNewMembership({
+                      ...newMembership,
+                      description: e.target.value,
+                    })
                   }
                   className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
                 />
@@ -601,8 +710,11 @@ const Memberships = () => {
                   type="number"
                   placeholder="Price"
                   value={editingMembership?.price ?? ""}
-                  onChange={e =>
-                    updateEditingField('price', e.target.value === '' ? null : Number(e.target.value))
+                  onChange={(e) =>
+                    updateEditingField(
+                      "price",
+                      e.target.value === "" ? null : Number(e.target.value)
+                    )
                   }
                   className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
                 />
@@ -626,7 +738,9 @@ const Memberships = () => {
                     onChange={() =>
                       updateEditingField(
                         "includesVAT",
-                        editingMembership.includesVAT === "true" ? "false" : "true"
+                        editingMembership.includesVAT === "true"
+                          ? "false"
+                          : "true"
                       )
                     }
                   />
@@ -636,7 +750,9 @@ const Memberships = () => {
                 <textarea
                   placeholder="Description"
                   value={editingMembership.description}
-                  onChange={(e) => updateEditingField("description", e.target.value)}
+                  onChange={(e) =>
+                    updateEditingField("description", e.target.value)
+                  }
                   className="w-full mb-2 px-3 py-2 rounded bg-gray-700 text-white"
                 />
 
@@ -673,7 +789,9 @@ const Memberships = () => {
               <div className="bg-gray-800 p-6 rounded shadow-lg w-96">
                 <h3 className="text-lg font-semibold mb-4">Confirm Deletion</h3>
                 <p className="text-sm text-gray-300 mb-6">
-                  Are you sure you want to delete {selectedMemberships.length} selected membership{selectedMemberships.length > 1 ? 's' : ''}?
+                  Are you sure you want to delete {selectedMemberships.length}{" "}
+                  selected membership{selectedMemberships.length > 1 ? "s" : ""}
+                  ?
                 </p>
                 <div className="flex justify-end gap-2">
                   <button

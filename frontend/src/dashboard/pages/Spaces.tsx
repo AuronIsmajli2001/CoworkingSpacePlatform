@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import api from "../../api/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 //@ts-ignore
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -295,12 +296,21 @@ const Spaces = () => {
       console.error("Failed to add space:", err);
       if (err.response) {
         if (err.response.status === 401) {
-          navigate("/auth");
+          Swal.fire({
+            icon: "error",
+            title: "Access Denied",
+            text: "You don't have permission to do this action.",
+          }).then(() => {
+            navigate("/auth");
+          });
         } else {
-          alert(
-            err.response.data?.message ||
-              "Failed to add space. Please try again."
-          );
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text:
+              err.response.data?.message ||
+              "You don't have permission to do this action.",
+          });
         }
       } else if (err.request) {
         alert("Network error. Please check your connection.");
@@ -429,6 +439,7 @@ const Spaces = () => {
                         </svg>
                       </button>
                     </div>
+
                     {showTypeFilter && (
                       <div className="absolute top-full left-0 mt-2 bg-gray-800 border border-gray-700 rounded shadow-md z-10 p-2">
                         <select
@@ -442,11 +453,12 @@ const Spaces = () => {
                           className="bg-gray-700 text-white p-1 text-xs rounded"
                         >
                           <option value="All">All</option>
-                          {spaceTypes.map((type) => (
-                            <option key={type} value={type}>
-                              {type}
-                            </option>
-                          ))}
+                          <option value="Conference Room">
+                            Conference Room
+                          </option>
+                          <option value="Events Area">Events Area</option>
+                          <option value="Dedicated Desk">Dedicated Desk</option>
+                          <option value="Private Office">Private Office</option>
                         </select>
                       </div>
                     )}
@@ -644,10 +656,10 @@ const Spaces = () => {
                       }
                       className="bg-gray-700 text-white rounded px-3 py-2 w-full"
                     >
-                      <option>Conference</option>
-                      <option>Workspace</option>
-                      <option>Meeting Room</option>
-                      <option>Event Space</option>
+                      <option>Conference Room</option>
+                      <option>Events Area</option>
+                      <option>Dedicated Desk</option>
+                      <option>Private Office</option>
                     </select>
                   </div>
 
@@ -796,10 +808,10 @@ const Spaces = () => {
                       required
                     >
                       <option value="">Select type</option>
-                      <option>Conference</option>
-                      <option>Workspace</option>
-                      <option>Meeting Room</option>
-                      <option>Event Space</option>
+                      <option>Conference Room</option>
+                      <option>Dedicated Desk</option>
+                      <option>Private Office</option>
+                      <option>Events Area</option>
                     </select>
                   </div>
 
