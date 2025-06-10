@@ -7,6 +7,7 @@ import api from "../../api/axiosConfig";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const Users = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -140,12 +141,18 @@ const Users = () => {
       }
       setShowConfirmModal(false);
     } catch (error: any) {
-      console.error("Error deleting user(s):", error);
+      console.error("Error updating user:", error);
       if (error.response) {
         if (error.response.status === 401) {
           navigate("/auth");
         } else {
-          alert(error.response.data?.message || "Failed to delete user(s)");
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text:
+              error.response.data?.message ||
+              "You don't have permission to do this action.",
+          });
         }
       } else if (error.request) {
         alert("Network error. Please check your connection");
@@ -292,7 +299,13 @@ const Users = () => {
         if (error.response.status === 401) {
           navigate("/auth");
         } else {
-          alert(error.response.data?.message || "Failed to update user");
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text:
+              error.response.data?.message ||
+              "You don't have permission to do this action.",
+          });
         }
       } else if (error.request) {
         alert("Network error. Please check your connection");
@@ -301,7 +314,6 @@ const Users = () => {
       }
     }
   };
-
   return (
     <div className="flex h-screen">
       <Sidebar />
