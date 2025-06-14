@@ -1,29 +1,66 @@
-# Ignore Visual Studio files
-/backend/.vs/
+# Ignore Visual Studio folders and files
+.vs/
 *.suo
-*.db
-*.vscode/
 *.user
-*.json
-# Ignore build and dependency files
-bin/
-obj/
-*.nuget.cache
-*.assets.json
-*.dg.spec.json
-*.editorconfig
-# Ignore more Visual Studio files
 *.userosscache
 *.sln.docstates
-.vscode/
-.env
-**/obj/
-**/bin/
-*.cache
-*.user
-*.suo
-*.vs/
 *.vsconfig
 
-/node_modules
+# Ignore Rider files
+.idea/
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore build and intermediate folders
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Ignore NuGet packages and cache
+*.nupkg
+*.snupkg
+*.nuget.cache
+*.nuspec
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Ignore build results
+*.dll
+*.exe
+*.app
+*.pdb
+*.cache
+*.db
+*.log
+
+# Ignore build dependency files
+*.assets.json
+*.dg.spec.json
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore Node modules (if using Node.js tools or frontend)
+node_modules/
+
+# Ignore sourcelink files
+*.sourcelink.json
+
+# Ignore all Debug/Release folders
+**/Debug/
+**/Release/
+
+# Ignore test result files
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+
+# Optional: Ignore your specific file or folder mentioned
 backend/.vs/CoworkingSpacePlatform/DesignTimeBuild/.dtbcache.v2
